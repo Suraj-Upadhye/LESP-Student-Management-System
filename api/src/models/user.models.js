@@ -25,17 +25,18 @@ const userSchema = new mongoose.Schema(
         },
         address: {
             type: String,
-            required: true
+            required: false,
+            default: ""
         },
         pincode: {
             type: String,
             required: false,
-            default: "0"
+            default: ""
         },
         profilePhoto: {
             type: String,       //cloudinary url
             required: false,
-            default: "I:\D Drive Backup\MegaProject\LESP-Student-Management-System\api\public\temp\default_profile.png"
+            default: ""
         },
 
         // academicDetails :-
@@ -76,12 +77,12 @@ const userSchema = new mongoose.Schema(
         fatherMobileNumber: {
             type: String,
             required: false,
-            default: "null"
+            default: ""
         },
         motherMobileNumber: {
             type: String,
             required: false,
-            default: "null"
+            default: ""
         },
         email: {
             type: String,
@@ -98,6 +99,9 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true
+        },
+        refreshToken:{
+            type: String
         },
         isEmailVerified: {
             type: Boolean,
@@ -124,7 +128,7 @@ const userSchema = new mongoose.Schema(
         role: {
             type: String,
             enum: ['Student'],
-            required: true
+            default: "Student"
         }
     },
     {
