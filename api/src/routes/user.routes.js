@@ -6,7 +6,13 @@ import {upload} from "../middlewares/multer.middlewares.js";
 const router = Router();
 
 router.route("/register").post(
-    upload.single("profilePhoto"),  // name of the input  field in form (<input type="file" name="profilePhoto">)
+    upload.fields([
+        {
+            name: "profilePhoto",
+            maxCount: 1
+        }, 
+    ]),
+    // upload.single("profilePhoto"),  // name of the input  field in form (<input type="file" name="profilePhoto">)
     registerUser
     )
 

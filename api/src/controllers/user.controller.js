@@ -31,7 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ email }, { rollNo }]
     })
 
@@ -39,15 +39,24 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "User with email and rollNo already exists.")
     }
 
-    const profilePhotoLocalPath = req.files?.profilePhoto?.path
 
-    console.log(profilePhotoLocalPath);
+    // console.log(req.files);
 
-    if (profilePhotoLocalPath) {
-        const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath)
+    // const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
+    let profilePhotoLocalPath;
+    if (req.files && Array.isArray(req.files.profilePhoto) && req.files.profilePhoto.length > 0) {
+        profilePhotoLocalPath = req.files.profilePhoto[0].path
     }
-    // const profilePhoto = await uploadOnCloudinary("api\public\temp\default_profile.png")
 
+    console.log("local path :",profilePhotoLocalPath);
+    
+    if (!profilePhotoLocalPath) {
+        const profilePhoto = ""
+    }
+    const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath)
+   
+
+    console.log("cloudinary obj :",profilePhoto);
 
     if (!profilePhoto) {
         throw new ApiError(400, "Profile photo is not uploaded properly.");

@@ -36,7 +36,6 @@ const userSchema = new mongoose.Schema(
         profilePhoto: {
             type: String,       //cloudinary url
             required: false,
-            default: ""
         },
 
         // academicDetails :-
