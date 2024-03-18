@@ -23,12 +23,11 @@ const adminSchema = new mongoose.Schema(
         },
         address: {
             type: String,
-            required: true
+            required: false
         },
         pincode: {
             type: String,
             required: false,
-            default: 0
         },
         qualification: {
             type: String,
@@ -60,6 +59,9 @@ const adminSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        refreshToken:{
+            type: String
+        },
         isEmailVerified: {
             type: Boolean,
             required: false,
@@ -78,12 +80,12 @@ const adminSchema = new mongoose.Schema(
                     type: Number,
                     required: true
                 },
-                semester: {
-                    type: Number,
-                    required: true
-                },
                 branch: {
                     type: String,
+                    required: true
+                },
+                semester: {
+                    type: Number,
                     required: true
                 },
                 division: {
