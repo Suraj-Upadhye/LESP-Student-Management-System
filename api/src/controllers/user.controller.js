@@ -251,9 +251,134 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 })
 
 
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body
+
+
+
+    const user = await User.findById(req.user?._id)
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+
+    if (!isPasswordCorrect) {
+        throw new ApiError(400, "Invalid old password")
+    }
+
+    user.password = newPassword
+    await user.save({ validateBeforeSave: false })
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "Password changed successfully"))
+})
+
+
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(
+            200,
+            req.user,
+            "User fetched successfully"
+        ))
+});
+
+
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+
+    let updatedFields = {}
+    for (let key in req.body) {
+        if (req.body[key] !== undefined && req.body[key] != null) {
+            updatedFields[key] = req.body[key]
+        }
+    }
+    console.log(updatedFields)
+
+    if (!updatedFields) {
+        throw new ApiError(400, "Atleast one field is required")
+    }
+
+    const updateObject = {
+        $set: {}
+    };
+
+    for (let key in updatedFields) {
+        updateObject.$set[key] = updatedFields[key];
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        updateObject,
+        { new: true }
+    ).select("-password")  // this returns updated data/information of the user without password information
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user, "Account details updated successfully"))
+
+});
+
+
+// remaining :-
+const upadateRollNo = asyncHandler(async (req, res) => {
+
+});         // only can change when hod allows to all future scope
+
+
+const updateUserProfilePhoto = asyncHandler(async(req, res) => {
+
+    const profilePhotoLocalPath = req.file?.path
+
+    if (!profilePhotoLocalPath) {
+        throw new ApiError(400, "profilePhoto file is missing")
+    }
+
+    //TODO: delete old image - assignment
+
+    const profilePhoto = await uploadOnCloudinary(avatarLocalPath)
+
+    if (!profilePhoto.url) {
+        throw new ApiError(400, "Error while uploading on profilePhoto")
+        
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set:{
+                profilePhoto: profilePhoto.url
+            }
+        },
+        {new: true}
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, user, "ProfilePhoto image updated successfully")
+    )
+})
+
+
+// remaining :-
+const forgetPassword = asyncHandler( async( req, res) =>{
+
+});
+
+
+
+
 export {
     registerUser,
     loginUser,
     logoutUser,
     refreshAccessToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails,
+    upadateRollNo,
+    updateUserProfilePhoto,
+    forgetPassword,
+
 }
