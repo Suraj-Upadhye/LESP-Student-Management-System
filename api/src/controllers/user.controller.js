@@ -4,6 +4,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import { Admin } from '../models/admin.modules.js';
 
 
 const generateAccessAndRefereshTokens = async (userId) => {
@@ -363,6 +364,65 @@ const updateUserProfilePhoto = asyncHandler(async(req, res) => {
 
 // remaining :-
 const forgetPassword = asyncHandler( async( req, res) =>{
+
+});
+
+
+// remaining :-
+const getAdminrProfile = asyncHandler( async( req, res) =>{
+
+    const {adminCode} = req.params
+
+    if( !adminCode?.trim()){
+        throw new ApiError(400,"Admin code is missing");
+    }
+
+    const admin = await Admin.aggregate([
+        {
+            $match:{
+                adminCode: adminCode
+            }
+        },
+        {
+            $lookup:{
+                from: "",
+                localField: "",
+                foreignField: "",
+                as: "teachers"
+            }
+        },
+        {
+            $lookup:{
+                from: "",
+                localField: "",
+                foreignField: "",
+                as: ""
+            }
+        },
+        {
+            $addFields: {
+                teachersCount: {
+                    $size: "$teachers"
+                },
+
+            }
+        },
+        {
+
+        }
+    ])
+
+
+    // console.log(getAdminrProfile)
+    if(!getAdminrProfile?.length){
+        throw new ApiError(404, "Admin does not exist")
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, getAdminrProfile,  'Admin profile fetched successfully')
+    )
 
 });
 

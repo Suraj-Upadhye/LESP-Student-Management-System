@@ -38,6 +38,10 @@ const adminSchema = new mongoose.Schema(
             required: true,
             default: 0
         },
+        adminCode :{
+            type: Number,
+            required: true
+        },
         profilePhoto: {
             type: String,
             required: false,
