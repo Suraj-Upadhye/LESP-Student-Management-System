@@ -377,8 +377,8 @@ export {
     changeCurrentPassword,
     getCurrentUser,
     updateAccountDetails,
-    upadateRollNo,
+    upadateRollNo,          // remaining
     updateUserProfilePhoto,
-    forgetPassword,
+    forgetPassword,     // remaining
 
 }

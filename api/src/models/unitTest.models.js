@@ -1,8 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { trusted } from "mongoose";
 
 const unitTestSchema = mongoose.Schema(
     {
-        UnitTest: {
+        subject: {
+          type: String,
+          required: true  
+        },
+        marks: {
             ut1: {
                 type: Number,
                 required: false,
