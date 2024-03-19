@@ -369,7 +369,7 @@ const forgetPassword = asyncHandler( async( req, res) =>{
 
 
 // remaining :-
-const getAdminrProfile = asyncHandler( async( req, res) =>{
+const getAdminProfile = asyncHandler( async( req, res) =>{
 
     const {adminCode} = req.params
 
