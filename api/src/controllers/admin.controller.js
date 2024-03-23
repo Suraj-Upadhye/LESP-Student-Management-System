@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import {ApiResponse} from "../utils/ApiResponse.js";
+import { Admin } from '../models/admin.modules.js';
 
 const registerAdmin = asyncHandler(async (req, res) => {
 
@@ -31,11 +32,11 @@ const registerAdmin = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    const existedUser = await User.findOne({
-        $or: [{ email }, { rollNo }]
+    const existedUser = await Admin.findOne({
+        $or: [{ email }, { adminCode }]
     })
 
-    if (existedUser) {
+    if (existedAdmin) {
         throw new ApiError(409, "User with email and rollNo already exists.")
     }
 
@@ -75,9 +76,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
         division, 
         enrollmentNo, 
         rollNo,
-        studentMobileNumber, 
-        fatherMobileNumber, 
-        motherMobileNumber, 
+        mobileNumber, 
         email: email.toLowerCase(), 
         otp, 
         password
@@ -98,6 +97,9 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
 
 })
+
+
+// const 
 
 
 export {

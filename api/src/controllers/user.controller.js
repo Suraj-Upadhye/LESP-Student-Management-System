@@ -4,7 +4,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import { Admin } from '../models/admin.modules.js';
+import { Admin } from '../models/admin.models.js';
 
 
 const generateAccessAndRefereshTokens = async (userId) => {
@@ -341,7 +341,7 @@ const updateUserProfilePhoto = asyncHandler(async(req, res) => {
 
     //TODO: delete old image - assignment
 
-    const profilePhoto = await uploadOnCloudinary(avatarLocalPath)
+    const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath)
 
     if (!profilePhoto.url) {
         throw new ApiError(400, "Error while uploading on profilePhoto")
@@ -370,6 +370,31 @@ const updateUserProfilePhoto = asyncHandler(async(req, res) => {
 const forgetPassword = asyncHandler( async( req, res) =>{
 
 });
+
+
+// remaining :-
+const resetPassword = asyncHandler(async (req,res)=>{
+
+});
+
+// remaining :-  name profile photo email 
+const getCurrentUserEssentials = asyncHandler(async (req,res)=>{
+
+});
+
+// remaining :-
+const viewAttendance = asyncHandler(async (req,res)=>{
+
+});
+
+
+// remaining :-
+const viewUTMarks =  asyncHandler(async (req,res)=>{
+
+});
+
+
+
 
 
 // remaining :-

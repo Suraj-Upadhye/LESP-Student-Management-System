@@ -1,25 +1,36 @@
 import mongoose, { Schema } from "mongoose";
 
-const SubjectsSchema = mongoose.Schema(
+const SubjectsSchema = new Schema(
     {
-        SubjectList:
-        {
-            year: {
-                type: String,
-                required: true
-            },
-            branch: {
-                type: String,
-                required: true
-            },
-            sem: {
-                type: String,
-                required: true
-            },
-            subjects:{
-
-            }
+        year: {
+            type: Number,
+            required: true
+        },
+        branch: {
+            type: String,
+            required: true
+        },
+        semester: {
+            type: Number,
+            required: true
+        },
+        subject: {
+            type: String,
+            required: true,
+        },
+        mode: {
+            type: Array,
+            enum: [
+                ["Lecture", "Tutorial"],
+                ["Lecture", "Practical"],
+                ["N/A"],
+                ["Lecture", "Tutorial", "Practical"],
+                ["Lecture"],
+                ["Practical"]
+            ],
+            required: true
         }
+        
     },
 
     {
@@ -27,4 +38,4 @@ const SubjectsSchema = mongoose.Schema(
     }
 );
 
-export const Subjects = mongoose.model("Subjects", SubjectsSchema);
+export const Subject = mongoose.model("Subject", SubjectsSchema);

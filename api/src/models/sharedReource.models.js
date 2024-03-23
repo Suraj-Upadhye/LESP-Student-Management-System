@@ -1,34 +1,32 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-const sharedResourceSchema = new mongoose.Schema(
+const sharedResourceSchema = new Schema(
     {
+        resourceFile: {
+            type: {
+                url: String,
+                public_id: String
+            },       // cloudinary url
+            required: true
+        },
         description: {
             type: String,
             required: true
         },
-        subjectName: {
+        title: {
             type: String,
             required: true,
-            default: 'none'
+            default: 'Notice'
         },
-        resource: [
-            {
-                resourceType: {
-                    type: String,
-                    enum: ["image", "video", "pdf"],
-                    required: true
-                },
-                resourceUrl: {
-                    type: String,        //cloudinary url 
-                    required: true
-                },
-                fileName: {
-                    type: String,
-                    required: true
-                }
-            }
-        ]
+        resourceType: {
+            type: String,
+            required: true
+        },
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: "Admin"
+        }
     },
 
     {

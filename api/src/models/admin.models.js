@@ -1,7 +1,7 @@
 // models/teacher.js
 import mongoose, { Schema } from 'mongoose';
 
-const adminSchema = new mongoose.Schema(
+const adminSchema = new Schema(
     {
         // personalDetails:-
         firstName: {
@@ -38,12 +38,15 @@ const adminSchema = new mongoose.Schema(
             required: true,
             default: 0
         },
-        adminCode :{
+        adminCode: {
             type: Number,
             required: true
         },
         profilePhoto: {
-            type: String,
+            type: {
+                url: String,
+                public_id: String
+            },      //cloudinary url
             required: false,
         },
         // securityDetails:-
@@ -63,7 +66,7 @@ const adminSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        refreshToken:{
+        refreshToken: {
             type: String
         },
         isEmailVerified: {
@@ -76,40 +79,31 @@ const adminSchema = new mongoose.Schema(
             required: false,
             default: false
         },
-        
+
         // workingDetails :-
         workingDetails:
-            [{
-                year: {
-                    type: Number,
-                    required: true
-                },
-                branch: {
-                    type: String,
-                    required: true
-                },
-                semester: {
-                    type: Number,
-                    required: true
-                },
-                division: {
-                    type: String,
-                    reqired: true
-                },
-                subject: {
-                    type: String,
-                    required: true
+            [
+                {
+                    subject: {
+                        type: Schema.Types.ObjectId,
+                        ref: "Subject"
+                    },
+                    division: {
+                        type: String,
+                        enum : ["Div1", "Div2", "None"],
+                        reqired: true,
+                        default: "None"
+                    },
+                    batch: {
+                        type: String,
+                        required: true
+                    }
                 }
-            }],
+            ],
         classTeacher: {
             type: String,
             required: false,
             default: "none"
-        },
-        sharedResource: {
-            type: Schema.Types.Array,
-            required: false,
-            ref: 'SharedResource'
         },
         role: {
             type: String,
@@ -122,4 +116,53 @@ const adminSchema = new mongoose.Schema(
     }
 );
 
+
+adminSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+
+    this.password = await bcrypt.hash(this.password, 10)
+    this.adminCode = getRandomIntInclusive()
+    next()
+})
+
+adminSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password)
+}
+
+adminSchema.methods.generateAccessToken = function () {
+    return jwt.sign(
+        {
+            _id: this._id,
+            email: this.email,
+            adminCode: this.adminCode,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
+
+adminSchema.methods.generateRefreshToken = function () {
+    return jwt.sign(
+        {
+            _id: this._id,
+
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
+
+
 export const Admin = mongoose.model("Admin", adminSchema);
+
+
+
+function getRandomIntInclusive() {
+    let min = Math.ceil(1);
+    let max = Math.floor(500);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

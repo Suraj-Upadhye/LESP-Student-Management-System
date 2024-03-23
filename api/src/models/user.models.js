@@ -3,20 +3,20 @@ import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
     {
         // personalDetails :-
         firstName: {
             type: String,
-            required: true
+            required: true,
         },
         middleName: {
             type: String,
-            required: true
+            required: true,
         },
         lastName: {
             type: String,
-            required: true
+            required: true,
         },
         gender: {
             type: String,
@@ -34,7 +34,10 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
         profilePhoto: {
-            type: String,       //cloudinary url
+            type: {
+                url: String,
+                public_id: String
+            },       //cloudinary url
             required: false,
         },
 
@@ -93,13 +96,12 @@ const userSchema = new mongoose.Schema(
         },
         otp: {
             type: String,
-            required: true
         },
         password: {
             type: String,
-            required: true
+            required: [true, 'Password is required']
         },
-        refreshToken:{
+        refreshToken: {
             type: String
         },
         isEmailVerified: {
@@ -113,17 +115,17 @@ const userSchema = new mongoose.Schema(
             default: false
         },
 
-        unitTestMarks: {
-            type: [Schema.Types.ObjectId],
-            ref: 'UnitTest',
-            required: false
-        },
+        // unitTestMarks: {
+        //     type: [Schema.Types.ObjectId],
+        //     ref: 'UnitTest',
+        //     required: false
+        // },
 
-        allAttendanceData: {
-            type: [Schema.Types.Array],
-            required: false,
-            ref: "Attendance"
-        },
+        // allAttendanceData: {
+        //     type: [Schema.Types.Array],
+        //     required: false,
+        //     ref: "Attendance"
+        // },
         role: {
             type: String,
             enum: ['Student'],
@@ -146,7 +148,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.generateAccessToken = function(){
+userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {
             _id: this._id,
@@ -160,11 +162,11 @@ userSchema.methods.generateAccessToken = function(){
     )
 }
 
-userSchema.methods.generateRefreshToken = function(){
+userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-            
+
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
