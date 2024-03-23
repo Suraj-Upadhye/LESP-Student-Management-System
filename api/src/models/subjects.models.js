@@ -4,19 +4,19 @@ const SubjectsSchema = new Schema(
     {
         year: {
             type: Number,
-            required: true
+            required: [true, 'Year field is required']
         },
         branch: {
             type: String,
-            required: true
+            required: [true, 'Branch field is required'],
         },
         semester: {
             type: Number,
-            required: true
+            required: [true, 'Semester field is required'],
         },
         subject: {
             type: String,
-            required: true,
+            required: [true, 'Subject field is required'],
         },
         mode: {
             type: Array,
@@ -28,9 +28,12 @@ const SubjectsSchema = new Schema(
                 ["Lecture"],
                 ["Practical"]
             ],
-            required: true
+            required: [true, 'Mode of teaching field is required']
+        },
+        applicableBatchNames: {
+            type: Array,
+            required: [true, 'List of batches field is required']
         }
-        
     },
 
     {

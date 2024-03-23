@@ -6,20 +6,20 @@ const adminSchema = new Schema(
         // personalDetails:-
         firstName: {
             type: String,
-            required: true
+            required: [true, "firstName is required"],
         },
         middleName: {
             type: String,
-            required: true
+            required: [true, "middleName is required"]
         },
         lastName: {
             type: String,
-            required: true
+            required: [true, "lastName is required"]
         },
         gender: {
             type: String,
             enum: ['Male', 'Female', 'Other'],
-            required: true
+            required: [true, 'gender is required']
         },
         address: {
             type: String,
@@ -31,16 +31,17 @@ const adminSchema = new Schema(
         },
         qualification: {
             type: String,
-            required: true
+            required: [true, "qualification is required"]
         },
         teachingExperience: {
             type: Number,
-            required: true,
+            required: [true, 'teaching Experience is required'],
             default: 0
         },
         adminCode: {
             type: Number,
-            required: true
+            required: [true, "admin code is required"],
+            unique: true
         },
         profilePhoto: {
             type: {
@@ -52,19 +53,18 @@ const adminSchema = new Schema(
         // securityDetails:-
         mobileNumber: {
             type: String,
-            required: true
+            required: [true, 'Mobile number is required'],
         },
         email: {
             type: String,
-            required: true
+            required: [true, 'Email id is required'],
         },
         otp: {
             type: String,
-            required: true
         },
         password: {
             type: String,
-            required: true
+            required: [true, 'Password is required']
         },
         refreshToken: {
             type: String
@@ -91,13 +91,13 @@ const adminSchema = new Schema(
                     division: {
                         type: String,
                         enum : ["Div1", "Div2", "None"],
-                        reqired: true,
+                        reqired: [true, 'division is required'],
                         default: "None"
                     },
-                    batch: {
-                        type: String,
-                        required: true
-                    }
+                    // batch: {
+                    //     type: String,
+                    //     required: [true, 'Batch is required']
+                    // }
                 }
             ],
         classTeacher: {
@@ -108,7 +108,8 @@ const adminSchema = new Schema(
         role: {
             type: String,
             enum: ['Teacher', 'HOD'],
-            required: true,
+            default: 'Teacher',
+            required: [true, 'role is required'],
         }
     },
     {

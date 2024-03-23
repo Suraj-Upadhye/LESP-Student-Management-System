@@ -8,20 +8,20 @@ const sharedResourceSchema = new Schema(
                 url: String,
                 public_id: String
             },       // cloudinary url
-            required: true
+            required: [true, 'Please provide a file']
         },
         description: {
             type: String,
-            required: true
+            required: [true, 'Please add a description'],
         },
         title: {
             type: String,
-            required: true,
+            required: [true, 'title field is required'],
             default: 'Notice'
         },
         resourceType: {
             type: String,
-            required: true
+            required: [true, 'resourceType field is required'],
         },
         owner: {
             type: Schema.Types.ObjectId,

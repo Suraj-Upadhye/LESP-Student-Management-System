@@ -8,20 +8,20 @@ const userSchema = new Schema(
         // personalDetails :-
         firstName: {
             type: String,
-            required: true,
+            required: [true, 'firstName field is required'],
         },
         middleName: {
             type: String,
-            required: true,
+            required: [true, 'middleName field is required'],
         },
         lastName: {
             type: String,
-            required: true,
+            required: [true, 'lastName field is required'],
         },
         gender: {
             type: String,
             enum: ['Male', 'Female', 'Other'],
-            required: true
+            required: [true, 'gender field is required']
         },
         address: {
             type: String,
@@ -44,25 +44,25 @@ const userSchema = new Schema(
         // academicDetails :-
         year: {
             type: String,
-            required: true
+            required: [true, 'year field cannot be empty']
         },
         branch: {
             type: String,
-            required: true,
+            required: [true, 'branch field is required'],
         },
         division: {
             type: String,
             enum: ['Div1', 'Div2', 'None'],
-            required: true,
+            required: [true, 'division field is required'],
         },
         enrollmentNo: {
             type: String,
-            required: true,
+            required:  [true, 'enrollment field is required'],
             unique: true,
         },
         rollNo: {
             type: String,
-            required: true,
+            required:  [true, 'rollNo field is required'],
             unique: true
         },
         batch: {
@@ -74,7 +74,7 @@ const userSchema = new Schema(
         // securityDetails :-
         studentMobileNumber: {
             type: String,
-            required: true
+            required:  [true, 'studentMobileNumber field is required']
         },
         fatherMobileNumber: {
             type: String,
@@ -88,7 +88,7 @@ const userSchema = new Schema(
         },
         email: {
             type: String,
-            required: true,
+            required: [true, 'email field is required'],
             unique: true,
             lowercase: true,
             trim: true,
@@ -114,18 +114,6 @@ const userSchema = new Schema(
             required: false,
             default: false
         },
-
-        // unitTestMarks: {
-        //     type: [Schema.Types.ObjectId],
-        //     ref: 'UnitTest',
-        //     required: false
-        // },
-
-        // allAttendanceData: {
-        //     type: [Schema.Types.Array],
-        //     required: false,
-        //     ref: "Attendance"
-        // },
         role: {
             type: String,
             enum: ['Student'],

@@ -1,10 +1,18 @@
-import mongoose, { trusted } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const unitTestSchema = mongoose.Schema(
+const unitTestSchema = new Schema(
     {
+        student: {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        },
+        teacher: {
+            type: Schema.Types.ObjectId,
+            ref: "Admin"
+        },
         subject: {
             type: String,
-            required: true
+            required: [true, "Subject field is required"]
         },
         ut1: {
             type: Number,

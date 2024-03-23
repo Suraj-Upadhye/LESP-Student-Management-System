@@ -1,62 +1,47 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema }  from "mongoose";
 
-const AttendanceSchema = mongoose.Schema(
-    {
-        dailyAttendanceData: {
-            date: {
-                type: Date,
-                required: true
+const AttendanceSchema = new Schema({
+    date: {
+        type: Date,
+        required: true
+    },
+    attendanceData: [
+        {
+            student: {
+                type: Schema.Types.ObjectId,
+                ref: "User"
             },
-            Period: [
-                {
-                    subjectName: {
-                        type: String,
-                        required: true
-                    },
-                    state: {
-                        type: String,
-                        enum: ["Present", "Absent", "Leave"],
-                        required: true,
-                        default: "Present"
-                    },
-                    sessionTpe:{
-                        type: String,
-                        enum: ['Theory', 'Practical', 'Tutorial'],
-                        required: true
-                    },
-                    batchBelongs: {
-                        type: String,
-                        required: true
-                    },
-                    remark: {
-                        type: String,
-                        required: true,
-                        default: "Remark is not added"
-                    }
-                }
-            ],
-            totalPeriodsTrack: {
-                lectures:{
-                    type: Number,
-                    required: true,
-                    default: 0
-                },
-                practicals:{
-                    type: Number,
-                    requierd: true,
-                    default: 0
-                },
-                sumOfBoth:{
-                    type: Number,
-                    required: true,
-                    default: 0
-                }
+            teacher: {
+                type: Schema.Types.ObjectId,
+                ref: "Admin"
+            },
+            subject: {
+                type: Schema.Types.ObjectId,
+                ref: "Subject"
+            },
+            state: {
+                type: String,
+                enum: ["Present", "Absent", "Leave"],
+                required: [true, 'Attendance state is required'],
+                default: "Present"
+            },
+            sessionType: {
+                type: String,
+                enum: ['Theory', 'Practical', 'Tutorial'],
+                required: [true, 'Session type is required']
+            },
+            batchBelongs: {
+                type: String,
+                required: false
+            },
+            remark: {
+                type: String,
+                required: [true, 'Remark / Note is required'],
             }
         }
-    },
-    {
-        timestamps: true
-    }
-);
+    ]
+}, {
+    timestamps: true
+});
 
 export const Attendance = mongoose.model("Attendance", AttendanceSchema);
