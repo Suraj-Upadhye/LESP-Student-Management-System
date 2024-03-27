@@ -1,8 +1,8 @@
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import { Admin } from '../models/admin.models.js';
 
@@ -25,7 +25,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
     }
 }
 
-
+// tested
 const registerUser = asyncHandler(async (req, res) => {
 
     const {
@@ -123,7 +123,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
 })
 
-
+// tested
+// move to auth controller
 const loginUser = asyncHandler(async (req, res) => {
 
     const { email, rollNo, password } = req.body;
@@ -176,6 +177,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
 })
 
+// tested
+// move to auth controller
 const logoutUser = asyncHandler(async (req, res) => {
 
     await User.findByIdAndUpdate(
@@ -206,7 +209,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged Out"))
 })
 
-
+// failed
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = res.cookies.refreshToken || req.body.refreshToken
 
@@ -255,7 +258,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 })
 
-
+// tested
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
 
@@ -277,7 +280,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 })
 
 
-
+// tested
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
         .status(200)
@@ -289,9 +292,12 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 
-
+// bug in update account details
 const updateAccountDetails = asyncHandler(async (req, res) => {
 
+    // data to be received may be : 
+    //(normal) gender, address, pincode, studentMobileNumber, fatherMobileNumber, motherMobileNumber,
+    // high security : (hod permission) // year, rollNo, division, batch
     let updatedFields = {}
     for (let key in req.body) {
         if (req.body[key] !== undefined && req.body[key] != null) {
@@ -331,6 +337,7 @@ const upadateRollNo = asyncHandler(async (req, res) => {
 });         // only can change when hod allows to all future scope
 
 
+// bug in update user profile photo
 const updateUserProfilePhoto = asyncHandler(async(req, res) => {
 
     const profilePhotoLocalPath = req.file?.path
@@ -340,7 +347,7 @@ const updateUserProfilePhoto = asyncHandler(async(req, res) => {
     }
 
     //TODO: delete old image - assignment
-
+console.log(profilePhotoLocalPath)
     const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath)
 
     if (!profilePhoto.url) {
@@ -369,27 +376,70 @@ const updateUserProfilePhoto = asyncHandler(async(req, res) => {
 // remaining :-
 const forgetPassword = asyncHandler( async( req, res) =>{
 
+    const  resetToken = crypto.randomBytes(32).toString('hex');
+    
+    let user = await User.findOne({email : req.body.email});
+    if(!user){
+        throw new ApiError(400,"Email does not exist");
+    }
+
+    const expireTime = Date.now() + 10*60;   //expires in 10 mins from now
+    user.resetToken = resetToken ;
+    user.resetTokenExpire= expireTime ;
+    await user.save();
+
+    const url = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
+
+    const message = `Follow this link to reset your password ${url}`;
+
+    try{
+       await emailService.sendEmail(req.body.email ,message);
+       res.status(200).json(
+           new ApiResponse(200,'Email has been sent',"Please check your email id for further instructions")
+       );
+    }catch(error){
+        console.log(`Error occurred while sending Email`, error);
+        user.resetToken = undefined;
+        user.resetTokenExpire=undefined;
+        await user.save();
+    }
+
 });
 
 
 // remaining :-
 const resetPassword = asyncHandler(async (req,res)=>{
 
+    const  {resetToken, password, confirmPassword} = req.body;
+    if(password !== confirmPassword )
+    {
+         throw new ApiError(400,"Passwords do not match");
+    }
+
+    const user =await User.findOneAndUpdate(
+                            {resetToken:resetToken},
+                            {password:password, 
+                             resetToken:undefined, 
+                             resetTokenExpire:undefined, 
+                             role:"user"},
+                            {new:true}
+                          ).select("-resetToken -resetTokenExpire -__v");
+
+   // Saving the updated user document in the database
+    await user.save();
+    
+    sendTokenResponse(user,200, "Password reset successfully",res);
 });
 
 // remaining :-  name profile photo email 
 const getCurrentUserEssentials = asyncHandler(async (req,res)=>{
 
-});
+    const  user = await User.findById(req.user.id).select("name profilePhoto email");
 
-// remaining :-
-const viewAttendance = asyncHandler(async (req,res)=>{
-
-});
-
-
-// remaining :-
-const viewUTMarks =  asyncHandler(async (req,res)=>{
+    res.json({
+       success: true,
+       data : user
+    });
 
 });
 

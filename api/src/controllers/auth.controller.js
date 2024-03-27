@@ -6,3 +6,9 @@ const login = asyncHandler( async( req, res) =>{
     if(!email || !password ) return res.status(400).json({ message: 'Please provide an email and a password' });
     
 })
+
+
+const logout = asyncHandler( async(req, res)=>{
+
+});
+
