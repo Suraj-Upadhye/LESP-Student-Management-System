@@ -493,7 +493,7 @@ const getAdminProfile = asyncHandler( async( req, res) =>{
 
 
     // console.log(getAdminrProfile)
-    if(!getAdminrProfile?.length){
+    if(!getAdminProfile?.length){
         throw new ApiError(404, "Admin does not exist")
     }
 

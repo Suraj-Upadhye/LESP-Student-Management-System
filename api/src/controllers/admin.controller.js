@@ -98,8 +98,18 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
 })
 
+const acceptNewStudent = asyncHandler( async( req, res)=>{
 
-// const 
+})
+
+const acceptNewTeacher = asyncHandler( async( req, res)=>{
+
+})
+
+
+const batchAllocation = asyncHandler( async( req, res)=>{
+
+})
 
 
 export {
