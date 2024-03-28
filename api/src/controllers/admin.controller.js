@@ -2,8 +2,12 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import {ApiResponse} from "../utils/ApiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
+
+const generateAccessAndRefereshTokens = asyncHandler(async (req, res) => {
+
+})
 
 const registerAdmin = asyncHandler(async (req, res) => {
 
@@ -49,21 +53,21 @@ const registerAdmin = asyncHandler(async (req, res) => {
         profilePhotoLocalPath = req.files.profilePhoto[0].path
     }
 
-    console.log("local path :",profilePhotoLocalPath);
-    
+    console.log("local path :", profilePhotoLocalPath);
+
     if (!profilePhotoLocalPath) {
         const profilePhoto = ""
     }
     const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath)
-   
 
-    console.log("cloudinary obj :",profilePhoto);
+
+    console.log("cloudinary obj :", profilePhoto);
 
     if (!profilePhoto) {
         throw new ApiError(400, "Profile photo is not uploaded properly.");
     }
 
-    const user =  await User.create({
+    const user = await User.create({
         firstName,
         middleName,
         lastName,
@@ -71,14 +75,14 @@ const registerAdmin = asyncHandler(async (req, res) => {
         address,
         pincode,
         profilePhoto: profilePhoto?.url || "",
-        year, 
-        branch, 
-        division, 
-        enrollmentNo, 
+        year,
+        branch,
+        division,
+        enrollmentNo,
         rollNo,
-        mobileNumber, 
-        email: email.toLowerCase(), 
-        otp, 
+        mobileNumber,
+        email: email.toLowerCase(),
+        otp,
         password
     })
 
@@ -86,7 +90,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
         "-password -refreshToken"
     )
 
-    if (!createAdmin){
+    if (!createAdmin) {
         throw new ApiError(500, "Something went wrong while registering the user");
     }
 
@@ -98,20 +102,86 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
 })
 
-const acceptNewStudent = asyncHandler( async( req, res)=>{
+const refreshAccessToken = asyncHandler(async (req, res) => {
 
 })
 
-const acceptNewTeacher = asyncHandler( async( req, res)=>{
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+
+})
+
+const getCurrentAdmin = asyncHandler(async (req, res) => {
+
+})
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+
+})
+
+const updateAdminProfilePhoto = asyncHandler(async (req, res) => {
+
+})
+
+const updateAdminCode = asyncHandler(async (req, res) => {
+
+})
+
+const getAdminCode = asyncHandler(async (req, res) => {
+
+})
+
+const forgetPassword = asyncHandler(async (req, res) => {
+
+})
+
+const resetPassword =  asyncHandler(async (req, res) => {
+
+})
+
+const getCurrentAdminEssentials = asyncHandler(async(req, res)=>{
 
 })
 
 
-const batchAllocation = asyncHandler( async( req, res)=>{
+// high security
+const acceptNewStudent = asyncHandler(async (req, res) => {
+
+})
+
+const acceptNewTeacher = asyncHandler(async (req, res) => {
+
+})
+
+const batchAllocation = asyncHandler(async (req, res) => {
+
+})
+
+const classTeacherAllocation = asyncHandler(async (req, res) => {
+
+})
+
+const allowToChangeAcademicDetails = asyncHandler(async (req, res) => {
 
 })
 
 
 export {
     registerAdmin,
+    refreshAccessToken,
+    changeCurrentPassword,
+    getCurrentAdmin,
+    updateAccountDetails,
+    updateAdminCode,    
+    getAdminCode,     
+    updateAdminProfilePhoto,
+    forgetPassword, 
+    resetPassword,
+    getCurrentAdminEssentials,
+    
+    acceptNewStudent,
+    acceptNewTeacher,
+    batchAllocation,
+    classTeacherAllocation,
+    allowToChangeAcademicDetails,
+
 }

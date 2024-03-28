@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import { Admin } from '../models/admin.models.js';
 
 
-const generateAccessAndRefereshTokens = async (userId) => {
+const generateAccessAndRefereshTokens = asyncHandler(async (userId) => {
     try {
         const user = await User.findById(userId);
         const accessToken = user.generateAccessToken()
@@ -23,7 +23,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
     } catch (error) {
         throw new ApiError(500, "Something went wrong while generating refresh and access token")
     }
-}
+})
 
 // tested
 const registerUser = asyncHandler(async (req, res) => {
@@ -331,8 +331,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 
-// remaining :-
-const upadateRollNo = asyncHandler(async (req, res) => {
+const updateRollNo = asyncHandler(async (req, res) => {
 
 });         // only can change when hod allows to all future scope
 
@@ -373,7 +372,6 @@ console.log(profilePhotoLocalPath)
 })
 
 
-// remaining :-
 const forgetPassword = asyncHandler( async( req, res) =>{
 
     const  resetToken = crypto.randomBytes(32).toString('hex');
@@ -407,7 +405,6 @@ const forgetPassword = asyncHandler( async( req, res) =>{
 });
 
 
-// remaining :-
 const resetPassword = asyncHandler(async (req,res)=>{
 
     const  {resetToken, password, confirmPassword} = req.body;
@@ -431,7 +428,7 @@ const resetPassword = asyncHandler(async (req,res)=>{
     sendTokenResponse(user,200, "Password reset successfully",res);
 });
 
-// remaining :-  name profile photo email 
+//   name profile photo email 
 const getCurrentUserEssentials = asyncHandler(async (req,res)=>{
 
     const  user = await User.findById(req.user.id).select("name profilePhoto email");
@@ -445,9 +442,6 @@ const getCurrentUserEssentials = asyncHandler(async (req,res)=>{
 
 
 
-
-
-// remaining :-
 const getAdminProfile = asyncHandler( async( req, res) =>{
 
     const {adminCode} = req.params
@@ -516,8 +510,10 @@ export {
     changeCurrentPassword,
     getCurrentUser,
     updateAccountDetails,
-    upadateRollNo,          // remaining
+    updateRollNo,       
     updateUserProfilePhoto,
-    forgetPassword,     // remaining
+    forgetPassword,
+    resetPassword,
+    getCurrentUserEssentials, 
 
 }

@@ -34,3 +34,13 @@ const getSubjectSwitchOptionList = asyncHandler( async(req, res)=>{
 
     // returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
 })
+
+export {
+    addSubject,
+    getSubject,
+    updateSubject,
+    deleteSubject,
+    getSubjectListBy,
+    getSubjectSwitchOptionList,
+    
+}

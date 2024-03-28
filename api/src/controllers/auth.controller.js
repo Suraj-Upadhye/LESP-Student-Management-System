@@ -1,14 +1,19 @@
 import { asyncHandler } from "../utils/asyncHandler";
 
 
-const login = asyncHandler( async( req, res) =>{
+const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    if(!email || !password ) return res.status(400).json({ message: 'Please provide an email and a password' });
-    
+    if (!email && !password)
+        return res.status(400).json({ message: 'Please provide an email and a password' });
+
 })
 
 
-const logout = asyncHandler( async(req, res)=>{
+const logout = asyncHandler(async (req, res) => {
 
 });
 
+export {
+    login,
+    logout,
+}

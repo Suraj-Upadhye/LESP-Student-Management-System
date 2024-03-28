@@ -39,3 +39,16 @@ const listApprovedLeaveApplication = asyncHandler(async(req, res)=>{
 
     // returns string with all specification, rollno, user
 })
+
+
+export {
+    addLeaveApplication,
+    getLeaveApplication,
+    updateLeaveApplication,
+    deleteLeaveApplication,
+    approveLeaveApplication,
+    rejectLeaveApplication,
+    listPendingLeaveApplication,
+    listApprovedLeaveApplication,
+    
+}

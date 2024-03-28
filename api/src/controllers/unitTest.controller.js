@@ -9,6 +9,7 @@ import { UnitTest } from '../models/unitTest.models.js';
 // @access  Public
 
 // in front end display changed ut marks fields (student name - rollno - marks (ut1, ut2))
+
 const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
 
     // subject wise adding ut1 and ut2
