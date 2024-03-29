@@ -1,3 +1,5 @@
+// subjects.models.js
+
 import mongoose, { Schema } from "mongoose";
 
 const SubjectsSchema = new Schema(

@@ -1,9 +1,18 @@
+// attendance.controller.js
+
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+const takeAttendanceEssentials = asyncHandler(async (req, res) => {
+
+    // req.body contains teacher data
+
+})
+
 const addAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
 
+    // req.body  should contain subject and date of attendance
 })
 
 const getAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {

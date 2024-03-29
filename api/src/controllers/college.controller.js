@@ -1,18 +1,28 @@
+// college.controller.js
+
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-const collegeNameFormatAttendance = asyncHandler( async(req, res)=>{
+const addcollegeNameFormatAttendance = asyncHandler( async(req, res)=>{
 
 })
 
-const collegeNameAndDescription = asyncHandler( async(req, res)=>{
+const addcollegeNameAndDescription = asyncHandler( async(req, res)=>{
+
+})
+
+const getcollegeNameFormatAttendance = asyncHandler( async(req, res)=>{
+
+})
+
+const getcollegeNameAndDescription = asyncHandler( async(req, res)=>{
 
 })
 
 export {
-    collegeNameFormatAttendance,
-    collegeNameAndDescription,
+    addcollegeNameFormatAttendance,
+    addcollegeNameAndDescription,
 }
 
 

@@ -1,4 +1,6 @@
-// models/teacher.js
+// admin.models.js
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import mongoose, { Schema } from 'mongoose';
 
 const adminSchema = new Schema(
@@ -59,9 +61,6 @@ const adminSchema = new Schema(
             type: String,
             required: [true, 'Email id is required'],
         },
-        otp: {
-            type: String,
-        },
         password: {
             type: String,
             required: [true, 'Password is required']
@@ -110,6 +109,14 @@ const adminSchema = new Schema(
             enum: ['Teacher', 'HOD'],
             default: 'Teacher',
             required: [true, 'role is required'],
+        },
+        resetToken: {
+            type: String,
+            default: null
+        },
+        resetTokenExpire: {
+            type: Date,
+            default: null
         }
     },
     {

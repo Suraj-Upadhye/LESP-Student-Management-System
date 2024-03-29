@@ -1,10 +1,11 @@
+// user.controller.js
+
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
-import { Admin } from '../models/admin.models.js';
 
 
 const generateAccessAndRefereshTokens = asyncHandler(async (userId) => {
@@ -330,10 +331,38 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 });
 
-
+// chatgpt
 const updateRollNo = asyncHandler(async (req, res) => {
+    const { rollNo } = req.body;
 
-});         // only can change when hod allows to all future scope
+    // Check if the user is authorized to perform this action (e.g., HOD permission)
+    // You need to implement your authorization logic here
+
+    // Example: Assuming only HODs can update roll numbers
+    if (req.user.role !== 'HOD') {
+        throw new ApiError(403, 'You are not authorized to perform this action');
+    }
+
+    // Check if the roll number is provided in the request body
+    if (!rollNo) {
+        throw new ApiError(400, 'Roll number is required');
+    }
+
+    // Update the roll number for the current user
+    const user = await User.findByIdAndUpdate(
+        req.user._id, // Assuming you have the user ID in the request object
+        { $set: { rollNo: rollNo } },
+        { new: true }
+    );
+
+    if (!user) {
+        throw new ApiError(404, 'User not found');
+    }
+
+    // Send a success response
+    res.status(200).json({ success: true, message: 'Roll number updated successfully', data: user });
+});
+         // only can change when hod allows to all future scope
 
 
 // bug in update user profile photo
@@ -371,131 +400,103 @@ console.log(profilePhotoLocalPath)
     )
 })
 
+// chatgpt
+const forgetPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
 
-const forgetPassword = asyncHandler( async( req, res) =>{
-
-    const  resetToken = crypto.randomBytes(32).toString('hex');
-    
-    let user = await User.findOne({email : req.body.email});
-    if(!user){
-        throw new ApiError(400,"Email does not exist");
+    // Validation: Check if email is provided
+    if (!email) {
+        throw new ApiError(400, 'Email is required');
     }
 
-    const expireTime = Date.now() + 10*60;   //expires in 10 mins from now
-    user.resetToken = resetToken ;
-    user.resetTokenExpire= expireTime ;
+    // Check if user exists with the provided email
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new ApiError(404, 'User with this email does not exist');
+    }
+
+    // Generate reset token and expiration time
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    // Update user document with reset token and expiration time
+    user.resetToken = resetToken;
+    user.resetTokenExpire = resetTokenExpire;
     await user.save();
 
-    const url = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
+    // Construct the reset password URL
+    const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/users/reset-password/${resetToken}`;
 
-    const message = `Follow this link to reset your password ${url}`;
+    // Send reset password instructions to the user's email
+    const message = `Please click on the following link to reset your password: ${resetPasswordUrl}`;
+    // You need to implement your email sending logic here
 
-    try{
-       await emailService.sendEmail(req.body.email ,message);
-       res.status(200).json(
-           new ApiResponse(200,'Email has been sent',"Please check your email id for further instructions")
-       );
-    }catch(error){
-        console.log(`Error occurred while sending Email`, error);
-        user.resetToken = undefined;
-        user.resetTokenExpire=undefined;
-        await user.save();
-    }
-
+    res.status(200).json({ success: true, message: 'Reset password instructions sent to your email' });
 });
 
 
-const resetPassword = asyncHandler(async (req,res)=>{
+// chatgpt
+const resetPassword = asyncHandler(async (req, res) => {
+    const { resetToken, password, confirmPassword } = req.body;
 
-    const  {resetToken, password, confirmPassword} = req.body;
-    if(password !== confirmPassword )
-    {
-         throw new ApiError(400,"Passwords do not match");
+    // Validation: Check if reset token, password, and confirmPassword are provided
+    if (!resetToken || !password || !confirmPassword) {
+        throw new ApiError(400, 'Reset token, password, and confirmPassword are required');
     }
 
-    const user =await User.findOneAndUpdate(
-                            {resetToken:resetToken},
-                            {password:password, 
-                             resetToken:undefined, 
-                             resetTokenExpire:undefined, 
-                             role:"user"},
-                            {new:true}
-                          ).select("-resetToken -resetTokenExpire -__v");
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        throw new ApiError(400, 'Passwords do not match');
+    }
 
-   // Saving the updated user document in the database
+    // Find user by reset token and check if it's valid
+    const user = await User.findOne({ resetToken, resetTokenExpire: { $gt: Date.now() } });
+    if (!user) {
+        throw new ApiError(400, 'Invalid or expired reset token');
+    }
+
+    // Reset user's password and clear reset token
+    user.password = password;
+    user.resetToken = undefined;
+    user.resetTokenExpire = undefined;
     await user.save();
-    
-    sendTokenResponse(user,200, "Password reset successfully",res);
+
+    // Send response indicating successful password reset
+    res.status(200).json({ success: true, message: 'Password reset successfully' });
 });
+
 
 //   name profile photo email 
-const getCurrentUserEssentials = asyncHandler(async (req,res)=>{
+// chatgpt
+const getCurrentUserEssentials = asyncHandler(async (req, res) => {
+    try {
+        // Assuming req.user contains the current user's details
+        const user = req.user;
 
-    const  user = await User.findById(req.user.id).select("name profilePhoto email");
+        // Extracting essential user details
+        const essentials = {
+            name: `${user.firstName} ${user.middleName} ${user.lastName}`,
+            profilePhoto: user.profilePhoto,
+            email: user.email
+        };
 
-    res.json({
-       success: true,
-       data : user
-    });
-
+        res.status(200).json({
+            success: true,
+            data: essentials
+        });
+    } catch (error) {
+        // Handle any errors
+        console.error("Error fetching current user essentials:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
 });
 
 
 
 const getAdminProfile = asyncHandler( async( req, res) =>{
-
-    const {adminCode} = req.params
-
-    if( !adminCode?.trim()){
-        throw new ApiError(400,"Admin code is missing");
-    }
-
-    const admin = await Admin.aggregate([
-        {
-            $match:{
-                adminCode: adminCode
-            }
-        },
-        {
-            $lookup:{
-                from: "",
-                localField: "",
-                foreignField: "",
-                as: "teachers"
-            }
-        },
-        {
-            $lookup:{
-                from: "",
-                localField: "",
-                foreignField: "",
-                as: ""
-            }
-        },
-        {
-            $addFields: {
-                teachersCount: {
-                    $size: "$teachers"
-                },
-
-            }
-        },
-        {
-
-        }
-    ])
-
-
-    // console.log(getAdminrProfile)
-    if(!getAdminProfile?.length){
-        throw new ApiError(404, "Admin does not exist")
-    }
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(200, getAdminrProfile,  'Admin profile fetched successfully')
-    )
 
 });
 

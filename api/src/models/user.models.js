@@ -1,4 +1,5 @@
-// models/student.js
+// user.models.js
+
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
@@ -94,9 +95,6 @@ const userSchema = new Schema(
             trim: true,
             index: true
         },
-        otp: {
-            type: String,
-        },
         password: {
             type: String,
             required: [true, 'Password is required']
@@ -118,6 +116,14 @@ const userSchema = new Schema(
             type: String,
             enum: ['Student'],
             default: "Student"
+        },
+        resetToken: {
+            type: String,
+            default: null
+        },
+        resetTokenExpire: {
+            type: Date,
+            default: null
         }
     },
     {

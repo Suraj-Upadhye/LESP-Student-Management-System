@@ -1,3 +1,5 @@
+// subjects.controller.js
+
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -33,6 +35,7 @@ const getSubjectListBy = asyncHandler(async (req, res) => {
 const getSubjectSwitchOptionList = asyncHandler( async(req, res)=>{
 
     // returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
+
 })
 
 export {
