@@ -15,7 +15,7 @@ const otpSchema = new Schema(
         expiresAt: {
             type: Date,
             required: true
-        }, // When the OTP will be invalidated (24 hours)
+        }, // When the OTP will be invalidated (10 minutes)
         used: {
             type: Boolean,
             required: true
