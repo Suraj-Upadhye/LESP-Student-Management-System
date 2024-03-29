@@ -7,22 +7,27 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
 
+// chatgpt
 const generateAccessAndRefereshTokens = asyncHandler(async (req, res) => {
+    try {
+        const admin = await Admin.findById(userId);
+        const accessToken = admin.generateAccessToken();
+        const refreshToken = admin.generateRefreshToken();
 
-})
+        admin.refreshToken = refreshToken;
+        await admin.save({ validateBeforeSave: false });
 
+        return { accessToken, refreshToken };
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating refresh and access tokens");
+    }
+});
+
+// chatgpt
 const registerAdmin = asyncHandler(async (req, res) => {
-
     const {
-        // Personal Details :-
         firstName, middleName, lastName, gender, address, pincode, qualification, teachingExperience,
-
-        // profilePhoto,
-
-        // Academic Details :-
-        year, branch, division, enrollmentNo, rollNo,
-
-        // Security Details :-
+        year, branch, division, enrollmentNo, adminCode,
         mobileNumber, email, otp, password
     } = req.body;
 
@@ -30,99 +35,186 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
     if (
         [firstName, middleName, lastName, gender,
-            year, branch, division, enrollmentNo, rollNo,
-            studentMobileNumber, email, otp, password
-        ].some((field) =>
-            field?.trim() === "")
+        year, branch, division, enrollmentNo, adminCode,
+        mobileNumber, email, otp, password].some(field => !field?.trim())
     ) {
-        throw new ApiError(400, "All fields are required")
+        throw new ApiError(400, "All fields are required");
     }
 
-    const existedUser = await Admin.findOne({
-        $or: [{ email }, { adminCode }]
-    })
+    const existedAdmin = await Admin.findOne({ $or: [{ email }, { adminCode }] });
 
     if (existedAdmin) {
-        throw new ApiError(409, "User with email and rollNo already exists.")
+        throw new ApiError(409, "Admin with email or adminCode already exists.");
     }
 
-
-    // console.log(req.files);
-
-    // const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
+    let profilePhoto = "";
     let profilePhotoLocalPath;
+
     if (req.files && Array.isArray(req.files.profilePhoto) && req.files.profilePhoto.length > 0) {
-        profilePhotoLocalPath = req.files.profilePhoto[0].path
+        profilePhotoLocalPath = req.files.profilePhoto[0].path;
+        profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
+
+        if (!profilePhoto) {
+            throw new ApiError(400, "Profile photo is not uploaded properly.");
+        }
     }
 
-    console.log("local path :", profilePhotoLocalPath);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (!profilePhotoLocalPath) {
-        const profilePhoto = ""
+    const admin = await Admin.create({
+        firstName, middleName, lastName, gender, address, pincode, qualification, teachingExperience,
+        year, branch, division, enrollmentNo, adminCode,
+        mobileNumber, email: email.toLowerCase(), otp, password: hashedPassword,
+        profilePhoto: profilePhoto?.url || ""
+    });
+
+    const createdAdmin = await Admin.findById(admin._id).select("-password -refreshToken");
+
+    if (!createdAdmin) {
+        throw new ApiError(500, "Something went wrong while registering the admin");
     }
-    const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath)
 
+    return res.status(201).json(new ApiResponse(200, createdAdmin, "Admin registered successfully"));
+});
 
-    console.log("cloudinary obj :", profilePhoto);
+// chatgpt
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
+
+    if (!incomingRefreshToken) {
+        throw new ApiError(401, "Unauthorized request");
+    }
+
+    try {
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        );
+
+        const admin = await Admin.findById(decodedToken._id);
+
+        if (!admin) {
+            throw new ApiError(401, "Invalid refresh token");
+        }
+
+        if (incomingRefreshToken !== admin.refreshToken) {
+            throw new ApiError(401, "Refresh token is expired or used");
+        }
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        };
+
+        const accessToken = admin.generateAccessToken();
+        const refreshToken = admin.generateRefreshToken();
+
+        admin.refreshToken = refreshToken;
+        await admin.save({ validateBeforeSave: false });
+
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(new ApiResponse(200, { accessToken, refreshToken }, "Access token refreshed"));
+    } catch (error) {
+        throw new ApiError(401, error.message || "Invalid refresh token");
+    }
+});
+
+// chatgpt
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    const admin = await Admin.findById(req.user._id);
+    const isPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
+
+    if (!isPasswordCorrect) {
+        throw new ApiError(400, "Invalid old password");
+    }
+
+    admin.password = newPassword;
+    await admin.save({ validateBeforeSave: false });
+
+    return res.status(200).json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
+// chatgpt
+const getCurrentAdmin = asyncHandler(async (req, res) => {
+    const admin = await Admin.findById(req.user._id).select("-password -refreshToken");
+
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, admin, "Admin fetched successfully"));
+});
+
+// chatgpt
+const updateAccountDetails = asyncHandler(async (req, res) => {
+    const {
+        firstName, middleName, lastName, gender, address, pincode, qualification, teachingExperience,
+        mobileNumber, email
+    } = req.body;
+
+    const admin = await Admin.findById(req.user._id);
+
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
+
+    // Update the admin's details
+    admin.firstName = firstName || admin.firstName;
+    admin.middleName = middleName || admin.middleName;
+    admin.lastName = lastName || admin.lastName;
+    admin.gender = gender || admin.gender;
+    admin.address = address || admin.address;
+    admin.pincode = pincode || admin.pincode;
+    admin.qualification = qualification || admin.qualification;
+    admin.teachingExperience = teachingExperience || admin.teachingExperience;
+    admin.mobileNumber = mobileNumber || admin.mobileNumber;
+    admin.email = email || admin.email;
+
+    await admin.save();
+
+    return res.status(200).json(new ApiResponse(200, admin, "Account details updated successfully"));
+});
+
+// chatgpt
+const updateAdminProfilePhoto = asyncHandler(async (req, res) => {
+    const admin = await Admin.findById(req.user._id);
+
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
+
+    // Check if there is a profile photo file in the request
+    if (!req.file) {
+        throw new ApiError(400, "No file uploaded");
+    }
+
+    const profilePhotoLocalPath = req.file.path;
+
+    // Upload the profile photo to Cloudinary
+    const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
 
     if (!profilePhoto) {
-        throw new ApiError(400, "Profile photo is not uploaded properly.");
+        throw new ApiError(500, "Failed to upload profile photo");
     }
 
-    const user = await User.create({
-        firstName,
-        middleName,
-        lastName,
-        gender,
-        address,
-        pincode,
-        profilePhoto: profilePhoto?.url || "",
-        year,
-        branch,
-        division,
-        enrollmentNo,
-        rollNo,
-        mobileNumber,
-        email: email.toLowerCase(),
-        otp,
-        password
-    })
+    // Update the admin's profile photo URL
+    admin.profilePhoto = {
+        url: profilePhoto.url,
+        public_id: profilePhoto.public_id
+    };
 
-    const createAdmin = await User.findById(user._id).select(
-        "-password -refreshToken"
-    )
+    await admin.save();
 
-    if (!createAdmin) {
-        throw new ApiError(500, "Something went wrong while registering the user");
-    }
-
-    return res.status(201).json(
-        new ApiResponse(200, createAdmin, "Admin registered successfully")
-    )
+    // Return the updated admin document
+    return res.status(200).json(new ApiResponse(200, admin, "Admin profile photo updated successfully"));
+});
 
 
-
-})
-
-const refreshAccessToken = asyncHandler(async (req, res) => {
-
-})
-
-const changeCurrentPassword = asyncHandler(async (req, res) => {
-
-})
-
-const getCurrentAdmin = asyncHandler(async (req, res) => {
-
-})
-
-const updateAccountDetails = asyncHandler(async (req, res) => {
-
-})
-
-const updateAdminProfilePhoto = asyncHandler(async (req, res) => {
-
-})
 
 // chatgpt
 const updateAdminCode = asyncHandler(async (req, res) => {
@@ -254,6 +346,38 @@ const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
 
 
 // high security
+
+// chatgpt
+const newStudentList = asyncHandler(async (req, res) => {
+    try {
+        // Assuming you have a method to retrieve a list of new students awaiting approval
+        const students = await getNewStudents();
+
+        // Assuming you have a method to format the student data for response
+        const formattedStudents = formatStudentList(students);
+
+        return res.status(200).json(new ApiResponse(200, formattedStudents, "New student list retrieved successfully"));
+    } catch (error) {
+        throw new ApiError(500, "Error fetching new student list");
+    }
+});
+
+// chatgpt
+const newTeacherList = asyncHandler(async (req, res) => {
+    try {
+        // Assuming you have a method to retrieve a list of new teachers awaiting approval
+        const teachers = await getNewTeachers();
+
+        // Assuming you have a method to format the teacher data for response
+        const formattedTeachers = formatTeacherList(teachers);
+
+        return res.status(200).json(new ApiResponse(200, formattedTeachers, "New teacher list retrieved successfully"));
+    } catch (error) {
+        throw new ApiError(500, "Error fetching new teacher list");
+    }
+});
+
+
 // chatgpt
 const acceptNewStudent = asyncHandler(async (req, res) => {
     try {
@@ -344,12 +468,7 @@ const classTeacherAllocation = asyncHandler(async (req, res) => {
 });
 
 // chatgpt
-// const allowToChangeAcademicDetails = asyncHandler(async (req, res) => {
-
-//     // allow user to change their academic details if the academic year is completed
-
-// })
-
+// allow user to change their academic details if the academic year is completed
 const allowToChangeAcademicDetails = asyncHandler(async (req, res) => {
     try {
         // Assuming the user's ID is obtained from the request
@@ -376,13 +495,15 @@ export {
     changeCurrentPassword,
     getCurrentAdmin,
     updateAccountDetails,
-    updateAdminCode,    
-    getAdminCode,     
+    updateAdminCode,
+    getAdminCode,
     updateAdminProfilePhoto,
-    forgetPassword, 
+    forgetPassword,
     resetPassword,
     getCurrentAdminEssentials,
-    
+
+    newStudentList,
+    newTeacherList,
     acceptNewStudent,
     acceptNewTeacher,
     studentBatchAllocation,

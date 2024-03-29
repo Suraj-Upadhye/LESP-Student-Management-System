@@ -124,6 +124,11 @@ const userSchema = new Schema(
         resetTokenExpire: {
             type: Date,
             default: null
+        },
+        isAcademicYearCompleted:{
+            type: String,
+            required: false,
+            default: false
         }
     },
     {
