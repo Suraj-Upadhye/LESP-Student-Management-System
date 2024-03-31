@@ -177,6 +177,11 @@ const getAttendanceAllSubjectsSingle = asyncHandler(async (req, res) => {
 });
 
 
+const subjectSelection = asyncHandler(async (req, res) => {
+
+})
+
+
 
 export {
     addAttendanceSubjectWiseAllStudents,
@@ -185,5 +190,5 @@ export {
     deleteAttendanceBySubjectAllStudents,
     getAttendanceSubjectWiseSingle,
     getAttendanceAllSubjectsSingle,
-    
+
 }

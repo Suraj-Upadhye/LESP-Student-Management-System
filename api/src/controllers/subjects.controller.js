@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Subject } from "../models/subjects.models.js";
 import { Admin } from "../models/admin.models.js";
 
-// chatgpt
+// Done
 const addSubject = asyncHandler(async (req, res) => {
     try {
         // Extract subject details from the request body
@@ -33,8 +33,8 @@ const addSubject = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
-const getSubject = asyncHandler(async (req, res) => {
+// Done
+const getAllSubject = asyncHandler(async (req, res) => {
     try {
         // Retrieve subject details from the database
         const subjects = await Subject.find();
@@ -47,7 +47,7 @@ const getSubject = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
+
 const updateSubject = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params; // Extract subject id from request parameters
@@ -73,7 +73,7 @@ const updateSubject = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
+
 const deleteSubject = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params; // Extract subject id from request parameters
@@ -95,10 +95,80 @@ const deleteSubject = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
+// Done
+// by year, semester, branch, subjectname find out subjectid
+const getSubjectIDByOther = asyncHandler(async (req, res) => {
+    const { year, semester, branch, subjectName } = req.body;
+
+    // Step 1: Find the subject document
+    const subject = await Subject.findOne({
+        year: year,
+        semester: semester,
+        branch: branch,
+        subject: subjectName
+    });
+
+    if (!subject) {
+        return res.status(404).json({ success: false, message: 'Subject not found' });
+    }
+
+    // Step 2: Return the ID of the found subject
+    res.status(200).json({ success: true, subjectID: subject._id });
+});
+
+
+// Done
+const getSubjectDetailsBySubjectID = asyncHandler(async (req, res) => {
+    const subjectID = req.body.subjectID;
+
+    try {
+        // Step 1: Find the subject document by ID
+        const subject = await Subject.findById(subjectID);
+
+        if (!subject) {
+            return res.status(404).json({ success: false, message: 'Subject not found' });
+        }
+
+        // Step 2: Return the details of the found subject
+        res.status(200).json({ success: true, subject: subject });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Done
+// step 1 :
+const getSemByYearBranch = asyncHandler(async (req, res) => {
+    const { year, branch } = req.body;
+
+    try {
+        // Use aggregation pipeline to group by semester
+        const result = await Subject.aggregate([
+            { $match: { year, branch } }, // Match documents with the specified year and branch
+            { $group: { _id: "$semester" } }, // Group by semester
+            { $sort: { _id: 1 } } // Sort the result by semester in ascending order
+        ]);
+
+        // Extract the semesters from the result
+        const semesters = result.map(item => item._id);
+
+        // Return the list of semesters
+        res.status(200).json({ success: true, semesters });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+
+
+// Done
+// step 2:
 // year, sem, branch
-// return subject list array of only provided data
-const getSubjectListBy = asyncHandler(async (req, res) => {
+// return subject list array of of that year sem branch
+const getSubjectListByYSB = asyncHandler(async (req, res) => {
     try {
         const { year, semester, branch } = req.body; // Extract query parameters
         console.log(year, semester, branch)
@@ -120,6 +190,51 @@ const getSubjectListBy = asyncHandler(async (req, res) => {
 });
 
 
+// Done
+// step 3 :
+const getModeListAndBatchListByYSBSub = asyncHandler(async (req, res) => {
+    const { year, semester, branch, subject } = req.body;
+
+    try {
+        // Aggregation pipeline to match the subject based on provided parameters
+        const pipeline = [
+            {
+                $match: {
+                    year,
+                    semester: parseInt(semester), // Convert semester to integer
+                    branch,
+                    subject
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    mode: 1,
+                    applicableBatchNames: 1
+                }
+            }
+        ];
+
+        // Perform aggregation
+        const result = await Subject.aggregate(pipeline);
+
+        if (result.length === 0) {
+            return res.status(404).json({ success: false, message: 'Subject not found' });
+        }
+
+        // Return mode list and batch list in the response
+        const { mode, applicableBatchNames } = result[0];
+        res.status(200).json({ success: true, mode, applicableBatchNames });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+
+
+// pending
 // req.body contains Admin ID 
 // fetch the working details array of Admin and list all subjects from it
 const getSubjectListByAdminID = asyncHandler(async (req, res) => {
@@ -146,49 +261,6 @@ const getSubjectListByAdminID = asyncHandler(async (req, res) => {
 });
 
 
-
-
-// by year, semester, branch, subjectname find out subjectid
-const getSubjectIDByOther = asyncHandler(async (req, res) => {
-    const { year, semester, branch, subjectName } = req.body;
-
-    // Step 1: Find the subject document
-    const subject = await Subject.findOne({
-        year: year,
-        semester: semester,
-        branch: branch,
-        subject: subjectName
-    });
-
-    if (!subject) {
-        return res.status(404).json({ success: false, message: 'Subject not found' });
-    }
-
-    // Step 2: Return the ID of the found subject
-    res.status(200).json({ success: true, subjectID: subject._id });
-});
-
-const getSubjectDetailsBySubjectID = asyncHandler(async (req, res) => {
-    const subjectID = req.body.subjectID;
-
-    try {
-        // Step 1: Find the subject document by ID
-        const subject = await Subject.findById(subjectID);
-
-        if (!subject) {
-            return res.status(404).json({ success: false, message: 'Subject not found' });
-        }
-
-        // Step 2: Return the details of the found subject
-        res.status(200).json({ success: true, subject: subject });
-    } catch (error) {
-        // Handle errors
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-
-// chatgpt
 // returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
 const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
     try {
@@ -212,15 +284,27 @@ const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
 });
 
 
+// for resource sharing
+const getAdminsAllSubjectList = asyncHandler( async(req, res)=>{
+
+})
+
+
 export {
     addSubject,
-    getSubject,
+    getAllSubject,
     updateSubject,
     deleteSubject,
-    getSubjectListBy,
     getSubjectListByAdminID,
     getSubjectIDByOther,
     getSubjectDetailsBySubjectID,
+    
+    getSemByYearBranch,
+    getSubjectListByYSB,
+    getModeListAndBatchListByYSBSub,
+
     getSubjectSwitchOptionList,
 
+
+    getAdminsAllSubjectList,
 }

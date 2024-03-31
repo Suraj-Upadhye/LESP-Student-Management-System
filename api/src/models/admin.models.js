@@ -95,12 +95,15 @@ const adminSchema = new Schema(
                         type: String,
                         enum : ["Div1", "Div2", "None"],
                         reqired: [true, 'division is required'],
-                        default: "None"
                     },
-                    // batch: {
-                    //     type: String,
-                    //     required: [true, 'Batch is required']
-                    // }
+                    mode: {
+                        type: String,
+                        required: [true, 'mode of session is required']
+                    },
+                    batch: {
+                        type: String,
+                        required: [true, 'Batch is required']
+                    }
                 }
             ],
         classTeacher: {
