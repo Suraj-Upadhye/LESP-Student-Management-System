@@ -26,22 +26,24 @@ const generateAccessAndRefereshTokens = asyncHandler(async (req, res) => {
 // chatgpt
 const registerAdmin = asyncHandler(async (req, res) => {
     const {
-        firstName, middleName, lastName, gender, address, pincode, qualification, teachingExperience,
-        year, branch, division, enrollmentNo, adminCode,
-        mobileNumber, email, otp, password
+        firstName, middleName, lastName, gender, qualification, teachingExperience,
+        mobileNumber, email, password, workingDetails, role
     } = req.body;
 
-    console.log("Email :", email)
+    console.log("Email :", email);
+    console.log(firstName, middleName, lastName, gender, qualification, teachingExperience, mobileNumber, email, password, role);
+
+    console.log("Working details:", workingDetails);
 
     if (
         [firstName, middleName, lastName, gender,
-        year, branch, division, enrollmentNo, adminCode,
-        mobileNumber, email, otp, password].some(field => !field?.trim())
+            qualification, teachingExperience,
+            mobileNumber, email, password, role].some(field => !field?.trim())
     ) {
         throw new ApiError(400, "All fields are required");
     }
 
-    const existedAdmin = await Admin.findOne({ $or: [{ email }, { adminCode }] });
+    const existedAdmin = await Admin.findOne({ email });
 
     if (existedAdmin) {
         throw new ApiError(409, "Admin with email or adminCode already exists.");
@@ -59,13 +61,12 @@ const registerAdmin = asyncHandler(async (req, res) => {
         }
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const admin = await Admin.create({
-        firstName, middleName, lastName, gender, address, pincode, qualification, teachingExperience,
-        year, branch, division, enrollmentNo, adminCode,
-        mobileNumber, email: email.toLowerCase(), otp, password: hashedPassword,
-        profilePhoto: profilePhoto?.url || ""
+        firstName, middleName, lastName, gender, qualification, teachingExperience,
+        mobileNumber, email: email.toLowerCase(), password,
+        profilePhoto: profilePhoto?.url || "",
+        workingDetails,
+        role
     });
 
     const createdAdmin = await Admin.findById(admin._id).select("-password -refreshToken");
@@ -76,6 +77,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
     return res.status(201).json(new ApiResponse(200, createdAdmin, "Admin registered successfully"));
 });
+
 
 // chatgpt
 const refreshAccessToken = asyncHandler(async (req, res) => {

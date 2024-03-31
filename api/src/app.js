@@ -19,11 +19,15 @@ app.use(cookieParser());
 // routes import 
 import userRouter from './routes/user.routes.js';
 import adminRouter from './routes/admin.routes.js';
+import authRouter from './routes/auth.routes.js';
+import subjectRouter from './routes/subject.routes.js';
 
 
 // routes declaration
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/admin", adminRouter)
+app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/subject", subjectRouter)
 
 
 // http://localhost:8000/api/v1/users/register

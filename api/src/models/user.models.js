@@ -34,12 +34,16 @@ const userSchema = new Schema(
             required: false,
             default: ""
         },
+        // profilePhoto: {
+        //     type: {
+        //         url: String,
+        //         public_id: String
+        //     },       //cloudinary url
+        //     required: false,
+        // },
         profilePhoto: {
-            type: {
-                url: String,
-                public_id: String
-            },       //cloudinary url
-            required: false,
+            type: String,
+            required: false
         },
 
         // academicDetails :-

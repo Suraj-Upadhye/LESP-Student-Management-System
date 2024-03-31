@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Subject } from "../models/subjects.models.js";
+import { Admin } from "../models/admin.models.js";
 
 // chatgpt
 const addSubject = asyncHandler(async (req, res) => {
@@ -96,24 +97,92 @@ const deleteSubject = asyncHandler(async (req, res) => {
 
 // chatgpt
 // year, sem, branch
-// return subject list array
+// return subject list array of only provided data
 const getSubjectListBy = asyncHandler(async (req, res) => {
     try {
-        const { year, sem, branch } = req.query; // Extract query parameters
+        const { year, semester, branch } = req.body; // Extract query parameters
+        console.log(year, semester, branch)
 
-        // Build query object based on provided parameters
-        const query = {};
-        if (year) query.year = year;
-        if (sem) query.semester = sem;
-        if (branch) query.branch = branch;
+        // Ensure that all required parameters are provided
+        if (!year || !semester || !branch) {
+            return res.status(400).json({ success: false, error: 'Missing required query parameters' });
+        }
 
-        // Find subjects based on the query object
-        const subjects = await Subject.find(query);
+        // Find subjects based on the provided year, sem, and branch
+        const subjects = await Subject.find({ year, semester, branch });
 
         // Return the list of subjects
         res.status(200).json({ success: true, data: subjects });
     } catch (error) {
         // Handle errors and send appropriate response
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+// req.body contains Admin ID 
+// fetch the working details array of Admin and list all subjects from it
+const getSubjectListByAdminID = asyncHandler(async (req, res) => {
+    const { adminID } = req.body;
+
+    // Step 1: Find the admin document
+    const admin = await Admin.findById(adminID).select('workingDetails').populate('workingDetails.subject', 'subject');
+
+    if (!admin) {
+        return res.status(404).json({ success: false, message: 'Admin not found' });
+    }
+
+    // Step 2: Extract subject IDs from workingDetails
+    const subjectIDs = admin.workingDetails.map(detail => detail.subject._id);
+
+    // Step 3: Fetch subject details from the database
+    const subjects = await Subject.find({ _id: { $in: subjectIDs } });
+
+    // Step 4: Extract subject names from the fetched subjects
+    const subjectNames = subjects.map(subject => subject.subject);
+
+    // Step 5: Return the list of subject names
+    res.status(200).json({ success: true, subjects: subjectNames });
+});
+
+
+
+
+// by year, semester, branch, subjectname find out subjectid
+const getSubjectIDByOther = asyncHandler(async (req, res) => {
+    const { year, semester, branch, subjectName } = req.body;
+
+    // Step 1: Find the subject document
+    const subject = await Subject.findOne({
+        year: year,
+        semester: semester,
+        branch: branch,
+        subject: subjectName
+    });
+
+    if (!subject) {
+        return res.status(404).json({ success: false, message: 'Subject not found' });
+    }
+
+    // Step 2: Return the ID of the found subject
+    res.status(200).json({ success: true, subjectID: subject._id });
+});
+
+const getSubjectDetailsBySubjectID = asyncHandler(async (req, res) => {
+    const subjectID = req.body.subjectID;
+
+    try {
+        // Step 1: Find the subject document by ID
+        const subject = await Subject.findById(subjectID);
+
+        if (!subject) {
+            return res.status(404).json({ success: false, message: 'Subject not found' });
+        }
+
+        // Step 2: Return the details of the found subject
+        res.status(200).json({ success: true, subject: subject });
+    } catch (error) {
+        // Handle errors
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -149,6 +218,9 @@ export {
     updateSubject,
     deleteSubject,
     getSubjectListBy,
+    getSubjectListByAdminID,
+    getSubjectIDByOther,
+    getSubjectDetailsBySubjectID,
     getSubjectSwitchOptionList,
 
 }

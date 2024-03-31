@@ -5,7 +5,7 @@ import mongoose, { Schema } from "mongoose";
 const SubjectsSchema = new Schema(
     {
         year: {
-            type: Number,
+            type: String,
             required: [true, 'Year field is required']
         },
         branch: {
@@ -21,15 +21,24 @@ const SubjectsSchema = new Schema(
             required: [true, 'Subject field is required'],
         },
         mode: {
-            type: Array,
-            enum: [
-                ["Lecture", "Tutorial"],
-                ["Lecture", "Practical"],
-                ["N/A"],
-                ["Lecture", "Tutorial", "Practical"],
-                ["Lecture"],
-                ["Practical"]
-            ],
+            type: [[String]],
+            validate: {
+                validator: function(value) {
+                    const validModes = [
+                        ["Lecture", "Tutorial"],
+                        ["Lecture", "Practical"],
+                        ["N/A"],
+                        ["Lecture", "Tutorial", "Practical"],
+                        ["Lecture"],
+                        ["Practical"],
+                        ["Tutorial"]
+                    ];
+
+                    // Check if each sub-array in the value matches one of the valid modes
+                    return value.every(subArray => validModes.some(validMode => JSON.stringify(subArray) === JSON.stringify(validMode)));
+                },
+                message: props => `${props.value} is not a valid mode combination`
+            },
             required: [true, 'Mode of teaching field is required']
         },
         applicableBatchNames: {

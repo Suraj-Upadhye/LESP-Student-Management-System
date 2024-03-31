@@ -3,6 +3,8 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { User } from "../models/user.models.js";
+import { Admin } from "../models/admin.models.js";
 
 // chatgpt
 const login = asyncHandler(async (req, res) => {
@@ -14,6 +16,7 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Email and password are required');
     }
 
+    console.log("here")
     // Check if the user exists in the database
     const user = await User.findOne({ email });
 
@@ -23,8 +26,10 @@ const login = asyncHandler(async (req, res) => {
     if (!user && !admin) {
         throw new ApiError(401, 'Invalid email or password');
     }
+    console.log("here1")
 
     if (user) {
+        console.log(user)
         // If user is found, check if the provided password matches the hashed password in the database
         const isPasswordCorrect = await user.isPasswordCorrect(password);
 
@@ -58,6 +63,7 @@ const login = asyncHandler(async (req, res) => {
     }
 
     if (admin) {
+        console.log(admin)
         // If admin is found, check if the provided password matches the hashed password in the database
         const isPasswordCorrect = await admin.isPasswordCorrect(password);
 
@@ -145,6 +151,5 @@ const getEmailPassword = asyncHandler(async (req, res) => {
 export {
     login,
     logout,
-    getEmailPassword,
-    
+    // getEmailPassword,
 }

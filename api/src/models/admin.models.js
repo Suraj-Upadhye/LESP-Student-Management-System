@@ -38,19 +38,23 @@ const adminSchema = new Schema(
         teachingExperience: {
             type: Number,
             required: [true, 'teaching Experience is required'],
-            default: 0
         },
         adminCode: {
             type: Number,
-            required: [true, "admin code is required"],
-            unique: true
+            required: false
+            // required: [true, "admin code is required"],
+            // unique: true
         },
-        profilePhoto: {
-            type: {
-                url: String,
-                public_id: String
-            },      //cloudinary url
-            required: false,
+        // profilePhoto: {
+        //     type: {
+        //         url: String,
+        //         public_id: String
+        //     },      //cloudinary url
+        //     required: false,
+        // },
+        profilePhoto:{
+            type: String,
+            required: false
         },
         // securityDetails:-
         mobileNumber: {
