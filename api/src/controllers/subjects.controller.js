@@ -47,7 +47,7 @@ const getAllSubject = asyncHandler(async (req, res) => {
     }
 });
 
-
+// 
 const updateSubject = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params; // Extract subject id from request parameters
@@ -73,7 +73,7 @@ const updateSubject = asyncHandler(async (req, res) => {
     }
 });
 
-
+// 
 const deleteSubject = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params; // Extract subject id from request parameters
@@ -93,6 +93,7 @@ const deleteSubject = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
+
 
 
 // Done
@@ -116,7 +117,6 @@ const getSubjectIDByOther = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, subjectID: subject._id });
 });
 
-
 // Done
 const getSubjectDetailsBySubjectID = asyncHandler(async (req, res) => {
     const subjectID = req.body.subjectID;
@@ -136,6 +136,7 @@ const getSubjectDetailsBySubjectID = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
+
 
 // Done
 // step 1 :
@@ -161,9 +162,6 @@ const getSemByYearBranch = asyncHandler(async (req, res) => {
     }
 });
 
-
-
-
 // Done
 // step 2:
 // year, sem, branch
@@ -188,7 +186,6 @@ const getSubjectListByYSB = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
-
 
 // Done
 // step 3 :
@@ -232,8 +229,6 @@ const getModeListAndBatchListByYSBSub = asyncHandler(async (req, res) => {
 });
 
 
-
-
 // pending
 // req.body contains Admin ID 
 // fetch the working details array of Admin and list all subjects from it
@@ -260,7 +255,6 @@ const getSubjectListByAdminID = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, subjects: subjectNames });
 });
 
-
 // returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
 const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
     try {
@@ -283,7 +277,6 @@ const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
     }
 });
 
-
 // for resource sharing
 const getAdminsAllSubjectList = asyncHandler( async(req, res)=>{
 
@@ -295,7 +288,7 @@ export {
     getAllSubject,
     updateSubject,
     deleteSubject,
-    getSubjectListByAdminID,
+
     getSubjectIDByOther,
     getSubjectDetailsBySubjectID,
     
@@ -303,8 +296,7 @@ export {
     getSubjectListByYSB,
     getModeListAndBatchListByYSBSub,
 
+    getSubjectListByAdminID,
     getSubjectSwitchOptionList,
-
-
     getAdminsAllSubjectList,
 }

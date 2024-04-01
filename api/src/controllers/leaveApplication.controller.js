@@ -6,7 +6,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Leave } from '../models/leaveApplication.models.js';
 import { User } from '../models/user.models.js';
 
-// chatgpt
 const addLeaveApplication = asyncHandler(async (req, res) => {
     const { userId, adminId, startDate, endDate, reason, status } = req.body;
 
@@ -28,7 +27,6 @@ const addLeaveApplication = asyncHandler(async (req, res) => {
     });
 });
 
-// chatgpt
 const getLeaveApplication = asyncHandler(async (req, res) => {
     // Find all leave applications
     const leaveApplications = await Leave.find();
@@ -60,7 +58,6 @@ const getLeaveApplication = asyncHandler(async (req, res) => {
     });
 });
 
-// chatgpt
 const updateLeaveApplication = asyncHandler(async (req, res) => {
     // Extract leave application ID from request parameters
     const { id } = req.params;
@@ -84,7 +81,6 @@ const updateLeaveApplication = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
 const deleteLeaveApplication = asyncHandler(async (req, res) => {
     // Extract leave application ID from request parameters
     const { id } = req.params;
@@ -105,7 +101,6 @@ const deleteLeaveApplication = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
 const approveLeaveApplication = asyncHandler(async (req, res) => {
     // Extract leave application ID from request parameters
     const { id } = req.params;
@@ -127,7 +122,6 @@ const approveLeaveApplication = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
 const rejectLeaveApplication = asyncHandler(async (req, res) => {
     // Extract leave application ID from request parameters
     const { id } = req.params;
@@ -148,7 +142,6 @@ const rejectLeaveApplication = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
 const listPendingLeaveApplication = asyncHandler(async (req, res) => {
     try {
         // Find all pending leave applications
@@ -173,7 +166,6 @@ const listPendingLeaveApplication = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
 const listApprovedLeaveApplication = asyncHandler(async (req, res) => {
     try {
         // Find all approved leave applications

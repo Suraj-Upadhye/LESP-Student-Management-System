@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
 import { Admin } from "../models/admin.models.js";
 
-// chatgpt
+// Done
 const login = asyncHandler(async (req, res) => {
     // Extract email and password from request body
     const { email, password } = req.body;
@@ -98,7 +98,7 @@ const login = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
+
 const logout = asyncHandler(async (req, res) => {
     // Check if the user is logged in
     if (!req.user) {
@@ -122,7 +122,7 @@ const logout = asyncHandler(async (req, res) => {
     return res.status(200).json({ success: true, message: 'Logged out successfully' });
 });
 
-// chatgpt
+
 const getEmailPassword = asyncHandler(async (req, res) => {
     // Check if the user is logged in
     if (!req.user) {

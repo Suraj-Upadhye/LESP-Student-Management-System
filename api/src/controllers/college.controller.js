@@ -5,7 +5,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 
-// chatgpt
 const addcollegeNameFormatAttendance = asyncHandler(async (req, res) => {
     // Process the request body to extract attendance data and college name
     const { collegeName, attendanceData } = req.body;
@@ -25,7 +24,6 @@ const addcollegeNameFormatAttendance = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, formattedAttendanceData });
 });
 
-// chatgpt
 const addcollegeNameAndDescription = asyncHandler(async (req, res) => {
     // Extract collegeName and description from the request body
     const { collegeName, description } = req.body;
@@ -41,7 +39,6 @@ const addcollegeNameAndDescription = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, message: 'College name and description added successfully' });
 });
 
-// chatgpt
 const getcollegeNameFormatAttendance = asyncHandler(async (req, res) => {
     try {
         // Fetch attendance data from the database with college names
@@ -66,7 +63,6 @@ const getcollegeNameFormatAttendance = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
 const getcollegeNameAndDescription = asyncHandler(async (req, res) => {
     try {
         // Fetch college data from the database

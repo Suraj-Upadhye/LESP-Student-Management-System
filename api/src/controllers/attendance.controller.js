@@ -6,7 +6,6 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-// chatgpt
 const takeAttendanceEssentials = asyncHandler(async (req, res) => {
     // Extract teacher data from request body
     const { teacher } = req.body;
@@ -22,7 +21,6 @@ const takeAttendanceEssentials = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Attendance essentials received successfully" });
 });
 
-// chatgpt
 const addAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
     const { subject, date } = req.body;
 
@@ -56,7 +54,6 @@ const addAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
     );
 });
 
-// chatgpt
 const getAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
     const { mode, batch } = req.body;
 
@@ -82,7 +79,6 @@ const getAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
     );
 });
 
-// chatgpt
 const updateAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     // Extract necessary data from request body
     const { subject, date, attendanceData } = req.body;
@@ -108,7 +104,6 @@ const updateAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     );
 });
 
-// chatgpt
 const deleteAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     // Extract subject and date from request body
     const { subject, date } = req.body;
@@ -126,7 +121,6 @@ const deleteAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     );
 });
 
-// chatgpt
 const getAttendanceSubjectWiseSingle = asyncHandler(async (req, res) => {
     // Extract mode and batch from request body
     const { mode, batch } = req.body;
@@ -151,7 +145,6 @@ const getAttendanceSubjectWiseSingle = asyncHandler(async (req, res) => {
     res.status(200).json(attendanceRecords);
 });
 
-// chatgpt
 const getAttendanceAllSubjectsSingle = asyncHandler(async (req, res) => {
     // Extract mode and batch from request body
     const { mode, batch } = req.body;

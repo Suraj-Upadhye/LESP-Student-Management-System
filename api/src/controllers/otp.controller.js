@@ -4,7 +4,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-// chatgpt
 // create a random otp and store it in database with expiry of 10 minutes and with email
 // send the generated OTP to user's email id  using nodemailer or any other mailing service
 const createAndStoreOTP = asyncHandler(async (req, res) => {
@@ -38,7 +37,6 @@ const createAndStoreOTP = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
 // compare  the entered OTP with stored one in DB
 // If matched then proceed further otherwise show error message
 const verifyOTP = asyncHandler(async (req, res, next) => {
@@ -102,7 +100,7 @@ const verifyOTPAndEmail = asyncHandler(async (req, res) => {
 
 
 export {
-    createOTP,
+    createAndStoreOTP,
     verifyOTP,
     verifyOTPAndEmail,
 }

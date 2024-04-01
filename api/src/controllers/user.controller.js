@@ -331,7 +331,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 });
 
-// chatgpt
 const updateRollNo = asyncHandler(async (req, res) => {
     const { rollNo } = req.body;
 
@@ -400,7 +399,6 @@ console.log(profilePhotoLocalPath)
     )
 })
 
-// chatgpt
 const forgetPassword = asyncHandler(async (req, res) => {
     const { email } = req.body;
 
@@ -435,7 +433,6 @@ const forgetPassword = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
 const resetPassword = asyncHandler(async (req, res) => {
     const { resetToken, password, confirmPassword } = req.body;
 
@@ -467,7 +464,6 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 
 //   name profile photo email 
-// chatgpt
 const getCurrentUserEssentials = asyncHandler(async (req, res) => {
     try {
         // Assuming req.user contains the current user's details

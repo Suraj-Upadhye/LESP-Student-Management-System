@@ -25,11 +25,13 @@ const adminSchema = new Schema(
         },
         address: {
             type: String,
-            required: false
+            required: false,
+            default: "Not Provided"
         },
         pincode: {
             type: String,
             required: false,
+            default: "Not Provided"
         },
         qualification: {
             type: String,
@@ -97,11 +99,11 @@ const adminSchema = new Schema(
                         reqired: [true, 'division is required'],
                     },
                     mode: {
-                        type: String,
+                        type: [],
                         required: [true, 'mode of session is required']
                     },
                     batch: {
-                        type: String,
+                        type: [],
                         required: [true, 'Batch is required']
                     }
                 }

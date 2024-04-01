@@ -11,7 +11,6 @@ import { UnitTest } from '../models/unitTest.models.js';
 // @access  Public
 
 
-// chatgpt
 // in front end display changed ut marks fields (student name - rollno - marks (ut1, ut2))
 // subject wise adding ut1 and ut2
 
@@ -69,7 +68,6 @@ const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
 // subject wise ut1 and ut2 single user
 
 // return rollno, name, ut1 marks, ut2 marks, average, class ranking
@@ -103,7 +101,6 @@ const getUserMarksSubjectWise = asyncHandler(async (req, res) => {
 
 
 
-// chatgpt
 // All subjects marks ut1 and ut2 single user
 
 // return rollno, name, subjectname (ut2 marks, ut2 marks), average of all, class ranking
@@ -147,7 +144,6 @@ const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
 
 
 
-// chatgpt
 // subject wise ut1 and ut2
 
 // return rollno, name, ut1 marks, ut2 marks, average, class ranking
@@ -188,7 +184,6 @@ const getAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
 // All subjects marks ut1 and ut2
 
 // return rollno, name, subjectname (ut2 marks, ut2 marks), average of all, class ranking
@@ -232,7 +227,6 @@ const getAllUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
 // deletion of ut1 or ut2 of that subject
 
 // return success

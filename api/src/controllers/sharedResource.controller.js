@@ -5,7 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { SharedResource } from "../models/sharedResource.models.js";
 
-// chatgpt
+
 const addSharedResource = asyncHandler(async (req, res) => {
     try {
         const { resourceFile, description, title, resourceType } = req.body;
@@ -34,11 +34,10 @@ const addSharedResource = asyncHandler(async (req, res) => {
     }
 });
 
-
 // @desc    Get all shared resources
 // @route   GET /api/v1/resources
 
-// chatgpt
+
 // future scope
 const addSharedResources = asyncHandler(async (req, res) => {
     try {
@@ -83,7 +82,7 @@ const addSharedResources = asyncHandler(async (req, res) => {
 // @route   GET /api/v1/sharedresources
 // @access  Public
 
-// chatgpt
+
 const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     try {
         const { subject } = req.query;
@@ -105,7 +104,7 @@ const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     }
 });
 
-// chatgpt
+
 const getSharedResourcesListAllSubjects = asyncHandler(async (req, res) => {
     try {
         // Query all shared resources
@@ -126,7 +125,7 @@ const getSharedResourcesListAllSubjects = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
+
 const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
     try {
         // Query only the shared resources with resourceType as "Notice"
@@ -147,7 +146,7 @@ const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
+
 const getSingleSharedResource = asyncHandler(async (req, res) => {
     try {
         const { resourceId } = req.params;
@@ -177,7 +176,7 @@ const getSingleSharedResource = asyncHandler(async (req, res) => {
 });
 
 
-// chatgpt
+
 const updateSharedResource = asyncHandler(async (req, res, next) => {
     try {
         const { resourceId } = req.params;
@@ -217,7 +216,7 @@ const updateSharedResource = asyncHandler(async (req, res, next) => {
 });
 
 
-// chatgpt
+
 const deleteSharedResource = asyncHandler(async (req, res, next) => {
     try {
         const { resourceId } = req.params;
