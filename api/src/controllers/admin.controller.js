@@ -8,8 +8,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
 
 // Done
-// call access and refresh token
-// some issues / limitations in access and refresh tokens
 const registerAdmin = asyncHandler(async (req, res) => {
     const {
         firstName, middleName, lastName, gender, qualification, teachingExperience,

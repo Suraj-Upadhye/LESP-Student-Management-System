@@ -224,34 +224,13 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 
-const getEmailPassword = asyncHandler(async (req, res) => {
-    // Check if the user is logged in
-    if (!req.user) {
-        throw new ApiError(401, 'User not authenticated');
-    }
+const getCurrenUser = asyncHandler( async(req, res)=>{
 
-    // Retrieve email and password based on user type
-    let email, password;
-    if (req.user.role === 'Student') {
-        // For students
-        const user = await User.findById(req.user._id).select('email password');
-        email = user.email;
-        password = user.password;
-    } else {
-        // For teachers and HOD
-        const admin = await Admin.findById(req.user._id).select('email password');
-        email = admin.email;
-        password = admin.password;
-    }
-
-    // Send response
-    return res.status(200).json({ success: true, email, password });
-});
+})
 
 
 export {
     login,
     logout,
     refreshAccessToken
-    // getEmailPassword,
 }
