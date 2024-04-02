@@ -1,5 +1,7 @@
 import {Router} from "express";
-import { registerAdmin } from "../controllers/admin.controller.js";
+import { registerAdmin,
+    changeCurrentPassword
+ } from "../controllers/admin.controller.js";
 import {upload} from "../middlewares/multer.middlewares.js";
 
 
@@ -14,5 +16,7 @@ router.route("/registerAdmin").post(
     ]),  // name of the input  field in form (<input type="file" name="profilePhoto">)
     registerAdmin
     )
+
+router.route("/changeCurrentPassword").post(changeCurrentPassword)
 
 export default router;

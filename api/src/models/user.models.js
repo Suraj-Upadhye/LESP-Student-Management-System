@@ -157,6 +157,7 @@ userSchema.methods.generateAccessToken = function () {
             _id: this._id,
             email: this.email,
             rollNo: this.rollNo,
+            userType: "user"
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -169,7 +170,8 @@ userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-
+            email: this.email,
+            userType: "user"
         },
         process.env.REFRESH_TOKEN_SECRET,
         {

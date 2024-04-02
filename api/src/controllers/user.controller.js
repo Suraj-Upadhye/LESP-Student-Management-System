@@ -8,23 +8,6 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 
 
-const generateAccessAndRefereshTokens = asyncHandler(async (userId) => {
-    try {
-        const user = await User.findById(userId);
-        const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
-
-
-        user.refreshToken = refreshToken
-        await user.save({ validateBeforeSave: false })
-
-        return { accessToken, refreshToken }
-
-
-    } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating refresh and access token")
-    }
-})
 
 // tested
 const registerUser = asyncHandler(async (req, res) => {
@@ -262,8 +245,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 // tested
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
-
-
 
     const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)

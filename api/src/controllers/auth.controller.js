@@ -5,100 +5,176 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
 import { Admin } from "../models/admin.models.js";
+import jwt from "jsonwebtoken";
+
+
+// Done
+const generateAccessAndRefreshTokens = async (userId, userType) => {
+    try {
+        let user;
+        if (userType === 'user') {
+            user = await User.findById(userId);
+        } else if (userType === 'admin') {
+            user = await Admin.findById(userId);
+        } else {
+            throw new Error('Invalid user type');
+        }
+
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+        console.log(accessToken, refreshToken);
+
+        user.refreshToken = refreshToken;
+        await user.save(); // Save the refresh token to the database
+
+        return { accessToken, refreshToken };
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating refresh and access token");
+    }
+};
+
+// Done
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
+
+    if (!incomingRefreshToken) {
+        throw new ApiError(401, "Unauthorized request");
+    }
+
+    try {
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        );
+
+        console.log(decodedToken);
+        console.log(decodedToken.email); 
+        console.log(decodedToken.userType);
+        let user;
+        if (decodedToken.userType === 'user') {
+            user = await User.findById(decodedToken._id);
+        } else if (decodedToken.userType === 'admin') {
+            user = await Admin.findById(decodedToken._id);
+        } else {
+            throw new ApiError(401, 'Invalid user type');
+        }
+
+        if (!user) {
+            throw new ApiError(401, "Invalid refresh token");
+        }
+
+        if (incomingRefreshToken !== user?.refreshToken) {
+            throw new ApiError(401, "Refresh token is expired or used");
+        }
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        };
+
+        // Generate new access token and refresh token
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id, decodedToken.userType);
+
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(
+                new ApiResponse(
+                    200,
+                    { accessToken, refreshToken },
+                    "Access token refreshed"
+                )
+            );
+    } catch (error) {
+        throw new ApiError(401, error?.message || "Invalid refresh token");
+    }
+});
 
 // Done
 const login = asyncHandler(async (req, res) => {
-    // Extract email and password from request body
     const { email, password } = req.body;
 
-    // Check if email and password are provided
     if (!email || !password) {
         throw new ApiError(400, 'Email and password are required');
     }
 
-    console.log("here")
-    // Check if the user exists in the database
     const user = await User.findOne({ email });
-
-    // Check if the user exists in the admin collection
     const admin = await Admin.findOne({ email });
 
     if (!user && !admin) {
         throw new ApiError(401, 'Invalid email or password');
     }
-    console.log("here1")
 
     if (user) {
-        console.log(user)
-        // If user is found, check if the provided password matches the hashed password in the database
         const isPasswordCorrect = await user.isPasswordCorrect(password);
 
-        // If password is incorrect, throw an error
         if (!isPasswordCorrect) {
             throw new ApiError(401, 'Invalid email or password');
         }
 
-        // Generate access token
-        const accessToken = user.generateAccessToken();
+        const loggedInUser = await User.findById(user._id).
+        select("-password -refreshToken")
 
-        // Generate refresh token
-        const refreshToken = user.generateRefreshToken();
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id, 'user');
 
-        // Save refresh token in the user document
-        user.refreshToken = refreshToken;
-        await user.save();
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
 
-        // Send response with access token and refresh token
-        return res.status(200).json({
-            success: true,
-            accessToken,
-            refreshToken,
-            user: {
-                _id: user._id,
-                email: user.email,
-                role: user.role
-                // Include other relevant user information here
-            }
-        });
+        return res
+            .status(200)
+            .cookie('accessToken', accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(
+                new ApiResponse(
+                    200,
+                    {
+                        user: loggedInUser, accessToken,
+                        refreshToken
+                    },
+                    "User logged In Successfully"
+                )
+            )
     }
 
     if (admin) {
-        console.log(admin)
-        // If admin is found, check if the provided password matches the hashed password in the database
         const isPasswordCorrect = await admin.isPasswordCorrect(password);
 
-        // If password is incorrect, throw an error
         if (!isPasswordCorrect) {
             throw new ApiError(401, 'Invalid email or password');
         }
 
-        // Generate access token
-        const accessToken = admin.generateAccessToken();
+        const loggedInUser = await Admin.findById(admin._id).
+        select("-password -refreshToken")
 
-        // Generate refresh token
-        const refreshToken = admin.generateRefreshToken();
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(admin._id, 'admin');
 
-        // Save refresh token in the admin document
-        admin.refreshToken = refreshToken;
-        await admin.save();
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
 
-        // Send response with access token and refresh token
-        return res.status(200).json({
-            success: true,
-            accessToken,
-            refreshToken,
-            admin: {
-                _id: admin._id,
-                email: admin.email,
-                role: admin.role
-                // Include other relevant admin information here
-            }
-        });
+        return res
+        .status(200)
+        .cookie('accessToken', accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    admin: loggedInUser, accessToken,
+                    refreshToken
+                },
+                "User logged In Successfully"
+            )
+        )
+
     }
 });
 
-
-
+// Done 
 const logout = asyncHandler(async (req, res) => {
     // Check if the user is logged in
     if (!req.user) {
@@ -108,18 +184,43 @@ const logout = asyncHandler(async (req, res) => {
     // Clear the refresh token in the user or admin document
     if (req.user.role === 'Student') {
         // For students
-        const user = await User.findById(req.user._id);
-        user.refreshToken = null;
-        await user.save();
+        await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                $unset: {
+                    refreshToken: 1 // this removes the field from document
+                }
+            },
+            {
+                new: true
+            }
+        )
     } else {
         // For teachers and HOD
-        const admin = await Admin.findById(req.user._id);
-        admin.refreshToken = null;
-        await admin.save();
+        await Admin.findByIdAndUpdate(
+            req.user._id,
+            {
+                $unset: {
+                    refreshToken: 1 // this removes the field from document
+                }
+            },
+            {
+                new: true
+            }
+        )
+    }
+
+    const options = {
+        httpOnly: true,
+        secure: true
     }
 
     // Send response
-    return res.status(200).json({ success: true, message: 'Logged out successfully' });
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User logged Out"))
 });
 
 
@@ -151,5 +252,6 @@ const getEmailPassword = asyncHandler(async (req, res) => {
 export {
     login,
     logout,
+    refreshAccessToken
     // getEmailPassword,
 }

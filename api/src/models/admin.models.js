@@ -152,6 +152,7 @@ adminSchema.methods.generateAccessToken = function () {
             _id: this._id,
             email: this.email,
             adminCode: this.adminCode,
+            userType: "admin"
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -164,7 +165,8 @@ adminSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-
+            email: this.email,
+            userType: "admin"
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
