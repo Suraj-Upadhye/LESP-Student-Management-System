@@ -14,7 +14,7 @@ import {
 
     getSubjectListByCurrentAdmin,
     getSubjectSwitchOptionList,
-    getAdminsAllSubjectList,
+    // getAdminsAllSubjectList,
 }
     from '../controllers/subjects.controller.js';
 import { verifyJWT } from '../middlewares/auth.middlewares.js';
@@ -36,7 +36,7 @@ router.route("/getModeListAndBatchListByYSBSub").post(getModeListAndBatchListByY
 router.route("/getSubjectListByCurrentAdmin").get(verifyJWT, getSubjectListByCurrentAdmin);
 
 router.route("/getSubjectSwitchOptionList").post(getSubjectSwitchOptionList)
-router.route("/getAdminsAllSubjectList").post(getAdminsAllSubjectList)
+// router.route("/getAdminsAllSubjectList").post(getAdminsAllSubjectList)
 
 
 export default router;

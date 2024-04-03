@@ -9,17 +9,17 @@ const AttendanceSchema = new Schema({
     },
     attendanceData: [
         {
-            teacherId: {
+            teacherId: {    // use year, sem , branch
                 type: Schema.Types.ObjectId,
                 ref: "Admin"
             },
-            subject: {
+            subjectId: {      // use year, sem , branch
                 type: Schema.Types.ObjectId,
                 ref: "Subject"
             },
             studentList: [
                 {
-                    studentId: {
+                    studentId: {        // use year, sem , branch
                         type: Schema.Types.ObjectId,
                         ref: "User"
                     },

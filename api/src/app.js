@@ -21,6 +21,7 @@ import userRouter from './routes/user.routes.js';
 import adminRouter from './routes/admin.routes.js';
 import authRouter from './routes/auth.routes.js';
 import subjectRouter from './routes/subject.routes.js';
+import attendanceRouter from './routes/attendance.routes.js'
 
 
 // routes declaration
@@ -28,6 +29,7 @@ app.use("/api/v1/users", userRouter)
 app.use("/api/v1/admin", adminRouter)
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/subject", subjectRouter)
+app.use("/api/v1/attendance", attendanceRouter)
 
 
 // http://localhost:8000/api/v1/users/register

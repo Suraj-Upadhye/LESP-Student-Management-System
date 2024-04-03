@@ -1,7 +1,7 @@
 // attendance.controller.js
-import { Attendance } from '../models/attendance.models';
-import { User } from '../models/user.models';
-import { Admin } from '../models/admin.models';
+import { Attendance } from '../models/attendance.models.js';
+import { User } from '../models/user.models.js';
+import { Admin } from '../models/admin.models.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -21,64 +21,67 @@ const takeAttendanceEssentials = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Attendance essentials received successfully" });
 });
 
-const addAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
-    const { subject, date } = req.body;
+// Done
+const fillAttendance = asyncHandler(async (req, res) => {
+    const { date, attendanceData } = req.body;
 
-    // Check if subject and date are provided
-    if (!subject || !date) {
-        throw new ApiError(400, "Subject and date of attendance are required");
+    try {
+        // Find or create attendance record for the given date
+        let attendanceRecord = await Attendance.findOne({ date });
+
+        if (!attendanceRecord) {
+            // Create a new attendance record if it doesn't exist for the given date
+            attendanceRecord = new Attendance({ date });
+        }
+
+        // Append attendance data to the attendance record
+        attendanceRecord.attendanceData.push(...attendanceData);
+
+        // Save the updated attendance record
+        await attendanceRecord.save();
+
+        res.status(200).json({ success: true, message: 'Attendance filled successfully' });
+    } catch (error) {
+        throw new ApiError(500, 'Failed to fill attendance', error);
     }
-
-    // Fetch all students
-    const students = await User.find({ role: "Student" });
-
-    // Fetch admin/teacher details
-    const teacher = await Admin.findOne({ _id: req.user._id });
-
-    // Create attendance records for each student
-    const attendanceData = students.map(student => ({
-        student: student._id,
-        teacher: teacher._id,
-        subject,
-        state: "Absent", // Default to absent
-        sessionType: "Theory", // Default session type
-        remark: "", // Default remark
-        date
-    }));
-
-    // Bulk insert attendance records
-    const createdAttendance = await Attendance.insertMany(attendanceData);
-
-    return res.status(201).json(
-        new ApiResponse(201, createdAttendance, "Attendance records added successfully")
-    );
 });
 
+// pending 
+// something missing or wrong approach
 const getAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
-    const { mode, batch } = req.body;
+    try {
+        const { teacherId } = req.params;
+        const { subjectId } = req.body;
 
-    // Check if mode is provided
-    if (!mode) {
-        throw new ApiError(400, "Mode of teaching (theory/practical/tutorial) is required");
+        // Find attendance records for the given teacher and subject
+        const attendanceRecords = await Attendance.find({
+            "attendanceData.teacherId": teacherId,
+            "attendanceData.subjectId": subjectId
+        });
+
+        console.log(attendanceRecords)
+
+        // Extract attendance data subject-wise for all students
+        const subjectWiseAttendance = {};
+        attendanceRecords.forEach(record => {
+            record.attendanceData.forEach(data => {
+                const { subjectId, studentList } = data;
+                if (!subjectWiseAttendance[subjectId]) {
+                    subjectWiseAttendance[subjectId] = [];
+                }
+                subjectWiseAttendance[subjectId].push(...studentList);
+            });
+        });
+
+        res.status(200).json({ success: true, data: subjectWiseAttendance });
+    } catch (error) {
+        console.error("Error fetching attendance data:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch attendance data." });
     }
-
-    // Fetch admin/teacher details
-    const teacher = await Admin.findOne({ _id: req.user._id });
-
-    // Query to find attendance records based on mode and batch (if provided)
-    const query = { teacher: teacher._id, sessionType: mode };
-    if (mode !== "Theory" && batch) {
-        query.batchBelongs = batch;
-    }
-
-    // Fetch attendance records
-    const attendanceRecords = await Attendance.find(query).populate('student');
-
-    return res.status(200).json(
-        new ApiResponse(200, attendanceRecords, "Attendance records fetched successfully")
-    );
 });
 
+
+// future scope
 const updateAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     // Extract necessary data from request body
     const { subject, date, attendanceData } = req.body;
@@ -104,6 +107,7 @@ const updateAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     );
 });
 
+// future scope
 const deleteAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     // Extract subject and date from request body
     const { subject, date } = req.body;
@@ -121,7 +125,7 @@ const deleteAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     );
 });
 
-const getAttendanceSubjectWiseSingle = asyncHandler(async (req, res) => {
+const getAttendanceSubjectWiseSingleStudent = asyncHandler(async (req, res) => {
     // Extract mode and batch from request body
     const { mode, batch } = req.body;
 
@@ -145,7 +149,7 @@ const getAttendanceSubjectWiseSingle = asyncHandler(async (req, res) => {
     res.status(200).json(attendanceRecords);
 });
 
-const getAttendanceAllSubjectsSingle = asyncHandler(async (req, res) => {
+const getAttendanceAllSubjectsSingleStudent = asyncHandler(async (req, res) => {
     // Extract mode and batch from request body
     const { mode, batch } = req.body;
 
@@ -168,19 +172,14 @@ const getAttendanceAllSubjectsSingle = asyncHandler(async (req, res) => {
     // Return the attendance records
     res.status(200).json(attendanceRecords);
 });
-
-const subjectSelection = asyncHandler(async (req, res) => {
-
-})
 
 
 
 export {
-    addAttendanceSubjectWiseAllStudents,
+    // addAttendanceSubjectWiseAllStudents,
+    fillAttendance,
     getAttendanceSubjectWiseAllStudents,
-    updateAttendanceBySubjectAllStudents,
-    deleteAttendanceBySubjectAllStudents,
-    getAttendanceSubjectWiseSingle,
-    getAttendanceAllSubjectsSingle,
+    getAttendanceSubjectWiseSingleStudent,
+    getAttendanceAllSubjectsSingleStudent,
 
 }

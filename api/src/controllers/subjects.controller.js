@@ -94,8 +94,6 @@ const deleteSubject = asyncHandler(async (req, res) => {
     }
 });
 
-
-
 // Done
 // by year, semester, branch, subjectname find out subjectid
 const getSubjectIDByOther = asyncHandler(async (req, res) => {
@@ -298,5 +296,5 @@ export {
 
     getSubjectListByCurrentAdmin,
     getSubjectSwitchOptionList,
-    getAdminsAllSubjectList,
+    // getAdminsAllSubjectList,
 }
