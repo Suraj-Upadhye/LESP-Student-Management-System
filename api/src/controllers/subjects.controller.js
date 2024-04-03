@@ -276,6 +276,7 @@ const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
     }
 });
 
+// pending
 // for teacher to assign batch to student
 const getBatchListByYSBSub = asyncHandler( async(req, res)=>{
 

@@ -5,28 +5,32 @@ import mongoose, { Schema } from "mongoose";
 
 const unitTestSchema = new Schema(
     {
-        student: {
-            type: Schema.Types.ObjectId,
-            ref: "User"
-        },
         teacher: {
             type: Schema.Types.ObjectId,
             ref: "Admin"
         },
         subject: {
-            type: String,
-            required: [true, "Subject field is required"]
+            type: Schema.Types.ObjectId,
+            ref: "Subject"
         },
-        ut1: {
-            type: Number,
-            required: false,
-            default: 0
-        },
-        ut2: {
-            type: Number,
-            required: false,
-            default: 0
-        }
+        studentList: [
+            {
+                student: {
+                    type: Schema.Types.ObjectId,
+                    ref: "User"
+                },
+                ut1: {
+                    type: Number,
+                    required: false,
+                    default: 0
+                },
+                ut2: {
+                    type: Number,
+                    required: false,
+                    default: 0
+                }
+            }
+        ]
     },
     {
         timestamps: true

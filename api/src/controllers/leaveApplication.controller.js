@@ -6,6 +6,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Leave } from '../models/leaveApplication.models.js';
 import { User } from '../models/user.models.js';
 
+
+
+// All Future Scope
+
 const addLeaveApplication = asyncHandler(async (req, res) => {
     const { userId, adminId, startDate, endDate, reason, status } = req.body;
 
