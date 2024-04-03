@@ -1,6 +1,6 @@
 // attendance.models.js
 
-import mongoose, { Schema }  from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const AttendanceSchema = new Schema({
     date: {
@@ -9,11 +9,7 @@ const AttendanceSchema = new Schema({
     },
     attendanceData: [
         {
-            student: {
-                type: Schema.Types.ObjectId,
-                ref: "User"
-            },
-            teacher: {
+            teacherId: {
                 type: Schema.Types.ObjectId,
                 ref: "Admin"
             },
@@ -21,15 +17,23 @@ const AttendanceSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "Subject"
             },
-            state: {
-                type: String,
-                enum: ["Present", "Absent", "Leave"],
-                required: [true, 'Attendance state is required'],
-                default: "Present"
-            },
+            studentList: [
+                {
+                    studentId: {
+                        type: Schema.Types.ObjectId,
+                        ref: "User"
+                    },
+                    state: {
+                        type: String,
+                        enum: ["Present", "Absent", "Leave"],
+                        required: [true, 'Attendance state is required'],
+                        default: "Present"
+                    }
+                },
+            ],
             sessionType: {
                 type: String,
-                enum: ['Theory', 'Practical', 'Tutorial'],
+                enum: ['Lecture', 'Practical', 'Tutorial'],
                 required: [true, 'Session type is required']
             },
             batchBelongs: {
