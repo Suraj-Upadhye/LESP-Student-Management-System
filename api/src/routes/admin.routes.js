@@ -1,12 +1,16 @@
 import {Router} from "express";
 import { registerAdmin,
-    changeCurrentPassword
+    changeCurrentPassword,
+    newTeacherList,
+    acceptNewTeacher
  } from "../controllers/admin.controller.js";
 import {upload} from "../middlewares/multer.middlewares.js";
+import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
 
 const router = Router();
 
+// Done
 router.route("/registerAdmin").post(
     upload.fields([
         {
@@ -17,6 +21,12 @@ router.route("/registerAdmin").post(
     registerAdmin
     )
 
+router.route("/newTeacherList").get(verifyJWT, newTeacherList)
+router.route("/acceptNewTeacher/:teacherId").post(acceptNewTeacher)
+
+// not done    
 router.route("/changeCurrentPassword").post(changeCurrentPassword)
+
+
 
 export default router;

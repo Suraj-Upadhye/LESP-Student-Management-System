@@ -7,7 +7,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 
-// tested
+// 
 const registerUser = asyncHandler(async (req, res) => {
 
     const {
@@ -20,7 +20,7 @@ const registerUser = asyncHandler(async (req, res) => {
         year, branch, division, enrollmentNo, rollNo,
 
         // Security Details :-
-        studentMobileNumber, fatherMobileNumber, motherMobileNumber, email, otp, password
+        studentMobileNumber, fatherMobileNumber, motherMobileNumber, email, password
     } = req.body;
 
     console.log("Email :", email)
@@ -28,7 +28,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (
         [firstName, middleName, lastName, gender,
             year, branch, division, enrollmentNo, rollNo,
-            studentMobileNumber, email, otp, password
+            studentMobileNumber, email, password
         ].some((field) =>
             field?.trim() === "")
     ) {
@@ -85,7 +85,6 @@ const registerUser = asyncHandler(async (req, res) => {
         fatherMobileNumber,
         motherMobileNumber,
         email: email.toLowerCase(),
-        otp,
         password
     })
 
@@ -346,9 +345,6 @@ const getAdminProfile = asyncHandler( async( req, res) =>{
 
 export {
     registerUser,
-    loginUser,
-    logoutUser,
-    refreshAccessToken,
     changeCurrentPassword,
     getCurrentUser,
     updateAccountDetails,

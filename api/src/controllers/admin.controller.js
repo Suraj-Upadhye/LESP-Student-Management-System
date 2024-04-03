@@ -11,7 +11,7 @@ import { Admin } from '../models/admin.models.js';
 const registerAdmin = asyncHandler(async (req, res) => {
     const {
         firstName, middleName, lastName, gender, qualification, teachingExperience,
-        mobileNumber, email, password, workingDetails, role
+        mobileNumber, email, password, workingDetails, hodDepartment, role
     } = req.body;
 
     console.log("Email :", email);
@@ -46,7 +46,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
     const admin = await Admin.create({
         firstName, middleName, lastName, gender, qualification, teachingExperience,
         mobileNumber, email: email.toLowerCase(), password, profilePhoto: profilePhotoUrl,
-        workingDetails, role
+        workingDetails, hodDepartment, role
     });
 
     // Return success response
@@ -57,6 +57,9 @@ const registerAdmin = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse(200, createdAdmin, "Admin registered successfully"));
 });
 
+const verifyEmail = asyncHandler(async (req, res) => {
+
+})
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body;
@@ -281,38 +284,78 @@ const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
 
 
 // high security
+// Done
+const newTeacherList = asyncHandler(async (req, res) => {
+    try {
+        // 1. Extract the department information of the HOD from the JWT token.
+        const { department } = req.user; // Assuming department information is stored in the user object
+
+        // Debugging: Log the department value
+        console.log("Department:", department);
+
+        // 2. Use aggregation to filter teachers who belong to the same department and have unverified emails.
+        const newTeachers = await Admin.aggregate([
+            {
+                $match: {
+                    department: department, // Filter by department
+                    role: "Teacher", // Filter by role
+                    isEmailVerified: false // Filter by unverified email
+                }
+            },
+            {
+                $project: {
+                    password: 0,
+                    refreshToken: 0 // Exclude password and refreshToken fields from the results
+                }
+            }
+        ]);
+
+        console.log("Filtered Teachers:", newTeachers);
+
+        // 3. Return the filtered list of teachers as the response.
+        res.status(200).json({
+            success: true,
+            data: newTeachers
+        });
+    } catch (error) {
+        // Error handling: Log and send error response
+        console.error("Error fetching new teachers:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
+});
+
+// Done
+const acceptNewTeacher = asyncHandler(async (req, res) => {
+    try {
+        const { teacherId } = req.params;
+        console.log(teacherId);
+
+        // Find the teacher by ID and update their status to accepted
+        const teacher = await Admin.findByIdAndUpdate(
+            teacherId,
+            {
+                $set: { isEmailVerified: true }
+            },
+            { new: true }
+        );
+
+        if (!teacher) {
+            throw new ApiError(404, "Teacher not found");
+        }
+
+        res.status(200).json(new ApiResponse(200, teacher, "Teacher accepted successfully"));
+    } catch (error) {
+        throw new ApiError(500, "Error accepting teacher");
+    }
+});
 
 
 const newStudentList = asyncHandler(async (req, res) => {
-    try {
-        // Assuming you have a method to retrieve a list of new students awaiting approval
-        const students = await getNewStudents();
-
-        // Assuming you have a method to format the student data for response
-        const formattedStudents = formatStudentList(students);
-
-        return res.status(200).json(new ApiResponse(200, formattedStudents, "New student list retrieved successfully"));
-    } catch (error) {
-        throw new ApiError(500, "Error fetching new student list");
-    }
+    // get list of student who's email is not verified
 });
-
-
-const newTeacherList = asyncHandler(async (req, res) => {
-    try {
-        // Assuming you have a method to retrieve a list of new teachers awaiting approval
-        const teachers = await getNewTeachers();
-
-        // Assuming you have a method to format the teacher data for response
-        const formattedTeachers = formatTeacherList(teachers);
-
-        return res.status(200).json(new ApiResponse(200, formattedTeachers, "New teacher list retrieved successfully"));
-    } catch (error) {
-        throw new ApiError(500, "Error fetching new teacher list");
-    }
-});
-
-
 
 const acceptNewStudent = asyncHandler(async (req, res) => {
     try {
@@ -334,29 +377,6 @@ const acceptNewStudent = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error accepting student");
     }
 });
-
-
-const acceptNewTeacher = asyncHandler(async (req, res) => {
-    try {
-        const { teacherId } = req.params;
-
-        // Find the teacher by ID and update their status to accepted
-        const teacher = await Admin.findByIdAndUpdate(
-            teacherId,
-            { $set: { isEmailVerified: true } },
-            { new: true }
-        );
-
-        if (!teacher) {
-            throw new ApiError(404, "Teacher not found");
-        }
-
-        res.status(200).json(new ApiResponse(200, teacher, "Teacher accepted successfully"));
-    } catch (error) {
-        throw new ApiError(500, "Error accepting teacher");
-    }
-});
-
 
 const studentBatchAllocation = asyncHandler(async (req, res) => {
     try {

@@ -84,6 +84,11 @@ const adminSchema = new Schema(
             required: false,
             default: false
         },
+        isHOD :{
+            type: Boolean,
+            require: false,
+            default: false
+        },
 
         // workingDetails :-
         workingDetails:
@@ -112,6 +117,10 @@ const adminSchema = new Schema(
             type: String,
             required: false,
             default: "none"
+        },
+        department: {
+            type: String,
+            required: [true, 'department is required'],
         },
         role: {
             type: String,

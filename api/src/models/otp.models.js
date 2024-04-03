@@ -8,7 +8,7 @@ const otpSchema = new Schema(
             type: String,
             required: true
         },
-        token: {
+        otp: {
             type: String,
             required: true
         }, // The generated OTP

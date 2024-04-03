@@ -34,6 +34,7 @@ const generateAccessAndRefreshTokens = async (userId, userType) => {
 };
 
 // Done
+// it will simply refreshes  the access token by using the existing refresh token 
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
@@ -48,7 +49,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         );
 
         console.log(decodedToken);
-        console.log(decodedToken.email); 
+        console.log(decodedToken.email);
         console.log(decodedToken.userType);
         let user;
         if (decodedToken.userType === 'user') {
@@ -113,30 +114,44 @@ const login = asyncHandler(async (req, res) => {
             throw new ApiError(401, 'Invalid email or password');
         }
 
-        const loggedInUser = await User.findById(user._id).
-        select("-password -refreshToken")
+        if (user.isEmailVerified) {
 
-        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id, 'user');
+            const loggedInUser = await User.findById(user._id).
+                select("-password -refreshToken")
 
-        const options = {
-            httpOnly: true,
-            secure: true
-        }
+            const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id, 'user');
 
-        return res
-            .status(200)
-            .cookie('accessToken', accessToken, options)
-            .cookie("refreshToken", refreshToken, options)
-            .json(
-                new ApiResponse(
-                    200,
-                    {
-                        user: loggedInUser, accessToken,
-                        refreshToken
-                    },
-                    "User logged In Successfully"
+            const options = {
+                httpOnly: true,
+                secure: true
+            }
+
+            return res
+                .status(200)
+                .cookie('accessToken', accessToken, options)
+                .cookie("refreshToken", refreshToken, options)
+                .json(
+                    new ApiResponse(
+                        200,
+                        {
+                            user: loggedInUser, accessToken,
+                            refreshToken
+                        },
+                        "User logged In Successfully"
+                    )
                 )
-            )
+        }
+        else {
+            return res
+                .status(400)
+                .json(
+                    new ApiResponse(
+                        400,
+                        {},
+                        "User is not Verified Yet"
+                    )
+                )
+        }
     }
 
     if (admin) {
@@ -146,30 +161,44 @@ const login = asyncHandler(async (req, res) => {
             throw new ApiError(401, 'Invalid email or password');
         }
 
-        const loggedInUser = await Admin.findById(admin._id).
-        select("-password -refreshToken")
+        if (admin.isEmailVerified) {
 
-        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(admin._id, 'admin');
+            const loggedInUser = await Admin.findById(admin._id).
+                select("-password -refreshToken")
 
-        const options = {
-            httpOnly: true,
-            secure: true
+            const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(admin._id, 'admin');
+
+            const options = {
+                httpOnly: true,
+                secure: true
+            }
+
+            return res
+                .status(200)
+                .cookie('accessToken', accessToken, options)
+                .cookie("refreshToken", refreshToken, options)
+                .json(
+                    new ApiResponse(
+                        200,
+                        {
+                            admin: loggedInUser, accessToken,
+                            refreshToken
+                        },
+                        "Admin logged In Successfully"
+                    )
+                )
         }
-
-        return res
-        .status(200)
-        .cookie('accessToken', accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
-        .json(
-            new ApiResponse(
-                200,
-                {
-                    admin: loggedInUser, accessToken,
-                    refreshToken
-                },
-                "User logged In Successfully"
-            )
-        )
+        else {
+            return res
+                .status(400)
+                .json(
+                    new ApiResponse(
+                        400,
+                        {},
+                        "Admin is not Verified Yet"
+                    )
+                )
+        }
 
     }
 });
@@ -217,16 +246,11 @@ const logout = asyncHandler(async (req, res) => {
 
     // Send response
     return res
-    .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, "User logged Out"))
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new ApiResponse(200, {}, "User logged Out"))
 });
-
-
-const getCurrenUser = asyncHandler( async(req, res)=>{
-
-})
 
 
 export {
