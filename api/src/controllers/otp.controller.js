@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Otp } from "../models/otp.models.js";
+import { sendOTPEmail } from "../utils/sendEmail.js";
 
 // Done
 // create a random otp and store it in database with expiry of 10 minutes and with email
@@ -15,14 +16,14 @@ const createAndStoreOTP = asyncHandler(async (req, res) => {
         throw new ApiError("Email is missing", 400);
     }
 
-    // if the otp is expired then remove them
-    const removedOtps = removeAllExpiredOTP()
-    console.log(removedOtps)
+    // Remove all expired OTPs
+    const removedOtps = await removeExpiredOTP();
+    console.log(`Deleted ${removedOtps} expired OTPs`);
 
     const existingOtp = await Otp.findOne({ email });
     // if otp  already exists for this email then delete that entry first
     if (existingOtp) {
-        await existingOtp.remove();
+        await Otp.deleteOne(existingOtp)
     }
 
     // Generate a random OTP
@@ -42,9 +43,9 @@ const createAndStoreOTP = asyncHandler(async (req, res) => {
         });
 
         // Send the generated OTP to the user's email using nodemailer or any other mailing service
-        
-        // call sendemailfuncton here
 
+        // call sendemailfuncton here
+        sendOTPEmail(email, otp);
         // Respond with success message
         res.status(200).json({ success: true, message: "OTP created and sent successfully." });
     } catch (error) {
@@ -57,7 +58,7 @@ const createAndStoreOTP = asyncHandler(async (req, res) => {
 // Done
 // compare  the entered OTP with stored one in DB
 // If matched then proceed further otherwise show error message
-const verifyOTP = asyncHandler(async (req, res, next) => {
+const verifyOTP = asyncHandler(async (req, res) => {
     const { email, otp } = req.body;
 
     try {
@@ -66,25 +67,31 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
 
         // Check if OTP record exists and is not expired
         if (!otpRecord || otpRecord.expiresAt < new Date()) {
-            return res.status(400).json({ success: false, message: "OTP not found or expired." });
+            throw new ApiError(400, "OTP not found or expired.");
         }
 
         // Check if the entered OTP matches the stored OTP
         if (otpRecord.otp !== otp) {
-            return res.status(400).json({ success: false, message: "Invalid OTP." });
+            throw new ApiError(400, "Invalid OTP.");
         }
 
-        // If OTP is valid, proceed to the next middleware
-        next();
+        // If OTP is valid, you can mark it as used or delete it from the database
+        // For example:
+        // otpRecord.used = true;
+        // await otpRecord.save();
+
+        // Return success response
+        res.status(200).json({ success: true, message: "OTP verified successfully." });
     } catch (error) {
-        // Handle errors
-        console.error("Error verifying OTP:", error);
-        res.status(500).json({ success: false, message: "Failed to verify OTP." });
+        // Throw the error to be caught by the error handling middleware
+        throw new ApiError(500, "Failed to verify OTP.");
     }
 });
 
+
 // Done
-const removeAllExpiredOTP = asyncHandler(async (req, res) => {
+// function
+const removeExpiredOTP = async () => {
     // Get the current date and time
     const currentDate = new Date();
 
@@ -94,14 +101,12 @@ const removeAllExpiredOTP = asyncHandler(async (req, res) => {
     // Delete the expired OTPs
     const removedOtps = await Otp.deleteMany({ expiresAt: { $lt: currentDate } });
 
-    res.status(200).json({ success: true, data: `Deleted ${removedOtps.deletedCount} expired OTPs` });
-});
+    return removedOtps.deletedCount;
+};
 
 
 
 export {
     createAndStoreOTP,
     verifyOTP,
-    removeAllExpiredOTP,
-
 }
