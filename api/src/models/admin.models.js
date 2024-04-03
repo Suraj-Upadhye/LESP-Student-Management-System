@@ -54,7 +54,7 @@ const adminSchema = new Schema(
         //     },      //cloudinary url
         //     required: false,
         // },
-        profilePhoto:{
+        profilePhoto: {
             type: String,
             required: false
         },
@@ -84,7 +84,7 @@ const adminSchema = new Schema(
             required: false,
             default: false
         },
-        isHOD :{
+        isHOD: {
             type: Boolean,
             require: false,
             default: false
@@ -100,7 +100,7 @@ const adminSchema = new Schema(
                     },
                     division: {
                         type: String,
-                        enum : ["Div1", "Div2", "None"],
+                        enum: ["Div1", "Div2", "None"],
                         reqired: [true, 'division is required'],
                     },
                     mode: {
@@ -113,11 +113,26 @@ const adminSchema = new Schema(
                     }
                 }
             ],
-        classTeacher: {
-            type: String,
-            required: false,
-            default: "none"
-        },
+        classTeacher: [
+            {
+                year: {
+                    type: String,
+                    required: false,
+                },
+                branch: {
+                    type: String,
+                    required: false,
+                },
+                semester: {
+                    type: String,
+                    required: false,
+                },
+                division: {
+                    type: String,
+                    required: false
+                }
+            }
+        ],
         department: {
             type: String,
             required: [true, 'department is required'],

@@ -1,5 +1,4 @@
 // otp.controller.js
-
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -88,7 +87,6 @@ const verifyOTP = asyncHandler(async (req, res) => {
     }
 });
 
-
 // Done
 // function
 const removeExpiredOTP = async () => {
@@ -103,7 +101,6 @@ const removeExpiredOTP = async () => {
 
     return removedOtps.deletedCount;
 };
-
 
 
 export {

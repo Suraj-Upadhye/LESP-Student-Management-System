@@ -2,7 +2,11 @@ import {Router} from "express";
 import { registerAdmin,
     changeCurrentPassword,
     newTeacherList,
-    acceptNewTeacher
+    acceptNewTeacher,
+    newStudentList,
+    acceptNewStudent,
+    studentBatchAllocation,
+    classTeacherAllocation
  } from "../controllers/admin.controller.js";
 import {upload} from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
@@ -23,6 +27,12 @@ router.route("/registerAdmin").post(
 
 router.route("/newTeacherList").get(verifyJWT, newTeacherList)
 router.route("/acceptNewTeacher/:teacherId").post(acceptNewTeacher)
+
+router.route("/newStudentList").get(verifyJWT, newStudentList)
+router.route("/acceptNewStudent/:studentId").post(acceptNewStudent)
+
+router.route("/studentBatchAllocation/:studentId").post(studentBatchAllocation)
+router.route("/classTeacherAllocation/:teacherId").post(classTeacherAllocation)
 
 // not done    
 router.route("/changeCurrentPassword").post(changeCurrentPassword)

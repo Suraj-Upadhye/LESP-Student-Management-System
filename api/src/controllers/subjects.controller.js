@@ -283,6 +283,10 @@ const getAdminsAllSubjectList = asyncHandler( async(req, res)=>{
 })
 
 
+const getBatchListByYSBSub = asyncHandler( async(req, res)=>{
+
+})
+
 export {
     addSubject,
     getAllSubject,

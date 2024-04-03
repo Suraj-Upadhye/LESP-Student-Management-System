@@ -6,6 +6,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
+import { sendNewUserAcceptedEmail } from '../utils/sendEmail.js';
 
 // Done
 const registerAdmin = asyncHandler(async (req, res) => {
@@ -345,6 +346,8 @@ const acceptNewTeacher = asyncHandler(async (req, res) => {
         if (!teacher) {
             throw new ApiError(404, "Teacher not found");
         }
+        // Send a notification email to the teacher's registered email address
+        sendNewUserAcceptedEmail(teacher.email, teacher.role, teacher.firstName);
 
         res.status(200).json(new ApiResponse(200, teacher, "Teacher accepted successfully"));
     } catch (error) {
@@ -352,32 +355,81 @@ const acceptNewTeacher = asyncHandler(async (req, res) => {
     }
 });
 
-
+// Done
 const newStudentList = asyncHandler(async (req, res) => {
     // get list of student who's email is not verified
+    try {
+        // 1. Extract the class name information of the teacher from the JWT token.
+        const { classTeacher } = req.user; // Assuming class teacher information is stored in the user object
+
+        // Debugging: Log the class teacher of class value
+        console.log("Class Teacher of :", classTeacher);
+
+        // 2. Use aggregation to filter students who belong to the same class and have unverified emails.
+        const newStudents = await User.aggregate([
+            {
+                $match: {
+                    year: classTeacher[0].year, // Filter by year branch semester division
+                    branch: classTeacher[0].branch,
+                    semester: classTeacher[0].semester,
+                    division: classTeacher[0].division,
+                    role: "Student", // Filter by role
+                    isEmailVerified: false // Filter by unverified email
+                }
+            },
+            {
+                $project: {
+                    password: 0,
+                    refreshToken: 0 // Exclude password and refreshToken fields from the results
+                }
+            }
+        ]);
+
+        console.log("Filtered Students:", newStudents);
+
+        // 3. Return the filtered list of Students as the response.
+        res.status(200).json({
+            success: true,
+            data: newStudents
+        });
+    } catch (error) {
+        // Error handling: Log and send error response
+        console.error("Error fetching new Students:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
 });
 
+// Done
 const acceptNewStudent = asyncHandler(async (req, res) => {
     try {
         const { studentId } = req.params;
+        console.log(studentId);
 
         // Find the student by ID and update their status to accepted
         const student = await User.findByIdAndUpdate(
             studentId,
-            { $set: { isEmailVerified: true } },
+            {
+                $set: { isEmailVerified: true }
+            },
             { new: true }
         );
 
         if (!student) {
-            throw new ApiError(404, "Student not found");
+            throw new ApiError(404, "student not found");
         }
+        // Send a notification email to the student's registered email address
+        sendNewUserAcceptedEmail(student.email, student.role, student.name);
 
-        res.status(200).json(new ApiResponse(200, student, "Student accepted successfully"));
+        res.status(200).json(new ApiResponse(200, student, "student accepted successfully"));
     } catch (error) {
         throw new ApiError(500, "Error accepting student");
     }
 });
 
+// Done
 const studentBatchAllocation = asyncHandler(async (req, res) => {
     try {
         const { studentId } = req.params;
@@ -400,15 +452,26 @@ const studentBatchAllocation = asyncHandler(async (req, res) => {
     }
 });
 
-
+// Done
 const classTeacherAllocation = asyncHandler(async (req, res) => {
     try {
         const { teacherId } = req.params;
+        const { year, branch, semester, division } = req.body;
 
         // Find the teacher by ID and update their class teacher status
         const teacher = await Admin.findByIdAndUpdate(
             teacherId,
-            { $set: { isClassTeacher: true } },
+            {
+                $set: {
+                    classTeacher: [{
+                        year: year,
+                        branch: branch,
+                        semester: semester,
+                        division: division,
+                    }],
+                    isClassTeacher: true
+                }
+            },
             { new: true }
         );
 
@@ -421,7 +484,6 @@ const classTeacherAllocation = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error allocating class teacher");
     }
 });
-
 
 // allow user to change their academic details if the academic year is completed
 const allowToChangeAcademicDetails = asyncHandler(async (req, res) => {

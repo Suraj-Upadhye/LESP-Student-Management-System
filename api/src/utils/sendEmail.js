@@ -43,4 +43,50 @@ const sendOTPEmail = async (email, otp) => {
     });
 };
 
-export { sendOTPEmail };
+
+const sendNewUserAcceptedEmail = async (email, userType, firstName) => {
+    const mailTransporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+
+    const mailDetails = {
+        from: process.env.EMAIL_ADDRESS,
+        to: email,
+        subject: `New ${userType} Registration Accepted`,
+        html: `<html>
+            <head>
+                <title>New ${userType} Registration Accepted</title>
+            </head>
+            <body>
+                <h1>Registration Accepted</h1>
+                <p>Dear ${firstName},</p>
+                <p>We have received your request for registration in our LESP Student Management System. We have verified that its real account. To Login, please go to our website:</p>
+                <p>If you have recieved email already, please disregard this message.</p>
+                <p>Thank you,</p>
+                <p>Team LESP, Sangli</p>
+            </body>
+        </html>`
+    };
+
+    return new Promise((resolve, reject) => {
+        mailTransporter.sendMail(mailDetails, (err, data) => {
+            if (err) {
+                console.error(err);
+                reject(new ApiError(500, "Something went wrong while sending the email"));
+            } else {
+                resolve();
+                console.log("Your Email has been sent successfully.");
+            }
+        });
+    });
+};
+
+export {
+    sendOTPEmail,
+    sendNewUserAcceptedEmail,
+
+};

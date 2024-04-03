@@ -55,6 +55,10 @@ const userSchema = new Schema(
             type: String,
             required: [true, 'branch field is required'],
         },
+        semester: {
+            type: String,
+            required: [true, 'Semester field is required']
+        },
         division: {
             type: String,
             enum: ['Div1', 'Div2', 'None'],
