@@ -12,11 +12,12 @@ import {
     getSubjectListByYSB,
     getModeListAndBatchListByYSBSub,
 
-    getSubjectListByAdminID,
+    getSubjectListByCurrentAdmin,
     getSubjectSwitchOptionList,
     getAdminsAllSubjectList,
 }
     from '../controllers/subjects.controller.js';
+import { verifyJWT } from '../middlewares/auth.middlewares.js';
 
 const router = Router();
 
@@ -32,9 +33,10 @@ router.route("/getSemByYearBranch").post(getSemByYearBranch);
 router.route("/getSubjectListByYSB").post(getSubjectListByYSB);
 router.route("/getModeListAndBatchListByYSBSub").post(getModeListAndBatchListByYSBSub);
 
-router.route("/getSubjectListByAdminID").post(getSubjectListByAdminID);
+router.route("/getSubjectListByCurrentAdmin").get(verifyJWT, getSubjectListByCurrentAdmin);
+
 router.route("/getSubjectSwitchOptionList").post(getSubjectSwitchOptionList)
 router.route("/getAdminsAllSubjectList").post(getAdminsAllSubjectList)
 
 
-export default router
+export default router;

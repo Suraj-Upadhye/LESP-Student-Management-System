@@ -34,10 +34,6 @@ const addSharedResource = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    Get all shared resources
-// @route   GET /api/v1/resources
-
-
 // future scope
 const addSharedResources = asyncHandler(async (req, res) => {
     try {
@@ -77,12 +73,6 @@ const addSharedResources = asyncHandler(async (req, res) => {
     }
 });
 
-
-// @desc    Get all shared resources
-// @route   GET /api/v1/sharedresources
-// @access  Public
-
-
 const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     try {
         const { subject } = req.query;
@@ -104,7 +94,6 @@ const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     }
 });
 
-
 const getSharedResourcesListAllSubjects = asyncHandler(async (req, res) => {
     try {
         // Query all shared resources
@@ -124,8 +113,6 @@ const getSharedResourcesListAllSubjects = asyncHandler(async (req, res) => {
     }
 });
 
-
-
 const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
     try {
         // Query only the shared resources with resourceType as "Notice"
@@ -144,8 +131,6 @@ const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
         });
     }
 });
-
-
 
 const getSingleSharedResource = asyncHandler(async (req, res) => {
     try {
@@ -174,8 +159,6 @@ const getSingleSharedResource = asyncHandler(async (req, res) => {
         });
     }
 });
-
-
 
 const updateSharedResource = asyncHandler(async (req, res, next) => {
     try {
@@ -214,8 +197,6 @@ const updateSharedResource = asyncHandler(async (req, res, next) => {
         });
     }
 });
-
-
 
 const deleteSharedResource = asyncHandler(async (req, res, next) => {
     try {

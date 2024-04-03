@@ -169,7 +169,6 @@ const getAttendanceAllSubjectsSingle = asyncHandler(async (req, res) => {
     res.status(200).json(attendanceRecords);
 });
 
-
 const subjectSelection = asyncHandler(async (req, res) => {
 
 })

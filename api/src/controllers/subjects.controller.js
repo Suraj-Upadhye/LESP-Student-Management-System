@@ -228,15 +228,15 @@ const getModeListAndBatchListByYSBSub = asyncHandler(async (req, res) => {
     }
 });
 
-
-// pending
-// req.body contains Admin ID 
+// Done
+// imp for share resource
 // fetch the working details array of Admin and list all subjects from it
-const getSubjectListByAdminID = asyncHandler(async (req, res) => {
-    const { adminID } = req.body;
+const getSubjectListByCurrentAdmin = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    // console.log(req.user);
 
     // Step 1: Find the admin document
-    const admin = await Admin.findById(adminID).select('workingDetails').populate('workingDetails.subject', 'subject');
+    const admin = await Admin.findById(_id).select('workingDetails').populate('workingDetails.subject', 'subject');
 
     if (!admin) {
         return res.status(404).json({ success: false, message: 'Admin not found' });
@@ -255,6 +255,7 @@ const getSubjectListByAdminID = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, subjects: subjectNames });
 });
 
+// pending
 // returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
 const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
     try {
@@ -277,12 +278,7 @@ const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
     }
 });
 
-// for resource sharing
-const getAdminsAllSubjectList = asyncHandler( async(req, res)=>{
-
-})
-
-
+// for teacher to assign batch to student
 const getBatchListByYSBSub = asyncHandler( async(req, res)=>{
 
 })
@@ -300,7 +296,7 @@ export {
     getSubjectListByYSB,
     getModeListAndBatchListByYSBSub,
 
-    getSubjectListByAdminID,
+    getSubjectListByCurrentAdmin,
     getSubjectSwitchOptionList,
     getAdminsAllSubjectList,
 }

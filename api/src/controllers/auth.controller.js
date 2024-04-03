@@ -7,7 +7,6 @@ import { User } from "../models/user.models.js";
 import { Admin } from "../models/admin.models.js";
 import jwt from "jsonwebtoken";
 
-
 // Done
 const generateAccessAndRefreshTokens = async (userId, userType) => {
     try {

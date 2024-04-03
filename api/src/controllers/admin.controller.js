@@ -58,10 +58,6 @@ const registerAdmin = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse(200, createdAdmin, "Admin registered successfully"));
 });
 
-const verifyEmail = asyncHandler(async (req, res) => {
-
-})
-
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body;
 
@@ -78,7 +74,6 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, {}, "Password changed successfully"));
 });
 
-
 const getCurrentAdmin = asyncHandler(async (req, res) => {
     const admin = await Admin.findById(req.user._id).select("-password -refreshToken");
 
@@ -88,7 +83,6 @@ const getCurrentAdmin = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, admin, "Admin fetched successfully"));
 });
-
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
     const {
@@ -118,7 +112,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, admin, "Account details updated successfully"));
 });
-
 
 const updateAdminProfilePhoto = asyncHandler(async (req, res) => {
     const admin = await Admin.findById(req.user._id);
@@ -153,9 +146,6 @@ const updateAdminProfilePhoto = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, admin, "Admin profile photo updated successfully"));
 });
 
-
-
-
 const updateAdminCode = asyncHandler(async (req, res) => {
     const { newAdminCode } = req.body;
     const adminId = req.user._id; // Assuming admin ID is available in the request
@@ -184,7 +174,6 @@ const updateAdminCode = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, admin, "Admin code updated successfully"));
 });
 
-
 const getAdminCode = asyncHandler(async (req, res) => {
     const adminId = req.user._id; // Assuming admin ID is available in the request
 
@@ -197,7 +186,6 @@ const getAdminCode = asyncHandler(async (req, res) => {
 
     res.status(200).json(new ApiResponse(200, admin, "Admin code fetched successfully"));
 });
-
 
 const forgetPassword = asyncHandler(async (req, res) => {
     const { email } = req.body;
@@ -232,8 +220,6 @@ const forgetPassword = asyncHandler(async (req, res) => {
     }
 });
 
-
-
 const resetPassword = asyncHandler(async (req, res) => {
     const { resetToken, password, confirmPassword } = req.body;
 
@@ -266,7 +252,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     }
 });
 
-
 const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
     try {
         // Find the current admin by ID and select essential fields
@@ -281,8 +266,6 @@ const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error fetching admin essentials");
     }
 });
-
-
 
 // high security
 // Done

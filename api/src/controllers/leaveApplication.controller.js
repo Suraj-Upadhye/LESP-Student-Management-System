@@ -165,7 +165,6 @@ const listPendingLeaveApplication = asyncHandler(async (req, res) => {
     }
 });
 
-
 const listApprovedLeaveApplication = asyncHandler(async (req, res) => {
     try {
         // Find all approved leave applications
