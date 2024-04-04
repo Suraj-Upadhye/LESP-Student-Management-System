@@ -13,7 +13,7 @@ import {
     getModeListAndBatchListByYSBSub,
 
     getSubjectListByCurrentAdmin,
-    getSubjectSwitchOptionList,
+    // getSubjectSwitchOptionList,
     // getAdminsAllSubjectList,
 }
     from '../controllers/subjects.controller.js';
@@ -35,7 +35,7 @@ router.route("/getModeListAndBatchListByYSBSub").post(getModeListAndBatchListByY
 
 router.route("/getSubjectListByCurrentAdmin").get(verifyJWT, getSubjectListByCurrentAdmin);
 
-router.route("/getSubjectSwitchOptionList").post(getSubjectSwitchOptionList)
+// router.route("/getSubjectSwitchOptionList").post(getSubjectSwitchOptionList)
 // router.route("/getAdminsAllSubjectList").post(getAdminsAllSubjectList)
 
 

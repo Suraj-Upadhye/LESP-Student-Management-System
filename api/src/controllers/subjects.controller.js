@@ -254,29 +254,6 @@ const getSubjectListByCurrentAdmin = asyncHandler(async (req, res) => {
 });
 
 // pending
-// returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
-const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
-    try {
-        const { role, _id } = req.user; // Extract user role and ID from request user object
-
-        let subjects = []; // Initialize subjects array
-
-        // Check user role to determine the type of subjects to fetch
-        if (role === 'Teacher' || role === 'HOD') {
-            // Fetch subjects assigned to the teacher or HOD based on their ID
-            subjects = await Subject.find({ "workingDetails.teacher": _id })
-                .populate('workingDetails.subject', 'subject year semester branch mode applicableBatchNames');
-        }
-
-        // Return the list of subjects with relevant details
-        res.status(200).json({ success: true, data: subjects });
-    } catch (error) {
-        // Handle errors and send appropriate response
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// pending
 // for teacher to assign batch to student
 const getBatchListByYSBSub = asyncHandler( async(req, res)=>{
 
@@ -296,6 +273,5 @@ export {
     getModeListAndBatchListByYSBSub,
 
     getSubjectListByCurrentAdmin,
-    getSubjectSwitchOptionList,
     // getAdminsAllSubjectList,
 }

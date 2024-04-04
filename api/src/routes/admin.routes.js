@@ -6,7 +6,8 @@ import { registerAdmin,
     newStudentList,
     acceptNewStudent,
     studentBatchAllocation,
-    classTeacherAllocation
+    classTeacherAllocation,
+    getSubjectSwitchOptionList,
  } from "../controllers/admin.controller.js";
 import {upload} from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
@@ -33,6 +34,8 @@ router.route("/acceptNewStudent/:studentId").post(acceptNewStudent)
 
 router.route("/studentBatchAllocation/:studentId").post(studentBatchAllocation)
 router.route("/classTeacherAllocation/:teacherId").post(classTeacherAllocation)
+
+router.route("/getSubjectSwitchOptionList").get(verifyJWT,getSubjectSwitchOptionList)
 
 // not done    
 router.route("/changeCurrentPassword").post(changeCurrentPassword)

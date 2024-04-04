@@ -48,37 +48,59 @@ const fillAttendance = asyncHandler(async (req, res) => {
 
 // pending 
 // something missing or wrong approach
-const getAttendanceSubjectWiseAllStudents = asyncHandler(async (req, res) => {
+// data from frontend teacherId, year, branch, division, sessionType, batch(if sessionType is practical or tutorial), subject name
+// get attendance data of one subject at a time 
+// if lecture then return all students data without filteration of batch and also return name of teacher, subject name, semester, class, academic year, roll no of student, student name, lecture no, date, total present, total absent , remark, content carried out lecture wise
+// if practical or tutorial then return only that batch student data and also return batch, name of teacher, subject name, semester, class, academic year, roll no of student, student name, lecture no, date, total present, total absent , remark, Experiment carried out practical wise
+const getAttendanceData = asyncHandler(async (req, res) => {
     try {
-        const { teacherId } = req.params;
-        const { subjectId } = req.body;
+        // Extract data from the frontend
+        const {teacherId} = req.user._id
+        const { year, branch, division, sessionType, batch, subjectName } = req.body;
 
-        // Find attendance records for the given teacher and subject
-        const attendanceRecords = await Attendance.find({
-            "attendanceData.teacherId": teacherId,
-            "attendanceData.subjectId": subjectId
+        // Get the subject ID based on the subject name
+        const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectIDByOther', {
+            year,
+            branch,
+            semester: division, // Assuming division corresponds to semester
+            subjectName
         });
 
-        console.log(attendanceRecords)
+        if (!subjectResponse.data.success) {
+            return res.status(404).json({ success: false, error: "Subject not found" });
+        }
 
-        // Extract attendance data subject-wise for all students
-        const subjectWiseAttendance = {};
-        attendanceRecords.forEach(record => {
-            record.attendanceData.forEach(data => {
-                const { subjectId, studentList } = data;
-                if (!subjectWiseAttendance[subjectId]) {
-                    subjectWiseAttendance[subjectId] = [];
-                }
-                subjectWiseAttendance[subjectId].push(...studentList);
-            });
-        });
+        const subjectId = subjectResponse.data.subjectID;
 
-        res.status(200).json({ success: true, data: subjectWiseAttendance });
+        // Fetch attendance data based on sessionType
+        let attendanceData;
+        if (sessionType === "Lecture") {
+            // For Lecture sessionType, return all students data without batch filter
+            attendanceData = await Attendance.find({
+                "attendanceData.teacherId": teacherId,
+                "attendanceData.subjectId": subjectId,
+                "attendanceData.sessionType": sessionType
+            }).populate('attendanceData.studentList.studentId', 'rollNo firstName middleName lastName');
+        } else if (sessionType === "Practical" || sessionType === "Tutorial") {
+            // For Practical or Tutorial sessionType, return batch-specific data
+            attendanceData = await Attendance.find({
+                "attendanceData.teacherId": teacherId,
+                "attendanceData.subjectId": subjectId,
+                "attendanceData.sessionType": sessionType,
+                "attendanceData.batchBelongs": batch
+            }).populate('attendanceData.studentList.studentId', 'rollNo firstName middleName lastName');
+        } else {
+            return res.status(400).json({ success: false, error: "Invalid sessionType" });
+        }
+
+        res.status(200).json({ success: true, data: attendanceData });
+
     } catch (error) {
         console.error("Error fetching attendance data:", error);
         res.status(500).json({ success: false, message: "Failed to fetch attendance data." });
     }
 });
+
 
 
 // future scope
@@ -178,7 +200,7 @@ const getAttendanceAllSubjectsSingleStudent = asyncHandler(async (req, res) => {
 export {
     // addAttendanceSubjectWiseAllStudents,
     fillAttendance,
-    getAttendanceSubjectWiseAllStudents,
+    // getAttendanceSubjectWiseAllStudents,
     getAttendanceSubjectWiseSingleStudent,
     getAttendanceAllSubjectsSingleStudent,
 

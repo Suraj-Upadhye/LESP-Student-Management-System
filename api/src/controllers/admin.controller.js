@@ -267,6 +267,62 @@ const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
     }
 });
 
+// Done
+// returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
+const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
+    try {
+        const { role, _id } = req.user; // Extract user role and ID from request user object
+
+        let subjects = []; // Initialize subjects array
+
+        // Check user role to determine the type of subjects to fetch
+        if (role === 'Teacher' || role === 'HOD') {
+            // Fetch subjects assigned to the teacher or HOD based on their ID
+            subjects = await Admin.aggregate([
+                {
+                    $match: {
+                        _id: _id
+                    }
+                },
+                {
+                    $unwind: "$workingDetails" // Unwind the workingDetails array
+                },
+                {
+                    $lookup: {
+                        from: "subjects", // The collection to join with
+                        localField: "workingDetails.subject", // Field from the Admin collection
+                        foreignField: "_id", // Field from the Subjects collection
+                        as: "subjectDetails" // Output array field
+                    }
+                },
+                {
+                    $unwind: "$subjectDetails" // Unwind the subjectDetails array
+                },
+                {
+                    $project: {
+                        _id: "$subjectDetails._id", // Subject ID
+                        year: "$subjectDetails.year", // Subject year
+                        semester: "$subjectDetails.semester", // Subject semester
+                        branch: "$subjectDetails.branch", // Subject branch
+                        subject: "$subjectDetails.subject", // Subject name
+                        division: "$workingDetails.division", // Division
+                        sessionType: "$workingDetails.sessionType", // Session type
+                        batch: "$workingDetails.batch" // Batch
+                    }
+                }
+            ]);
+        }
+
+        // Return the list of subjects with relevant details
+        res.status(200).json({ success: true, data: subjects });
+    } catch (error) {
+        // Handle errors and send appropriate response
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+
 // high security
 // Done
 const newTeacherList = asyncHandler(async (req, res) => {
@@ -500,6 +556,8 @@ export {
     forgetPassword,
     resetPassword,
     getCurrentAdminEssentials,
+
+    getSubjectSwitchOptionList,
 
     newStudentList,
     newTeacherList,
