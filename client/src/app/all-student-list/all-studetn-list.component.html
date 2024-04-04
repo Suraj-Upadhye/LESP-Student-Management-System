@@ -1,0 +1,108 @@
+<app-header-merged></app-header-merged>
+<div class="w-full lg:w-10/12 px-4 mx-auto mt-6">
+    <div
+        class="relative flex flex-col min-w-0 w-full mb-6 shadow-lg rounded-lg bg-blueGray-100  h-3/4 border-0 bg-gray-100">
+
+        <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
+            <div class="flex flex-wrap">
+                <div class="w-full lg:w-1/5 px-6 mt-4">
+                    <div class="relative w-full mb-3">
+                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="session">
+                            Filter
+                        </label>
+                        <select id="Filter"
+                            class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option>TY CO</option>
+                            <option>SY CO</option>
+                            <option>FY CO</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/4 px-6 mt-4">
+                    <div class="relative w-full mb-3">
+                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="session">
+                            Lists
+                        </label>
+                        <select #selectRole (change)="onRoleChange(selectRole.value)"
+                            class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="student">All Student List</option>
+                            <option value="teacher">All Teacher List</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col">
+                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8" *ngIf="selectedRole === 'student'">
+                        <div class="overflow-hidden">
+                            <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
+                                <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-4">Roll No</th>
+                                        <th scope="col" class="px-6 py-4">Student Name</th>
+                                        <th scope="col" class="px-6 py-4">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-neutral-200 dark:border-black/10">
+                                        <td class="whitespace-nowrap px-6 py-4 font-balck">233206</td>
+                                        <td class="whitespace-nowrap px-6 py-4 items-center">Manas Chnadrashekhar patil
+                                        </td>
+                                        <td>
+                                            <a href="/viewprofilestudent">
+                                            <button
+                                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2"
+                                                type="button">
+                                                View
+                                            </button>
+                                        </a>
+                                            <button
+                                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg ml-3"
+                                                type="button">
+                                                Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8" *ngIf="selectedRole === 'teacher'">
+                        <div class="overflow-hidden">
+                            <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
+                                <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-4">Sr No</th>
+                                        <th scope="col" class="px-6 py-4">Teacher Name</th>
+                                        <th scope="col" class="px-6 py-4">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-neutral-200 dark:border-black/10">
+                                        <td class="whitespace-nowrap px-6 py-4 font-balck">01</td>
+                                        <td class="whitespace-nowrap px-6 py-4 items-center">Mr. Pravin Maruti Rupnar
+                                        </td>
+                                        <td>
+                                            <a href="/viewprofileteacher">
+                                            <button
+                                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2"
+                                                type="button">
+                                                View
+                                            </button>
+                                        </a>
+                                            <button
+                                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg ml-3"
+                                                type="button">
+                                                Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>

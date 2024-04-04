@@ -1,0 +1,42 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.header{
+    margin-top: 1%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.profile{
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.profileImg{
+   border-radius: 50%;
+}
+
+.logout{
+    margin-right: 5%;
+    margin-left: 3%;
+}
+
+.logoutBtn{
+    background-color: red;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    width: 80px;
+    height: 30px;
+    font-weight: 700;
+}
+
+.logoutBtn:hover{
+    background-color: rgb(221, 216, 216);
+}

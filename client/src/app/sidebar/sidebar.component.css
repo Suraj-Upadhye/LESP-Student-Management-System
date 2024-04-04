@@ -1,0 +1,63 @@
+ *{
+    font-family: "Lato", sans-serif;
+  }
+  
+  .sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    cursor: pointer; 
+    /* background-color: #9E66C0; */
+     background-color: white;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+  
+  
+  .profile{
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-size: 13px;
+    font-weight: 700;
+  } 
+  
+  .profileImg{
+   border-radius: 50%;
+  }
+  
+  .profileName{
+    margin-right: 25px;
+  }
+  
+  .sidenav p{
+    padding: 8px 8px 8px 32px;
+    /* text-decoration: none; */
+    font-size: 15px;
+    color: black;
+    display: block;
+  }
+  
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+  }
+  
+  .sidenav a:hover {
+    color: black;
+  }
+  
+  .sidenav .closebtn {
+    position: absolute;
+    right: 25px;
+    font-size: 36px;
+    top: 0px;
+  }
+  

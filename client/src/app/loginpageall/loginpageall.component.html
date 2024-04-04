@@ -1,0 +1,94 @@
+<div class="w-full lg:w-10/12 px-4 mx-auto mt-4">
+    <div
+        class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0 h-dvh bg-gray-100">
+        <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
+            <div class="flex h-full flex-wrap items-center justify-center lg:justify-between">
+                <div class="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
+                    <img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                        class="w-full" alt="Sample image" />
+                </div>
+                <div
+                    class="w-full bg-gray-100 rounded-lg md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                        <h1
+                            class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                            Sign in to your account
+                        </h1>
+                        <div>
+                            <label for="email"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            <input type="email" id="email" name="email" [(ngModel)]="email" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="name@company.com" required>
+                        </div>
+                        <div>
+                            <label for="password"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <input type="password" id="password" name="password" [(ngModel)]="password" required placeholder="***********"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-start">
+                            </div>
+                            <a href="/forget"
+                                class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot
+                                password?</a>
+                        </div>
+                        <a href="/homepage">
+                            <button (click)="onSubmit()"
+                                class="bg-blue-500 mt-4 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                                Sign in
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="fixed inset-0 collapse z-50 w-full">
+                        <input type="checkbox" id="signup" class="peer appearance-none collapse opacity-0">
+                        <div
+                            class="absolute bg-slate-800 bg-opacity-60 px-10 inset-0 w-full flex justify-center items-center invisible opacity-0 peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100 transition-all">
+                            <div
+                                class="relative z-40 max-h-[calc(100vh-5em)] w-11/12 md:w-4/12 max-w-screen-md cursor-auto overflow-y-auto rounded-sm bg-white py-6 px-6 md:px-8 scale-90 md:scale-100 transition-all text-center rounded-lg">
+                                <!-- Adjusted width and reduced padding -->
+                                <!-- Button close pop-up -->
+                                <label for="signup"
+                                    class="group absolute top-5 right-5 cursor-pointer w-auto transition-all rounded-full">
+                                    <svg class="h-4 w-auto group-hover:opacity-50 transition-all" width="40" height="48"
+                                        viewBox="0 0 48 48" fill="none">
+                                        <path d="M3 45L45 3" stroke="#1E293B" stroke-width="5" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <path d="M45 45L3 3" stroke="#1E293B" stroke-width="5" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg>
+                                </label>
+                                <p class="text-lg md:text-2xl mb-4">Select Signup Mode For User</p>
+                                <div class="w-full flex justify-center items-center flex-row gap-4 flex-wrap">
+                                    <a href="/signup">
+                                        <div
+                                            class="bg-blue-300 hover:bg-blue-600 text-black font-bold py-2 px-4 border border-blue-700 rounded-full">
+                                            STUDENT</div>
+                                    </a>
+                                    <a href="/signup1">
+                                        <div
+                                            class="bg-blue-300 hover:bg-blue-600 text-black font-bold py-2 px-4 border border-blue-700 rounded-full">
+                                            TEACHER</div>
+                                    </a>
+                                    <a href="/signup1">
+                                        <div
+                                            class="bg-blue-300 hover:bg-blue-600 text-black font-bold py-2 px-4 border border-blue-700 rounded-full">
+                                            HOD</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-sm font-light text-gray-500 dark:text-gray-400 text-center mt-4 rounded-full">
+                        <!-- Adjusted margin and centered text -->
+                        Don’t have an account yet?
+                        <label for="signup"
+                            class="font-medium text-black-100 hover:underline dark:text-primary-500">Sign up</label>
+                    </p>
+
+
+                </div>
+            </div>

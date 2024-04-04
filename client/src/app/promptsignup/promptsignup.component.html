@@ -1,0 +1,32 @@
+<body class="flex justify-center items-center h-screen bg-gray-100">
+    <!-- Pop-Up 6 -->
+    <div class="fixed inset-0 collapse z-50 w-full">
+        <input type="checkbox" id="pop-up-6" class="peer appearance-none collapse opacity-0">
+        <div class="absolute bg-slate-800 bg-opacity-60 px-10 inset-0 w-full flex justify-center items-center invisible opacity-0 peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100 transition-all ">
+            <div class="relative z-40 max-h-[calc(100vh-5em)] w-full max-w-screen-lg cursor-auto overflow-y-auto rounded-sm bg-white py-10 px-10 md:px-14 scale-90 transition-all text-center w-6/12 h-full rounded-lg"> 
+                <!-- Button close pop-up -->
+                <label for="pop-up-6" class="group absolute top-5 right-5 cursor-pointer w-auto transition-all">
+                    <svg class="h-4 w-auto group-hover:opacity-50 transition-all" width="40" height="48" viewBox="0 0 48 48" fill="none">
+                        <path d="M3 45L45 3" stroke="#1E293B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M45 45L3 3" stroke="#1E293B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>                        
+                </label>
+                <div class="w-full items-center">
+                    <button type="button" class="w-6/12 h-20 text-black bg-blue-300 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mb-4 mt-4">STUDENT</button>
+                    <button type="button" class="w-6/12 h-20 text-black bg-blue-300 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mb-4 mt-4">TEACHER</button>
+                    <button type="button" class="w-6/12 h-20 text-black bg-blue-300 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-4">HOD</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="min-h-screen w-full flex justify-center items-center flex-col py-16">
+        <div class="w-full max-w-screen-lg px-10">
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="p-16 border border-slate-200 flex justify-center items-center rounded-sm">
+                    <label for="pop-up-6" class="px-8 py-4 rounded-sm bg-blue-500 text-white text-base whitespace-nowrap cursor-pointer hover:bg-opacity-70 transition-all">signup</label>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
