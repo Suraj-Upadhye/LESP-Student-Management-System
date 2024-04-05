@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { HeaderMergedComponent } from "../header-merged/header-merged.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-changepassword',
     standalone: true,
     templateUrl: './changepassword.component.html',
     styleUrl: './changepassword.component.css',
-    imports: [HeaderMergedComponent,CommonModule,FormsModule]
+    imports: [HeaderMergedComponent,CommonModule,FormsModule, RouterModule]
 })
 export class ChangepasswordComponent {
     newPassword: string = ''; // newPassword variable is initialize

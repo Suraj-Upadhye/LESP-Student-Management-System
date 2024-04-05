@@ -14,32 +14,33 @@
                             class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Sign in to your account
                         </h1>
-                        <div>
-                            <label for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="email" id="email" name="email" [(ngModel)]="email" required
-                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="name@company.com" required>
-                        </div>
-                        <div>
-                            <label for="password"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            <input type="password" id="password" name="password" [(ngModel)]="password" required placeholder="***********"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-start">
+                        <form [formGroup]="loginForm">
+                            <div>
+                                <label for="email"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                <input type="email" id="email" name="email" formControlName="email" required
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="name@company.com" required>
                             </div>
-                            <a href="/forget"
-                                class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot
-                                password?</a>
-                        </div>
-                        <a href="/homepage">
-                            <button (click)="onSubmit()"
+                            <div>
+                                <label for="password"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                <input type="password" id="password" name="password" formControlName="password" required
+                                    placeholder="***********"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-start">
+                                </div>
+                                <a routerLink="/forget"
+                                    class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot
+                                    password?</a>
+                            </div>
+                            <button (click)="login()"
                                 class="bg-blue-500 mt-4 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
                                 Sign in
                             </button>
-                        </a>
+                        </form>
                     </div>
 
                     <div class="fixed inset-0 collapse z-50 w-full">
@@ -92,3 +93,7 @@
 
                 </div>
             </div>
+
+
+
+            

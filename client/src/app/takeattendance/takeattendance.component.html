@@ -23,6 +23,7 @@
                     </mat-form-field> -->
                     <input type="text" id="first_name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    [value]="date"
                     disabled>
                 </div>
             </div>
@@ -33,6 +34,7 @@
                     </label>
                     <input type="text" id="first_name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        [value]="year"
                         disabled>
                 </div>
             </div>
@@ -43,6 +45,7 @@
                     </label>
                     <input type="text" id="first_name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        [value]="branch"
                         disabled>
                 </div>
             </div>
@@ -53,6 +56,7 @@
                     </label>
                     <input type="text" id="first_name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        [value]="division"
                         disabled>
                 </div>
             </div>
@@ -61,10 +65,9 @@
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="session">
                         Session Type
                     </label>
-                    <select id="session"
+                    <select id="session" 
                         class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option>Theory</option>
-                        <option>Practical</option>
+                        <option *ngFor="let sessionType of sessionTypeList">{{sessionType}}</option>
                     </select>
                 </div>
             </div>
@@ -75,9 +78,7 @@
                     </label>
                     <select id="batch"
                         class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option>T1</option>
-                        <option>T2</option>
-                        <option>T3</option>
+                        <option *ngFor="let batch of batchList">{{batch}}</option>
                     </select>
                 </div>
             </div>
@@ -88,12 +89,15 @@
                     </label>
                     <input type="text" id="first_name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        [value]="subjectName"
                         disabled>
                 </div>
             </div>
             <div class="w-full lg:w-1/6 px-6 mt-10">
                 <div class="relative w-full mb-3">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
+                    <button 
+                    (click)="switchData()"
+                    class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
                         Switch
                     </button>
                 </div>

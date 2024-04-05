@@ -103,7 +103,7 @@ const adminSchema = new Schema(
                         enum: ["Div1", "Div2", "None"],
                         reqired: [true, 'division is required'],
                     },
-                    mode: {
+                    sessionType: {
                         type: [],
                         required: [true, 'mode of session is required']
                     },

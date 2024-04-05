@@ -1,9 +1,10 @@
 <div class="header">
-    <div class="profile">
-        <img src="\assets\img\blank-profile-picture.jpg"
+    <div class="profile"
+    routerLink="/viewprofilestudent">
+        <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1710748095/xowjbmq7hqz5vr9iyjkb.jpg"
             alt="profileImg" class="profileImg cursor-pointer
             " height="40px" width="40px">
-        <p class="profileName cursor-pointer" > Profile Name</p>
+        <p class="profileName cursor-pointer">{{profileName}}</p>
     </div>
     <div class="logout">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-8 w-20" routerLink="/">Logout</button>

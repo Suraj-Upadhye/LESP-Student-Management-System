@@ -1,35 +1,39 @@
 <div id="mySidenav" class="sidenav bg-black h-full w-0 fixed z-10 top-0 left-0 transition duration-500 ease-in-out overflow-x-hidden pt-16">
-  <div class="profile flex flex-col items-center ">
-    <img src="\assets\img\blank-profile-picture.jpg" alt="profileImg" class="profileImg rounded-full" height="40px" width="40px" routerLink="/profile">
-    <p class="profileName text-black" routerLink="/profile"> Profile Name</p>
+  <div 
+  routerLink="/viewprofilestudent"
+  class="profile flex flex-col items-center ">
+    <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1710748095/xowjbmq7hqz5vr9iyjkb.jpg" alt="profileImg" class="profileImg rounded-full" height="40px" width="40px" routerLink="/profile">
+    <p class="profileName text-black" routerLink="/profile">{{profileName}}</p>
   </div>
   <a class="closebtn absolute top-3 right-6 text-black text-2xl" (click)="closeNav()">&times;</a>
   <hr class="bg-black h-px">
 
-  <a href="/homepage" class="text-black hover:text-black">Home</a>
+
+  <a *ngIf="role == 'HOD' || role == 'Teacher'" href="/homepage-teacher-hod" class="text-black hover:text-black">Home</a>
+  <a *ngIf="role == 'Student'" href="/homepage-student" class="text-black hover:text-black">Home</a>
 
   <!-- hod rights -->
-  <div class="hodRights" *ngIf="username=='hod' || username == 'teacher' ">
+  <div class="hodRights" *ngIf="role=='HOD' || role == 'Teacher' ">
     <a href="/TakeAttendance" class="text-black hover:text-black">Fill Attendance</a>
     <a href="/TakeUTMarks" class="text-black hover:text-black">Fill UT Marks</a>
     <a href="/StudyResource" class="text-black hover:text-black">Send Resouces</a>
     <hr class="bg-h-px">
   </div>
 
-  <div class="hodRights" *ngIf="username=='hod'">
+  <div class="hodRights" *ngIf="role=='HOD'">
     <p class="text-black">All Section :</p>
     <a *ngFor="let path of teacherSectionPath;let i=index" [href]="path" class="text-black hover:text-black">{{teacherSection[i]}}</a>
     <hr class="bg-black h-px">
   </div>
 
   <!-- teacher rights -->
-  <div class="teacherRights" *ngIf="username=='teacher'">
+  <div class="teacherRights" *ngIf="role=='Teacher'">
     <a *ngFor="let path of teachernavListPath;let i=index" [href]="path" class="text-black hover:text-black">{{teachernavList[i]}}</a>
     <hr class="bg-black h-px">
   </div>
 
   <!-- all rights -->
-  <div class="allRights" *ngIf="username">
+  <div class="allRights" *ngIf="role">
     <a href="/view-attendance" class="text-black hover:text-black">View Attendance</a>
     <a href="/class-ranking" class="text-black hover:text-black">View UT Marks</a>
     <a href="/previousResource" class="text-black hover:text-black">View Resources</a>
@@ -37,11 +41,11 @@
   </div>
 
   <!-- student rights -->
-  <div class="studentRights" *ngIf="username=='student'">
+  <div class="studentRights" *ngIf="role=='Student'">
     <a *ngFor="let path of studentnavListPath;let i=index" [href]="path" class="text-white hover:text-black">{{studentnavList[i]}}</a>
   </div>
 
-  <div class="studentSection" *ngIf="username!='student'">
+  <div class="studentSection" *ngIf="role!='Student'">
     <div class="studentsection">
       <!-- <a *ngFor="let path of studentSectionPath;let i=index" [href]="path" class="text-white hover:text-black">{{studentSection[i]}}</a> -->
     </div>

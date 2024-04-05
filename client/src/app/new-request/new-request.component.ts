@@ -1,18 +1,17 @@
-import { Component,ElementRef,Renderer2,ViewChild } from '@angular/core';
-import { HeaderMergedComponent } from "../header-merged/header-merged.component";
+import { Component } from '@angular/core';
+import { HeaderMergedComponent } from '../header-merged/header-merged.component';
 import { CommonModule } from '@angular/common';
-import { v4 as uuidv4 } from 'uuid';
 
 @Component({
-    selector: 'app-newstudent-requsetpage',
-    standalone: true,
-    templateUrl: './newstudent-requsetpage.component.html',
-    styleUrl: './newstudent-requsetpage.component.css',
-    imports: [HeaderMergedComponent,CommonModule]
+  selector: 'app-new-request',
+  standalone: true,
+  imports: [HeaderMergedComponent,CommonModule],
+  templateUrl: './new-request.component.html',
+  styleUrl: './new-request.component.css'
 })
-export class NewstudentRequsetpageComponent {
+export class NewRequestComponent {
 
-
+  
   fun(){
     
     console.log(this.teachers)
@@ -45,5 +44,5 @@ export class NewstudentRequsetpageComponent {
   onRoleChange(role: string) {
     this.selectedRole = role;
   }
-}
 
+}

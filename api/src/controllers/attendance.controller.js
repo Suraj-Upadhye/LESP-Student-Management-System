@@ -6,20 +6,21 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-const takeAttendanceEssentials = asyncHandler(async (req, res) => {
+const getStudentDataForAttendance = asyncHandler(async (req, res) => {
     // Extract teacher data from request body
     const { teacher } = req.body;
+    const {year, branch, semester, division, sessionType, batch , subjectName} = req.body
 
-    // Validate required fields
-    if (!teacher) {
-        throw new ApiError(400, "Teacher data is required");
+    if(sessionType === "Lecture"){
+
+    } else if (sessionType === "Practical"){
+
+    } else if (sessionType === "Tutorial"){
+
     }
 
-    // Perform necessary actions with the teacher data
-
-    // Send response
-    res.status(200).json({ message: "Attendance essentials received successfully" });
 });
+
 
 // Done
 const fillAttendance = asyncHandler(async (req, res) => {
