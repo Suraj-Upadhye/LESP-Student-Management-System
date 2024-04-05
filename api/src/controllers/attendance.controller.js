@@ -5,28 +5,79 @@ import { Admin } from '../models/admin.models.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import axios from 'axios';
 
-const getStudentDataForAttendance = asyncHandler(async (req, res) => {
-    // Extract teacher data from request body
-    const { teacher } = req.body;
-    const {year, branch, semester, division, sessionType, batch , subjectName} = req.body
+const getStudentsDataListForAttendance = asyncHandler(async (req, res) => {
+    const { year, branch, semester, division, sessionType, batch } = req.body;
 
-    if(sessionType === "Lecture"){
+    console.log(req.body)
 
-    } else if (sessionType === "Practical"){
+    let aggregationPipeline = [];
 
-    } else if (sessionType === "Tutorial"){
-
+    // Match stage to filter documents based on session type and other criteria
+    if (sessionType === "Lecture") {
+        aggregationPipeline.push({
+            $match: {
+                year,
+                branch,
+                semester: String(semester),
+                division,
+                role: "Student",
+                isEmailVerified: true
+            }
+        });
+    } else if (sessionType === "Practical" || sessionType === "Tutorial") {
+        aggregationPipeline.push({
+            $match: {
+                year,
+                branch,
+                semester: String(semester),
+                division,
+                role: "Student",
+                batch
+            }
+        });
+    } else {
+        // If session type is invalid, throw an error
+        throw new ApiError(400, "Invalid session type");
     }
 
+    // Project stage to include specific fields in the output
+    aggregationPipeline.push({
+        $project: {
+            _id: 1,
+            firstName: 1,
+            middleName: 1,
+            lastName: 1,
+            rollNo: 1
+        }
+    });
+
+    // Perform aggregation
+    let userData = await User.aggregate(aggregationPipeline);
+    console.log(userData);
+
+    // Return the list of students
+    res.status(200).json(new ApiResponse(200, "Success", userData));
 });
+
+
 
 
 // Done
 const fillAttendance = asyncHandler(async (req, res) => {
-    const { date, attendanceData } = req.body;
+    const { date, teacherId, year, semester, branch, subjectName, studentList, sessionType, batchBelongs, remark } = req.body;
 
     try {
+        // Get the subject ID based on the subject name
+        const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectIDByOther', {
+            year,
+            branch,
+            semester,
+            subjectName
+        });
+        const subjectId = subjectResponse.data.subjectID;
+
         // Find or create attendance record for the given date
         let attendanceRecord = await Attendance.findOne({ date });
 
@@ -35,8 +86,15 @@ const fillAttendance = asyncHandler(async (req, res) => {
             attendanceRecord = new Attendance({ date });
         }
 
-        // Append attendance data to the attendance record
-        attendanceRecord.attendanceData.push(...attendanceData);
+        // Push new attendance data into attendanceData array
+        attendanceRecord.attendanceData.push({
+            teacherId,
+            subjectId,
+            studentList,
+            sessionType,
+            batchBelongs,
+            remark
+        });
 
         // Save the updated attendance record
         await attendanceRecord.save();
@@ -47,6 +105,7 @@ const fillAttendance = asyncHandler(async (req, res) => {
     }
 });
 
+
 // pending 
 // something missing or wrong approach
 // data from frontend teacherId, year, branch, division, sessionType, batch(if sessionType is practical or tutorial), subject name
@@ -56,7 +115,7 @@ const fillAttendance = asyncHandler(async (req, res) => {
 const getAttendanceData = asyncHandler(async (req, res) => {
     try {
         // Extract data from the frontend
-        const {teacherId} = req.user._id
+        const { teacherId } = req.user._id
         const { year, branch, division, sessionType, batch, subjectName } = req.body;
 
         // Get the subject ID based on the subject name
@@ -199,7 +258,7 @@ const getAttendanceAllSubjectsSingleStudent = asyncHandler(async (req, res) => {
 
 
 export {
-    // addAttendanceSubjectWiseAllStudents,
+    getStudentsDataListForAttendance,
     fillAttendance,
     // getAttendanceSubjectWiseAllStudents,
     getAttendanceSubjectWiseSingleStudent,

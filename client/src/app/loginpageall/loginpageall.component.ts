@@ -41,12 +41,14 @@ export class LoginpageallComponent implements OnInit {
         console.log(res.data);
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
+        
 
         if (res.data.hasOwnProperty('admin')) {
           localStorage.setItem(
             'user_name',
             res.data.admin.firstName + ' ' + res.data.admin.lastName
           );
+          localStorage.setItem('_id', res.data.admin._id)
           this.role = res.data.admin.role;
           localStorage.setItem('role', res.data.admin.role);
           console.log(this.role);
@@ -55,6 +57,7 @@ export class LoginpageallComponent implements OnInit {
             'user_name',
             res.data.user.firstName + ' ' + res.data.user.lastName
           );
+          localStorage.setItem('_id', res.data.user._id);
           this.role = res.data.user.role;
           localStorage.setItem('role', res.data.user.role);
         }

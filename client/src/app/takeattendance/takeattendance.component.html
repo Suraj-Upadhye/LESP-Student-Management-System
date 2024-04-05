@@ -41,6 +41,17 @@
             <div class="w-full lg:w-1/6 px-6 mt-4">
                 <div class="relative w-full mb-3">
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="branch">
+                        Semester
+                    </label>
+                    <input type="text" id="first_name"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        [value]="semester"
+                        disabled>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/6 px-6 mt-4">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="branch">
                         Branch
                     </label>
                     <input type="text" id="first_name"
@@ -65,7 +76,8 @@
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="session">
                         Session Type
                     </label>
-                    <select id="session" 
+                    <select id="selectSession" 
+                    #sessionTypeSelect (change)="onSessionTypeChange(sessionTypeSelect.value)"
                         class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option *ngFor="let sessionType of sessionTypeList">{{sessionType}}</option>
                     </select>
@@ -76,7 +88,8 @@
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="batch">
                         Batch
                     </label>
-                    <select id="batch"
+                    <select id="selectBatch"
+                    #batchSelect (change)="onBatchChange(batchSelect.value)"
                         class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option *ngFor="let batch of batchList">{{batch}}</option>
                     </select>
@@ -97,8 +110,18 @@
                 <div class="relative w-full mb-3">
                     <button 
                     (click)="switchData()"
-                    class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
+                    class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg w-full">
                         Switch
+                    </button>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-1/6 px-6 mt-10">
+                <div class="relative w-full mb-3">
+                    <button 
+                    (click)="showStudentList()"
+                    class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg w-full">
+                        Take Attendance
                     </button>
                 </div>
             </div>
@@ -127,13 +150,16 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                        <tr  *ngFor="let user of users;let i = index">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ user.roll }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{{ user.name }}</td>
+                                    <tbody class="divide-y divide-gray-200  dark:divide-gray-700"
+                                    *ngIf="flagToDisplayTableData">
+                                        <tr  *ngFor="let student of studentListFormatted;let i = index">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">{{ student.rollNo }}</td>
+                                            <!-- dark:text-gray-200 -->
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">{{ student.name }}</td>
+                                            <!-- dark:text-gray-200 -->
                                             <td class="px-6 py-4 whitespace-nowrap text-start text-sm font-medium">
-                                                <button (click)="changeColor(i)" [style.backgroundColor]="user.attence === 'Present' ? 'green' : user.attence === 'Absent' ? 'red' : user.attence === 'Leave' ? 'orange' : 'initial'" class="uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-5 ease-linear transition-all duration-150s w-22">
-                                                    {{ user.attence}}
+                                                <button (click)="changeColorAttendance(i)" [style.backgroundColor]="student.status === 'Present' ? 'green' : student.status === 'Absent' ? 'red' : student.status === 'Leave' ? 'orange' : 'initial'" class="uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-5 ease-linear transition-all duration-150s w-22">
+                                                    {{ student.status}}
                                                 </button>
                                             </td>
                                         </tr>
@@ -146,7 +172,7 @@
                 <div class="flex justify-end">
                     <div class="w-full lg:w-auto px-0 mt-7">
                         <div class="relative w-full mb-3">
-                            <button (click)="onfun()" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-5 rounded-lg mr-2">
+                            <button (click)="onSaveAttendance()" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-5 rounded-lg mr-2">
                                 Save
                             </button>
                         </div>

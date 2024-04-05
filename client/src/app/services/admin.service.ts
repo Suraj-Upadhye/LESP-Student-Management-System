@@ -29,6 +29,18 @@ export class AdminService {
     );
   }
 
+  getStudentsDataListForAttendanceService(academicObj: any){
+    return this.http.post<any>(
+      `${apiUrls.attendanceServiceApi}getStudentsDataListForAttendance`, academicObj
+    );
+  }
+
+  fillAttendanceService(attendanceData: any){
+    return this.http.post<any>(
+      `${apiUrls.attendanceServiceApi}fillAttendance`, attendanceData
+    );
+  }
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   isLoggedIn() {

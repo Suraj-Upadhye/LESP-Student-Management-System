@@ -42,7 +42,8 @@ const AttendanceSchema = new Schema({
             },
             remark: {
                 type: String,
-                required: [true, 'Remark / Note is required'],
+                // required: [true, 'Remark / Note is required'],
+                required: false
             }
         }
     ]

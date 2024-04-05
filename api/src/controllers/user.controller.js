@@ -17,7 +17,7 @@ const registerUser = asyncHandler(async (req, res) => {
         // profilePhoto,
 
         // Academic Details :-
-        year, branch, division, enrollmentNo, rollNo,
+        year, branch,semester, division, enrollmentNo, rollNo,
 
         // Security Details :-
         studentMobileNumber, fatherMobileNumber, motherMobileNumber, email, password
@@ -27,7 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if (
         [firstName, middleName, lastName, gender,
-            year, branch, division, enrollmentNo, rollNo,
+            year, branch,semester, division, enrollmentNo, rollNo,
             studentMobileNumber, email, password
         ].some((field) =>
             field?.trim() === "")
@@ -77,6 +77,7 @@ const registerUser = asyncHandler(async (req, res) => {
         pincode,
         profilePhoto: profilePhoto?.url || "",
         year,
+        semester,
         branch,
         division,
         enrollmentNo,
