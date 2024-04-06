@@ -1,14 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
-import { HeaderMergedComponent } from '../header-merged/header-merged.component';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminService } from '../services/admin.service';
 import { Router } from '@angular/router';
+import { HeaderMergedComponent } from '../header-merged/header-merged.component';
 
 interface Student {
   _id: string;
@@ -16,24 +11,16 @@ interface Student {
 }
 
 @Component({
-  selector: 'app-takeattendance',
+  selector: 'app-view-attendance-common-bar',
   standalone: true,
-  templateUrl: './takeattendance.component.html',
-  styleUrl: './takeattendance.component.css',
-  imports: [
-    MatFormFieldModule,
-    MatDatepickerModule,
-    MatInputModule,
-    MatNativeDateModule,
-    HeaderMergedComponent,
-    FormsModule,
-    CommonModule,
-    HttpClientModule,
-  ],
-  providers: [AdminService],
+  imports: [CommonModule,CommonModule,
+    HttpClientModule, HeaderMergedComponent],
+  templateUrl: './view-attendance-common-bar.component.html',
+  styleUrl: './view-attendance-common-bar.component.css',
+  providers: [AdminService]
 })
-export class TakeattendanceComponent implements OnInit {
-  
+export class ViewAttendanceCommonBarComponent implements OnInit{
+
   adminService = inject(AdminService);
   router = inject(Router);
 
@@ -342,30 +329,4 @@ export class TakeattendanceComponent implements OnInit {
     this.saveAttendanceData()
   }
 
-  // users = [
-  //   { roll: '233205', name: 'suraj jitendra borgave', attence: 'Present' },
-  //   { roll: '233206', name: 'shubham dhondiram sargar', attence: 'Present' },
-  //   { roll: '233207', name: 'manas chandrashekahar patil', attence: 'Present' },
-  //   { roll: '233208', name: 'suraj shantinath upadhye', attence: 'Present' },
-  //   { roll: '233209', name: 'atharv anil niprul', attence: 'Present' },
-  // ];
-
-  // onfun() {
-  //   console.log(this.users);
-  // }
-
-  // changeColor(index: number) {
-  //   const user = this.users[index];
-  //   switch (user.attence) {
-  //     case 'Present':
-  //       user.attence = 'Absent';
-  //       break;
-  //     case 'Absent':
-  //       user.attence = 'Leave';
-  //       break;
-  //     case 'Leave':
-  //       user.attence = 'Present';
-  //       break;
-  //   }
-  // }
 }

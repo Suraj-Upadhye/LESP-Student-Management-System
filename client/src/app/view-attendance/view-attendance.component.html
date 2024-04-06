@@ -1,0 +1,99 @@
+
+
+<app-view-attendance-common-bar/>
+
+
+<div id="tblinfo" class="overflow-x-auto">
+
+    <table id="fir" width="75%">
+        <thead>
+            <tr>
+                <th *ngIf="sessionType==='Lecture'" class="logo" rowspan="2" colspan="2">
+                    <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1712349324/fgpjrap6buflvvjexshz.jpg"
+                        alt="logo" height="100px" width="100px" class="center-image">
+                </th>
+                <th *ngIf="sessionType!=='Lecture'" rowspan="2">
+                    <h1>Batch Name</h1>
+                </th>
+                <th *ngIf="sessionType!=='Lecture'" class="logo" rowspan="2">
+                    <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1712349324/fgpjrap6buflvvjexshz.jpg"
+                        alt="logo" height="100px" width="100px" class="center-image">
+                </th>
+                <th id="heading1" colspan="29">Latthe Education Society's Polytechnic, Sangli</th>
+            </tr>
+            <tr>
+                <th id="heading2" colspan="29">POLYTECHNIC KUPWAD MIDC</th>
+            </tr>
+            <tr>
+                <th rowspan="2" colspan="2"></th>
+                <th colspan="7" rowspan="2">Name of Teacher</th>
+                <th colspan="10" rowspan="2"></th>
+                <th rowspan="2" colspan="3">Subject</th>
+                <th rowspan="2" colspan="12"></th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th rowspan="2" colspan="2"></th>
+                <th rowspan="2" colspan="3">Semester</th>
+                <th rowspan="2" colspan="7"></th>
+                <th rowspan="2" colspan="2">Class</th>
+                <th rowspan="2" colspan="7"></th>
+                <th rowspan="2" colspan="2">Year</th>
+                <th rowspan="2" colspan="7"></th>
+            </tr>
+        </thead>
+        <thead>
+            <tr class="fri">
+                <td rowspan="2" class="row"><b>Roll No.</b></td>
+                <td rowspan="2" class="stn"><b>Student Name</b></td>
+                <td class="vertical-text"><b>Date</b></td>
+                <td *ngFor="let num of range(1, totalLecture)"></td>
+
+                <td class="vertical-text" rowspan="2"><b>Total Present</b></td>
+                <td class="vertical-text" rowspan="2"><b>Total Absent</b></td>
+                <td class="vertical-text" rowspan="2"><b>Remark</b></td>
+            </tr>
+            <tr class="sec">
+                <td class="vertical-text"><b>{{sessionType}} No.</b></td>
+                <td *ngFor="let num of range(1, totalLecture)">{{num}}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td colspan="2">Student Name</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>p</td>
+                <td>a</td>
+                <td>12</td>
+                <td>12</td>
+                <td>50%</td>
+        </tbody>
+    </table>
+</div>
+<!-- <button id="down_btn" (click)="downloadPDF()">Download as PDF</button> -->
+<button id="down_btn" (click)="downloadPDF()"
+    class="mt-8 ml-2.5% sm:ml-0 block w-full sm:w-auto h-12 font-bold border border-black rounded-md px-6 py-2 bg-green-500 hover:bg-red-700">Download
+    as PDF</button>

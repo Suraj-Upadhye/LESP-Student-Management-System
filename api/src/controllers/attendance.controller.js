@@ -2,11 +2,13 @@
 import { Attendance } from '../models/attendance.models.js';
 import { User } from '../models/user.models.js';
 import { Admin } from '../models/admin.models.js';
+import { Subject } from '../models/subjects.models.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import axios from 'axios';
 
+// Done
 const getStudentsDataListForAttendance = asyncHandler(async (req, res) => {
     const { year, branch, semester, division, sessionType, batch } = req.body;
 
@@ -112,54 +114,81 @@ const fillAttendance = asyncHandler(async (req, res) => {
 // get attendance data of one subject at a time 
 // if lecture then return all students data without filteration of batch and also return name of teacher, subject name, semester, class, academic year, roll no of student, student name, lecture no, date, total present, total absent , remark, content carried out lecture wise
 // if practical or tutorial then return only that batch student data and also return batch, name of teacher, subject name, semester, class, academic year, roll no of student, student name, lecture no, date, total present, total absent , remark, Experiment carried out practical wise
+
 const getAttendanceData = asyncHandler(async (req, res) => {
     try {
-        // Extract data from the frontend
-        const { teacherId } = req.user._id
-        const { year, branch, division, sessionType, batch, subjectName } = req.body;
+        // Extract request parameters
+        const { subjectName, sessionType, batch } = req.body;
 
-        // Get the subject ID based on the subject name
-        const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectIDByOther', {
-            year,
-            branch,
-            semester: division, // Assuming division corresponds to semester
-            subjectName
-        });
-
-        if (!subjectResponse.data.success) {
+        // Find the subject
+        const subject = await Subject.findOne({ subject: subjectName });
+        if (!subject) {
             return res.status(404).json({ success: false, error: "Subject not found" });
         }
-
-        const subjectId = subjectResponse.data.subjectID;
 
         // Fetch attendance data based on sessionType
         let attendanceData;
         if (sessionType === "Lecture") {
-            // For Lecture sessionType, return all students data without batch filter
             attendanceData = await Attendance.find({
-                "attendanceData.teacherId": teacherId,
-                "attendanceData.subjectId": subjectId,
-                "attendanceData.sessionType": sessionType
-            }).populate('attendanceData.studentList.studentId', 'rollNo firstName middleName lastName');
+                "attendanceData.subjectId": subject._id,
+                "attendanceData.sessionType": "Lecture"
+            }).populate({
+                path: "attendanceData.studentList.studentId",
+                select: "firstName lastName middleName rollNo year semester branch"
+            }).select("date attendanceData.studentList.state");
         } else if (sessionType === "Practical" || sessionType === "Tutorial") {
-            // For Practical or Tutorial sessionType, return batch-specific data
             attendanceData = await Attendance.find({
-                "attendanceData.teacherId": teacherId,
-                "attendanceData.subjectId": subjectId,
+                "attendanceData.subjectId": subject._id,
                 "attendanceData.sessionType": sessionType,
                 "attendanceData.batchBelongs": batch
-            }).populate('attendanceData.studentList.studentId', 'rollNo firstName middleName lastName');
+            }).populate({
+                path: "attendanceData.studentList.studentId",
+                select: "firstName lastName middleName rollNo year semester branch"
+            }).select("date attendanceData.studentList.state attendanceData.batchBelongs");
         } else {
             return res.status(400).json({ success: false, error: "Invalid sessionType" });
         }
 
-        res.status(200).json({ success: true, data: attendanceData });
+        // Prepare formatted attendance data
+        const formattedAttendance = {};
+        for (const data of attendanceData) {
+            const key = data.date.toISOString().split('T')[0]; // Extract date without time
+            if (!formattedAttendance[key]) {
+                formattedAttendance[key] = [];
+            }
+            for (const item of data.attendanceData) {
+                for (const student of item.studentList) {
+                    formattedAttendance[key].push({
+                        date: key,
+                        subjectName: subjectName,
+                        studentName: `${student.studentId.firstName} ${student.studentId.middleName} ${student.studentId.lastName}`,
+                        rollNo: student.studentId.rollNo,
+                        status: student.state,
+                        batch: item.batchBelongs || "",
+                        sessionType: item.sessionType,
+                        year: student.studentId.year,
+                        semester: student.studentId.semester,
+                        branch: student.studentId.branch,
+                        // You can add teacherName here if it's available in your schema
+                    });
+                }
+            }
+        }
+
+        // Return the useful attendance data
+        res.status(200).json({ success: true, data: formattedAttendance });
 
     } catch (error) {
         console.error("Error fetching attendance data:", error);
         res.status(500).json({ success: false, message: "Failed to fetch attendance data." });
     }
 });
+
+
+
+
+
+
 
 
 
@@ -260,6 +289,7 @@ const getAttendanceAllSubjectsSingleStudent = asyncHandler(async (req, res) => {
 export {
     getStudentsDataListForAttendance,
     fillAttendance,
+    getAttendanceData,
     // getAttendanceSubjectWiseAllStudents,
     getAttendanceSubjectWiseSingleStudent,
     getAttendanceAllSubjectsSingleStudent,

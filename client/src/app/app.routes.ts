@@ -21,6 +21,10 @@ import { ContectUsComponent } from './contect-us/contect-us.component';
 import { HomepageTeacherHodComponent } from './homepage-teacher-hod/homepage-teacher-hod.component';
 import { HomepagestudentComponent } from './homepagestudent/homepagestudent.component';
 import { NewRequestComponent } from './new-request/new-request.component';
+import { ViewAttendanceComponent } from './view-attendance/view-attendance.component';
+import { ViewAttendanceIndividualComponent } from './view-attendance-individual/view-attendance-individual.component';
+import { ViewUtmarksComponent } from './view-utmarks/view-utmarks.component';
+import { ViewUtmarksIndividualComponent } from './view-utmarks-individual/view-utmarks-individual.component';
 
 
 export const routes: Routes = [
@@ -40,6 +44,11 @@ export const routes: Routes = [
 
     {path:'TakeAttendance', component:TakeattendanceComponent},
     {path:'TakeUTMarks', component:TakeUTMarksComponent},
+
+    {path:'view-attendance', component:ViewAttendanceComponent},
+    {path:'view-attendance-individual', component: ViewAttendanceIndividualComponent},
+    {path: 'view-utmarks', component:ViewUtmarksComponent},
+    {path: 'view-utmarks', component:ViewUtmarksIndividualComponent},
 
     {path:'StudyResource', component:StudyshearComponent},
     {path:'previousResource', component:Studyshear1Component},
