@@ -2,8 +2,6 @@ import { Router } from 'express';
 import {
     addSubject,
     getAllSubject,
-    updateSubject,
-    deleteSubject,
 
     getSubjectIDByOther,
     getSubjectDetailsBySubjectID,
@@ -23,8 +21,6 @@ const router = Router();
 
 router.route("/addSubject").post(addSubject);
 router.route("/getSubject").get(getAllSubject);
-router.route("/getSubject").post(updateSubject);
-router.route("/getSubject").post(deleteSubject);
 
 router.route("/getSubjectIDByOther").post(getSubjectIDByOther)
 router.route("/getSubjectDetailsBySubjectID").post(getSubjectDetailsBySubjectID);

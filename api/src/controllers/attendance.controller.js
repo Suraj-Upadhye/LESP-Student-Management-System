@@ -63,9 +63,6 @@ const getStudentsDataListForAttendance = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, "Success", userData));
 });
 
-
-
-
 // Done
 const fillAttendance = asyncHandler(async (req, res) => {
     const { date, teacherId, year, semester, branch, subjectName, studentList, sessionType, batchBelongs, remark } = req.body;
@@ -107,14 +104,7 @@ const fillAttendance = asyncHandler(async (req, res) => {
     }
 });
 
-
-// pending 
-// something missing or wrong approach
-// data from frontend teacherId, year, branch, division, sessionType, batch(if sessionType is practical or tutorial), subject name
-// get attendance data of one subject at a time 
-// if lecture then return all students data without filteration of batch and also return name of teacher, subject name, semester, class, academic year, roll no of student, student name, lecture no, date, total present, total absent , remark, content carried out lecture wise
-// if practical or tutorial then return only that batch student data and also return batch, name of teacher, subject name, semester, class, academic year, roll no of student, student name, lecture no, date, total present, total absent , remark, Experiment carried out practical wise
-
+// Done
 const getAttendanceData = asyncHandler(async (req, res) => {
     try {
         // Extract request parameters
@@ -154,26 +144,37 @@ const getAttendanceData = asyncHandler(async (req, res) => {
         for (const data of attendanceData) {
             const key = data.date.toISOString().split('T')[0]; // Extract date without time
             if (!formattedAttendance[key]) {
-                formattedAttendance[key] = [];
+                const firstAttendanceItem = data.attendanceData[0]; // Assuming there's at least one item in the attendanceData array
+                // console.log(data.attendanceData);
+                let batchBelongs = "";
+                if (sessionType === "Lecture") {
+                    batchBelongs = ""
+                } else {
+                    batchBelongs = batch;
+                }
+                formattedAttendance[key] = {
+                    date: key,
+                    subjectName: subjectName,
+                    batch: batchBelongs, // Assuming batchBelongs is consistent for all items in the attendanceData array
+                    sessionType: sessionType, // Assuming sessionType is consistent for all items in the attendanceData array
+                    year: firstAttendanceItem.studentList[0].studentId.year || "", // Assuming year is available in the first student entry
+                    semester: firstAttendanceItem.studentList[0].studentId.semester || "", // Assuming semester is available in the first student entry
+                    branch: firstAttendanceItem.studentList[0].studentId.branch || "", // Assuming branch is available in the first student entry
+                    attendance: [] // Initialize attendance array
+                };
             }
             for (const item of data.attendanceData) {
                 for (const student of item.studentList) {
-                    formattedAttendance[key].push({
-                        date: key,
-                        subjectName: subjectName,
+                    formattedAttendance[key].attendance.push({
                         studentName: `${student.studentId.firstName} ${student.studentId.middleName} ${student.studentId.lastName}`,
                         rollNo: student.studentId.rollNo,
-                        status: student.state,
-                        batch: item.batchBelongs || "",
-                        sessionType: item.sessionType,
-                        year: student.studentId.year,
-                        semester: student.studentId.semester,
-                        branch: student.studentId.branch,
-                        // You can add teacherName here if it's available in your schema
+                        status: student.state
                     });
                 }
             }
         }
+
+
 
         // Return the useful attendance data
         res.status(200).json({ success: true, data: formattedAttendance });
@@ -184,7 +185,73 @@ const getAttendanceData = asyncHandler(async (req, res) => {
     }
 });
 
+// Done
+const getAttendanceSubjectWiseSingleStudent = asyncHandler(async (req, res) => {
+    try {
+        // Extract request parameters
+        const { subjectName, sessionType, rollNo } = req.body;
 
+        // Find the subject
+        const subject = await Subject.findOne({ subject: subjectName });
+        if (!subject) {
+            return res.status(404).json({ success: false, error: "Subject not found" });
+        }
+
+        // Find the student
+        const student = await User.findOne({ rollNo });
+        if (!student) {
+            return res.status(404).json({ success: false, error: "Student not found" });
+        }
+
+        // Use aggregation to fetch attendance data
+        const attendanceData = await Attendance.aggregate([
+            {
+                $match: {
+                    "attendanceData.subjectId": subject._id,
+                    "attendanceData.sessionType": sessionType,
+                }
+            },
+            {
+                $unwind: "$attendanceData"
+            },
+            {
+                $unwind: "$attendanceData.studentList"
+            },
+            {
+                $match: {
+                    "attendanceData.studentList.studentId": student._id,
+                    "attendanceData.sessionType": sessionType,
+                }
+            },
+            {
+                $project: {
+                    date: "$date",
+                    subjectName: subjectName,
+                    studentName: `${student.firstName} ${student.middleName} ${student.lastName}`,
+                    rollNo: rollNo,
+                    status: "$attendanceData.studentList.state",
+                    batch: "$attendanceData.batchBelongs",
+                    sessionType: "$attendanceData.sessionType",
+                    year: student.year,
+                    semester: student.semester,
+                    branch: student.branch
+                }
+            }
+        ]);
+
+        // Add serial number to each record
+        attendanceData.forEach((record, index) => {
+            record.serialNumber = index + 1;
+        });
+
+        // Return the formatted attendance data
+        res.status(200).json({ success: true, data: attendanceData });
+
+    } catch (error) {
+        console.error("Error fetching attendance data:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch attendance data." });
+    }
+});
 
 
 
@@ -236,30 +303,7 @@ const deleteAttendanceBySubjectAllStudents = asyncHandler(async (req, res) => {
     );
 });
 
-const getAttendanceSubjectWiseSingleStudent = asyncHandler(async (req, res) => {
-    // Extract mode and batch from request body
-    const { mode, batch } = req.body;
-
-    // Validate required fields
-    if (!mode) {
-        throw new ApiError(400, "Mode (theory/practical/tutorial) is required");
-    }
-
-    // Define query object
-    const query = { sessionType: mode };
-
-    // If mode is practical or tutorial, add batch to the query
-    if (mode !== 'theory' && batch) {
-        query.batchBelongs = batch;
-    }
-
-    // Find attendance records matching the query
-    const attendanceRecords = await Attendance.find(query);
-
-    // Return the attendance records
-    res.status(200).json(attendanceRecords);
-});
-
+// future scope
 const getAttendanceAllSubjectsSingleStudent = asyncHandler(async (req, res) => {
     // Extract mode and batch from request body
     const { mode, batch } = req.body;
@@ -284,14 +328,10 @@ const getAttendanceAllSubjectsSingleStudent = asyncHandler(async (req, res) => {
     res.status(200).json(attendanceRecords);
 });
 
-
-
 export {
     getStudentsDataListForAttendance,
     fillAttendance,
     getAttendanceData,
-    // getAttendanceSubjectWiseAllStudents,
     getAttendanceSubjectWiseSingleStudent,
-    getAttendanceAllSubjectsSingleStudent,
 
 }

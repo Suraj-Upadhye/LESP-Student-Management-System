@@ -48,7 +48,7 @@ export const routes: Routes = [
     {path:'view-attendance', component:ViewAttendanceComponent},
     {path:'view-attendance-individual', component: ViewAttendanceIndividualComponent},
     {path: 'view-utmarks', component:ViewUtmarksComponent},
-    {path: 'view-utmarks', component:ViewUtmarksIndividualComponent},
+    {path: 'view-utmarks-individual', component:ViewUtmarksIndividualComponent},
 
     {path:'StudyResource', component:StudyshearComponent},
     {path:'previousResource', component:Studyshear1Component},

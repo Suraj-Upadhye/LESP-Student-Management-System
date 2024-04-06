@@ -34,45 +34,6 @@ const addSharedResource = asyncHandler(async (req, res) => {
     }
 });
 
-// future scope
-const addSharedResources = asyncHandler(async (req, res) => {
-    try {
-        const { resources } = req.body;
-        const { _id: owner } = req.user; // Assuming user authentication is implemented and user ID is available in req.user
-
-        // Create an array to store created shared resources
-        const createdResources = [];
-
-        // Iterate over each resource in the request body and create a shared resource
-        for (const resourceData of resources) {
-            const { resourceFile, description, title, resourceType } = resourceData;
-
-            // Create new shared resource
-            const sharedResource = await SharedResource.create({
-                resourceFile,
-                description,
-                title,
-                resourceType,
-                owner
-            });
-
-            createdResources.push(sharedResource);
-        }
-
-        res.status(201).json({
-            success: true,
-            message: 'Shared resources added successfully',
-            data: createdResources
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
-    }
-});
-
 const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     try {
         const { subject } = req.query;
@@ -160,6 +121,76 @@ const getSingleSharedResource = asyncHandler(async (req, res) => {
     }
 });
 
+const deleteSharedResource = asyncHandler(async (req, res, next) => {
+    try {
+        const { resourceId } = req.params;
+
+        // Check if the resource exists
+        let resource = await SharedResource.findById(resourceId);
+
+        if (!resource) {
+            return res.status(404).json({
+                success: false,
+                message: 'Shared resource not found'
+            });
+        }
+
+        // Delete the resource
+        await SharedResource.findByIdAndDelete(resourceId);
+
+        res.status(200).json({
+            success: true,
+            message: 'Shared resource deleted successfully'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
+// future scope
+const addSharedResources = asyncHandler(async (req, res) => {
+    try {
+        const { resources } = req.body;
+        const { _id: owner } = req.user; // Assuming user authentication is implemented and user ID is available in req.user
+
+        // Create an array to store created shared resources
+        const createdResources = [];
+
+        // Iterate over each resource in the request body and create a shared resource
+        for (const resourceData of resources) {
+            const { resourceFile, description, title, resourceType } = resourceData;
+
+            // Create new shared resource
+            const sharedResource = await SharedResource.create({
+                resourceFile,
+                description,
+                title,
+                resourceType,
+                owner
+            });
+
+            createdResources.push(sharedResource);
+        }
+
+        res.status(201).json({
+            success: true,
+            message: 'Shared resources added successfully',
+            data: createdResources
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
+// future scope
 const updateSharedResource = asyncHandler(async (req, res, next) => {
     try {
         const { resourceId } = req.params;
@@ -198,36 +229,6 @@ const updateSharedResource = asyncHandler(async (req, res, next) => {
     }
 });
 
-const deleteSharedResource = asyncHandler(async (req, res, next) => {
-    try {
-        const { resourceId } = req.params;
-
-        // Check if the resource exists
-        let resource = await SharedResource.findById(resourceId);
-
-        if (!resource) {
-            return res.status(404).json({
-                success: false,
-                message: 'Shared resource not found'
-            });
-        }
-
-        // Delete the resource
-        await SharedResource.findByIdAndDelete(resourceId);
-
-        res.status(200).json({
-            success: true,
-            message: 'Shared resource deleted successfully'
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
-    }
-});
-
 
 
 export {
@@ -236,6 +237,5 @@ export {
     getSharedResourcesListAllSubjects,
     getSharedResourcesListNoticesOnly,
     getSingleSharedResource,
-    updateSharedResource,
     deleteSharedResource,
 }

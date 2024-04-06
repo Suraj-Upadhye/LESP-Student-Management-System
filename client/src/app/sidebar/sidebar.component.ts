@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit {
 
   teacherSection = ['New All Requests', ' All Leave Requests', 'All List'];
 
-  teacherSectionPath = ['/newstudent', '/listrequest', '/allStudentlist'];
+  teacherSectionPath = ['/new-request', '/listrequest', '/allStudentlist'];
 
   // studentSection=["New Student Requests","All Students List"];
 

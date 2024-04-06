@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import html2canvas from 'html2canvas';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { HeaderMergedComponent } from '../header-merged/header-merged.component';
 
 @Component({
   selector: 'app-view-attendance-individual',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderMergedComponent],
   templateUrl: './view-attendance-individual.component.html',
   styleUrl: './view-attendance-individual.component.css'
 })

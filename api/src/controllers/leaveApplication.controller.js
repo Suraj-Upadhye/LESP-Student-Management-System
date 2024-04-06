@@ -62,49 +62,6 @@ const getLeaveApplication = asyncHandler(async (req, res) => {
     });
 });
 
-const updateLeaveApplication = asyncHandler(async (req, res) => {
-    // Extract leave application ID from request parameters
-    const { id } = req.params;
-
-    // Extract update fields from request body
-    const { status } = req.body;
-
-    try {
-        // Find the leave application by ID and update its status
-        const leave = await Leave.findByIdAndUpdate(id, { status }, { new: true });
-
-        if (!leave) {
-            return res.status(404).json({ success: false, message: 'Leave application not found' });
-        }
-
-        // Send success response with updated leave application
-        res.status(200).json({ success: true, data: leave, message: 'Leave application updated successfully' });
-    } catch (error) {
-        // Handle errors
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
-
-const deleteLeaveApplication = asyncHandler(async (req, res) => {
-    // Extract leave application ID from request parameters
-    const { id } = req.params;
-
-    try {
-        // Find the leave application by ID and delete it
-        const leave = await Leave.findByIdAndDelete(id);
-
-        if (!leave) {
-            return res.status(404).json({ success: false, message: 'Leave application not found' });
-        }
-
-        // Send success response with deleted leave application
-        res.status(200).json({ success: true, data: leave, message: 'Leave application deleted successfully' });
-    } catch (error) {
-        // Handle errors
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
-
 const approveLeaveApplication = asyncHandler(async (req, res) => {
     // Extract leave application ID from request parameters
     const { id } = req.params;
@@ -169,6 +126,7 @@ const listPendingLeaveApplication = asyncHandler(async (req, res) => {
     }
 });
 
+// future scope
 const listApprovedLeaveApplication = asyncHandler(async (req, res) => {
     try {
         // Find all approved leave applications
@@ -192,16 +150,56 @@ const listApprovedLeaveApplication = asyncHandler(async (req, res) => {
     }
 });
 
+// future scope
+const updateLeaveApplication = asyncHandler(async (req, res) => {
+    // Extract leave application ID from request parameters
+    const { id } = req.params;
+
+    // Extract update fields from request body
+    const { status } = req.body;
+
+    try {
+        // Find the leave application by ID and update its status
+        const leave = await Leave.findByIdAndUpdate(id, { status }, { new: true });
+
+        if (!leave) {
+            return res.status(404).json({ success: false, message: 'Leave application not found' });
+        }
+
+        // Send success response with updated leave application
+        res.status(200).json({ success: true, data: leave, message: 'Leave application updated successfully' });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// future scope
+const deleteLeaveApplication = asyncHandler(async (req, res) => {
+    // Extract leave application ID from request parameters
+    const { id } = req.params;
+
+    try {
+        // Find the leave application by ID and delete it
+        const leave = await Leave.findByIdAndDelete(id);
+
+        if (!leave) {
+            return res.status(404).json({ success: false, message: 'Leave application not found' });
+        }
+
+        // Send success response with deleted leave application
+        res.status(200).json({ success: true, data: leave, message: 'Leave application deleted successfully' });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
 
 
 export {
     addLeaveApplication,
     getLeaveApplication,
-    updateLeaveApplication,
-    deleteLeaveApplication,
     approveLeaveApplication,
     rejectLeaveApplication,
     listPendingLeaveApplication,
-    listApprovedLeaveApplication,
-    
 }

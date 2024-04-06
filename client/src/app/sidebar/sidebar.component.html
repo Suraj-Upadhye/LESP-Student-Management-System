@@ -21,7 +21,6 @@
   </div>
 
   <div class="hodRights" *ngIf="role=='HOD'">
-    <p class="text-black">All Section :</p>
     <a *ngFor="let path of teacherSectionPath;let i=index" [href]="path" class="text-black hover:text-black">{{teacherSection[i]}}</a>
     <hr class="bg-black h-px">
   </div>
@@ -33,9 +32,16 @@
   </div>
 
   <!-- all rights -->
-  <div class="allRights" *ngIf="role">
+  <div class="allRights" *ngIf="role==='Teacher' || role === 'HOD'">
     <a href="/view-attendance" class="text-black hover:text-black">View Attendance</a>
-    <a href="/class-ranking" class="text-black hover:text-black">View UT Marks</a>
+    <a href="/view-utmarks" class="text-black hover:text-black">View UT Marks</a>
+    <a href="/previousResource" class="text-black hover:text-black">View Resources</a>
+    <hr class="bg-black h-px">
+  </div>
+
+  <div class="allRights" *ngIf="role==='Student'">
+    <a href="/view-attendance-individual" class="text-black hover:text-black">View Attendance</a>
+    <a href="/view-utmarks-individual" class="text-black hover:text-black">View UT Marks</a>
     <a href="/previousResource" class="text-black hover:text-black">View Resources</a>
     <hr class="bg-black h-px">
   </div>

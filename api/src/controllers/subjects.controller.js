@@ -47,7 +47,7 @@ const getAllSubject = asyncHandler(async (req, res) => {
     }
 });
 
-// 
+// future scope
 const updateSubject = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params; // Extract subject id from request parameters
@@ -73,7 +73,7 @@ const updateSubject = asyncHandler(async (req, res) => {
     }
 });
 
-// 
+// future scope
 const deleteSubject = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params; // Extract subject id from request parameters
@@ -95,7 +95,6 @@ const deleteSubject = asyncHandler(async (req, res) => {
 });
 
 // Done
-// by year, semester, branch, subjectname find out subjectid
 const getSubjectIDByOther = asyncHandler(async (req, res) => {
     const { year, semester, branch, subjectName } = req.body;
 
@@ -262,16 +261,10 @@ const getBatchListByYSBSub = asyncHandler( async(req, res)=>{
 export {
     addSubject,
     getAllSubject,
-    updateSubject,
-    deleteSubject,
-
     getSubjectIDByOther,
     getSubjectDetailsBySubjectID,
-    
     getSemByYearBranch,
     getSubjectListByYSB,
     getModeListAndBatchListByYSBSub,
-
     getSubjectListByCurrentAdmin,
-    // getAdminsAllSubjectList,
 }

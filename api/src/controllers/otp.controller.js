@@ -6,8 +6,6 @@ import { Otp } from "../models/otp.models.js";
 import { sendOTPEmail } from "../utils/sendEmail.js";
 
 // Done
-// create a random otp and store it in database with expiry of 10 minutes and with email
-// send the generated OTP to user's email id  using nodemailer or any other mailing service
 const createAndStoreOTP = asyncHandler(async (req, res) => {
     const { email } = req.body;
 
@@ -55,8 +53,6 @@ const createAndStoreOTP = asyncHandler(async (req, res) => {
 });
 
 // Done
-// compare  the entered OTP with stored one in DB
-// If matched then proceed further otherwise show error message
 const verifyOTP = asyncHandler(async (req, res) => {
     const { email, otp } = req.body;
 
@@ -88,7 +84,6 @@ const verifyOTP = asyncHandler(async (req, res) => {
 });
 
 // Done
-// function
 const removeExpiredOTP = async () => {
     // Get the current date and time
     const currentDate = new Date();
