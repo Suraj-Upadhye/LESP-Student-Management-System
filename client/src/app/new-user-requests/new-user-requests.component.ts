@@ -3,13 +3,14 @@ import { HeaderMergedComponent } from '../header-merged/header-merged.component'
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-new-request',
+  selector: 'app-new-user-requests',
   standalone: true,
   imports: [HeaderMergedComponent,CommonModule],
-  templateUrl: './new-request.component.html',
-  styleUrl: './new-request.component.css'
+  templateUrl: './new-user-requests.component.html',
+  styleUrl: './new-user-requests.component.css'
 })
-export class NewRequestComponent {
+export class NewUserRequestsComponent {
+
 
   
   fun(){
@@ -44,5 +45,6 @@ export class NewRequestComponent {
   onRoleChange(role: string) {
     this.selectedRole = role;
   }
+
 
 }

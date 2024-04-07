@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AllStudetnListComponent } from './all-studetn-list.component';
+import { NewUserRequestsComponent } from './new-user-requests.component';
 
-describe('AllStudetnListComponent', () => {
-  let component: AllStudetnListComponent;
-  let fixture: ComponentFixture<AllStudetnListComponent>;
+describe('NewUserRequestsComponent', () => {
+  let component: NewUserRequestsComponent;
+  let fixture: ComponentFixture<NewUserRequestsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AllStudetnListComponent]
+      imports: [NewUserRequestsComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AllStudetnListComponent);
+    fixture = TestBed.createComponent(NewUserRequestsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

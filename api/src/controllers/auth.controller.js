@@ -97,10 +97,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 // Done
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+    console.log(email, password);
 
     if (!email || !password) {
         throw new ApiError(400, 'Email and password are required');
     }
+
 
     const user = await User.findOne({ email });
     const admin = await Admin.findOne({ email });
@@ -206,9 +208,9 @@ const login = asyncHandler(async (req, res) => {
 });
 
 // Done
-const loginByEmail = asyncHandler(async(req, res) =>{
+const loginByEmail = asyncHandler(async (req, res) => {
 
-    const  email = req.body.email;
+    const email = req.body.email;
 
     if (!email) {
         throw new ApiError(400, 'Email is required');
@@ -354,7 +356,7 @@ const logout = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged Out"))
 });
 
-
+// Done
 const forgetPassword = asyncHandler(async (req, res) => {
     const { email } = req.body;
 
@@ -453,6 +455,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
     }
 });
 
+// Done
 const resetPassword = async (req, res) => {
     const token = req.params.token; // Corrected
     const newPassword = req.body.password;
@@ -514,6 +517,7 @@ const resetPassword = async (req, res) => {
     });
 }
 
+// Done
 const skipResetPassword = asyncHandler(async (req, res) => {
     const token = req.params.token;
 
@@ -537,13 +541,13 @@ const skipResetPassword = asyncHandler(async (req, res) => {
 
             if (user) {
                 if (user.isEmailVerified) {
-                    return res.status(200).json(new ApiResponse(200, {email: user.email}, "User Reset Skipped Successfully!"));
+                    return res.status(200).json(new ApiResponse(200, { email: user.email }, "User Reset Skipped Successfully!"));
                 } else {
                     return res.status(500).json(new ApiResponse(500, {}, "Something went wrong while skipping the reset password!"));
                 }
             } else if (admin) { // Corrected this line
                 if (admin.isEmailVerified) {
-                    return res.status(200).json(new ApiResponse(200, {email: admin.email}, "Admin Reset Skipped Successfully!"));
+                    return res.status(200).json(new ApiResponse(200, { email: admin.email }, "Admin Reset Skipped Successfully!"));
                 } else {
                     return res.status(500).json(new ApiResponse(500, {}, "Something went wrong while skipping the reset password!"));
                 }
@@ -551,6 +555,92 @@ const skipResetPassword = asyncHandler(async (req, res) => {
         }
     });
 });
+
+// Done
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user?._id);
+    const admin = await Admin.findOne(req.user?._id);
+
+    if (!user && !admin) {
+        throw new ApiError(401, 'Invalid email or password');
+    } 
+
+    if (user) {
+        if (user.isEmailVerified) {
+
+            const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+
+            if (!isPasswordCorrect) {
+                throw new ApiError(400, "Invalid old password")
+            }
+
+            user.password = newPassword
+            await user.save({ validateBeforeSave: false })
+
+            return res
+                .status(200)
+                .json(
+                    new ApiResponse(
+                        200,
+                        {
+                        },
+                        "Password changed Successfully"
+                    )
+                )
+        }
+        else {
+            return res
+                .status(500)
+                .json(
+                    new ApiResponse(
+                        500,
+                        {},
+                        "Something Went Wrong"
+                    )
+                )
+        }
+    }
+
+    if (admin) {
+        if (admin.isEmailVerified) {
+
+            const isPasswordCorrect = await admin.isPasswordCorrect(oldPassword)
+
+            if (!isPasswordCorrect) {
+                throw new ApiError(400, "Invalid old password")
+            }
+
+            admin.password = newPassword
+            await user.save({ validateBeforeSave: false })
+
+            return res
+                .status(200)
+                .json(
+                    new ApiResponse(
+                        200,
+                        {
+                        },
+                        "Password changed Successfully"
+                    )
+                )
+        }
+        else {
+            return res
+                .status(500)
+                .json(
+                    new ApiResponse(
+                        500,
+                        {},
+                        "Something went wrong"
+                    )
+                )
+        }
+
+    }
+
+})
 
 export {
     login,
@@ -560,4 +650,5 @@ export {
     resetPassword,
     skipResetPassword,
     loginByEmail,
+    changeCurrentPassword,
 }

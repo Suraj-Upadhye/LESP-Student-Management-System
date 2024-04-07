@@ -7,12 +7,9 @@ import { TakeattendanceComponent } from './takeattendance/takeattendance.compone
 import { TakeUTMarksComponent } from './take-utmarks/take-utmarks.component';
 import { StudyshearComponent } from './studyshear/studyshear.component';
 import { Studyshear1Component } from './studyshear1/studyshear1.component';
-import { AllteacherlistComponent } from './allteacherlist/allteacherlist.component';
 import { TeacherLeaveApplicationComponent } from './Send-leave-application/teacher-leave-application.component';
 import { ChangepasswordComponent } from './changepassword/changepassword.component';
 import { LandingpagesComponent } from './landingpages/landingpages.component';
-import { AllStudetnListComponent } from './all-student-list/all-studetn-list.component';
-import { ListStudentRequestComponent } from './list-student-request/list-student-request.component';
 import { ViewprofilestudentComponent } from './viewprofilestudent/viewprofilestudent.component';
 import { ResetpassComponent } from './resetpass/resetpass.component';
 import { ViewprofileteacherComponent } from './viewprofileteacher/viewprofileteacher.component';
@@ -20,12 +17,14 @@ import { AboutUspageComponent } from './about-uspage/about-uspage.component';
 import { ContectUsComponent } from './contect-us/contect-us.component';
 import { HomepageTeacherHodComponent } from './homepage-teacher-hod/homepage-teacher-hod.component';
 import { HomepagestudentComponent } from './homepagestudent/homepagestudent.component';
-import { NewRequestComponent } from './new-request/new-request.component';
 import { ViewAttendanceComponent } from './view-attendance/view-attendance.component';
 import { ViewAttendanceIndividualComponent } from './view-attendance-individual/view-attendance-individual.component';
 import { ViewUtmarksComponent } from './view-utmarks/view-utmarks.component';
 import { ViewUtmarksIndividualComponent } from './view-utmarks-individual/view-utmarks-individual.component';
 import { ViewAttendanceCommonBarComponent } from './view-attendance-common-bar/view-attendance-common-bar.component';
+import { AllUsersListComponent } from './all-users-list/all-users-list.component';
+import { NewUserRequestsComponent } from './new-user-requests/new-user-requests.component';
+import { AllLeaveRequestsComponent } from './all-leave-requests/all-leave-requests.component';
 
 
 export const routes: Routes = [
@@ -54,13 +53,11 @@ export const routes: Routes = [
     {path:'StudyResource', component:StudyshearComponent},
     {path:'previousResource', component:Studyshear1Component},
 
-    {path:'new-request', component:NewRequestComponent},
-
-    {path:'allteacherlist', component:AllteacherlistComponent},
-    {path:'allStudentlist', component:AllStudetnListComponent},
+    {path:'all-users-list', component:AllUsersListComponent},
+    {path:'new-user-requests', component:NewUserRequestsComponent},
+    {path:'all-leave-requests', component:AllLeaveRequestsComponent},
 
     {path:'leaveapplication', component:TeacherLeaveApplicationComponent},
-    {path:'listrequest', component:ListStudentRequestComponent},
 
     {path:'viewprofilestudent', component:ViewprofilestudentComponent},
     {path:'viewprofileteacher', component:ViewprofileteacherComponent},

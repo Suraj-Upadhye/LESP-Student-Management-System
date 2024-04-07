@@ -5,7 +5,8 @@ import {
     forgetPassword,
     resetPassword,
     skipResetPassword,
-    loginByEmail
+    loginByEmail,
+    changeCurrentPassword,
 
 } from "../controllers/auth.controller.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
@@ -20,6 +21,7 @@ router.route("/login").post(login)
 router.route("/loginByEmail").post(loginByEmail)
 
 router.route("/logout").post(verifyJWT,logout)
+router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 
 
 router.route("/createAndStoreOTP").post(createAndStoreOTP)

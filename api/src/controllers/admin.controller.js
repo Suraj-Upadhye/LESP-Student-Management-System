@@ -12,21 +12,48 @@ import { sendNewUserAcceptedEmail } from '../utils/sendEmail.js';
 // Done
 const registerAdmin = asyncHandler(async (req, res) => {
     const {
-        firstName, middleName, lastName, gender, qualification, teachingExperience,
+        firstName, middleName, lastName, gender, qualification, department, teachingExperience,
         mobileNumber, email, password, workingDetails, hodDepartment, role
     } = req.body;
 
     console.log("Email :", email);
-    console.log(firstName, middleName, lastName, gender, qualification, teachingExperience, mobileNumber, email, password, role);
+    console.log(firstName, middleName, lastName, gender, department, qualification, teachingExperience, mobileNumber, email, password, role);
 
     console.log("Working details:", workingDetails);
 
     // Check if any required field is missing or empty
-    if ([firstName, middleName, lastName, gender, qualification, mobileNumber, email, password, role].some(field => !field?.trim())) {
+    if ([firstName, middleName, lastName, gender, qualification, department, mobileNumber, email, password, role].some(field => !field?.trim())) {
         if (!teachingExperience)
             throw new ApiError(400, "All fields are required");
     }
 
+    for (const workingDetail of workingDetails) {
+        const { year, semester, branch, subjectName, ...rest } = workingDetail;
+    
+        // Step 1: Find the subject document
+        const subject = await Subject.findOne({
+            year,
+            semester,
+            branch,
+            subject: subjectName
+        });
+    
+        if (!subject) {
+            return res.status(404).json({ success: false, message: 'Subject not found' });
+        }
+    
+        // Step 2: Update the workingDetail object with the subjectID
+        workingDetail.subject = subject._id.toString();
+    
+        // Optionally, remove year, semester, branch, and subjectName
+        delete workingDetail.year;
+        delete workingDetail.semester;
+        delete workingDetail.branch;
+        delete workingDetail.subjectName;
+    }
+    
+    console.log(workingDetails);
+    
 
     // Check if admin with the same email already exists
     const existedAdmin = await Admin.findOne({ email });
@@ -46,7 +73,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
     // Create new admin
     const admin = await Admin.create({
-        firstName, middleName, lastName, gender, qualification, teachingExperience,
+        firstName, middleName, lastName, gender, qualification, teachingExperience, department,
         mobileNumber, email: email.toLowerCase(), password, profilePhoto: profilePhotoUrl,
         workingDetails, hodDepartment, role
     });
@@ -434,10 +461,18 @@ const newStudentList = asyncHandler(async (req, res) => {
     // get list of student who's email is not verified
     try {
         // 1. Extract the class name information of the teacher from the JWT token.
-        const { classTeacher } = req.user; // Assuming class teacher information is stored in the user object
+        const { classTeacher, isClassTeacher } = req.user; // Assuming class teacher information is stored in the user object
 
         // Debugging: Log the class teacher of class value
         console.log("Class Teacher of :", classTeacher);
+
+
+        if (isClassTeacher === false) {
+            return res.status(500).json({
+                success: false,
+                error: "Teacher is not a Class Teacher"
+            });
+        }
 
         // 2. Use aggregation to filter students who belong to the same class and have unverified emails.
         const newStudents = await User.aggregate([

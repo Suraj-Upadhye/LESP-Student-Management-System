@@ -1,77 +1,131 @@
 import { CommonModule } from '@angular/common';
-import { Component} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, inject} from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { first } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup-student',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule],
   templateUrl: './signup-student.component.html',
   styleUrl: './signup-student.component.css'
 })
-export class SignupStudentComponent {
+export class SignupStudentComponent implements OnInit{
 
-  isFormSubmited: boolean=false;
-  password:string='';
-  repassword:string='';
-  userObj: any={
-    firstname:'',
-    middlename:'',
-    lastname:'',
-    address:'',
-    pincode:'',
-    Enrollment:'',
-    Rollno:'',
-    Studentmobileno:'',
-    Fathermobileno:'',
-    Mothermobileno:'',
-    Email:'',
-    Otp:'',
-    password:'',
-    repassword:'',
+  fb = inject(FormBuilder);
+
+  signupForm!: FormGroup;
+imageUrl: any;
+
+
+  ngOnInit(): void {
+    this.signupForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(3)]],
+      middleName: ['', [Validators.required, Validators.minLength(3)]],
+      lastName: ['', [Validators.required, Validators.minLength(3)]],
+      gender: ['', Validators.required],
+      address: ['', [Validators.required, Validators.minLength(27)]],
+      pincode: ['', [Validators.required, Validators.pattern('^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$')]],
+      year: ['', Validators.required],
+      semester: ['', Validators.required],
+      branch: ['', Validators.required],
+      division: ['', Validators.required],
+      enrollmentNo: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      rollNo: ['', [Validators.required, Validators.pattern('[0-9]{6}')]],
+      studentMobileNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      fatherMobileNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      motherMobileNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      Email: ['', [Validators.required, Validators.email]],
+      Otp: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+      password: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
+      confirmPassword: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]]
+    });
   }
 
+  // Function to access form controls easily in the HTML template
+  get f() {
+    return this.signupForm.controls;
+  }
 
-  users= [
-    
-
-  ]
-  onSubmit(){
-    this.isFormSubmited=true;
-    if(this.password !== this.repassword){
-      console.log("password Does Not Match:")
+  onSubmit() {
+    if (this.signupForm.invalid) {
       return;
     }
-    else{
-      this.password='';
-      this.repassword='';
-      console.log("password are same")
-    }
   }
+
+
+//   isFormSubmited: boolean=false;
+//   password:string='';
+//   repassword:string='';
+//   userObj: any={
+//     firstName:'',
+//     middleName:'',
+//     lastName:'',
+//     gender: '',
+//     address:'',
+//     pincode:'',
+//     year: '',
+//     semester: '',
+//     branch: '',
+//     division: '',
+//     enrollmentNo:'',
+//     rollNo:'',
+//     studentMobileNumber:'',
+//     fatherMobileNumber:'',
+//     motherMobileNumber:'',
+//     Email:'',
+//     Otp:'',
+//     password:'',
+//     repassword:'',
+//   }
+
+
+//   users= [
+    
+
+//   ]
+//   onSubmit(){
+//     this.isFormSubmited=true;
+//     if(this.password !== this.repassword){
+//       console.log("password Does Not Match:")
+//       return;
+//     }
+//     else{
+//       this.password='';
+//       this.repassword='';
+//       console.log("password are same")
+//     }
+//   }
    
 
 
-  imageUrl: string | ArrayBuffer | null = null;
+//   imageUrl: string | ArrayBuffer | null = null;
 
-  constructor() { }
+//   constructor() { }
 
-  handleFileInput(event: any): void {
-    const file = event.target.files[0];
-    const reader = new FileReader();
+//   handleFileInput(event: any): void {
+//     const file = event.target.files[0];
+//     const reader = new FileReader();
 
-    reader.onload = () => {
-      this.imageUrl = reader.result;
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  }
+//     reader.onload = () => {
+//       this.imageUrl = reader.result;
+//     };
+//     if (file) {
+//       reader.readAsDataURL(file);
+//     }
+//   }
 
-  handleUploadClick(): void {
-    const uploadInput = document.getElementById('upload');
-    uploadInput?.click();
-  }
+handleFileInput(event: any):void{
+  
+}
+
+//   handleUploadClick(): void {
+//     const uploadInput = document.getElementById('upload');
+//     uploadInput?.click();
+//   }
 
 }
 

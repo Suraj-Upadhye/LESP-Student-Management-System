@@ -30,7 +30,7 @@ export class LoginPageForAllComponent implements OnInit {
       next: (res) => {
         // localStorage.removeItem('accessToken');
         localStorage.clear();
-        alert('Logout is Success!');
+        alert('Logouted out successfully!');
         this.router.navigate(['']);
       },
       error: (err) => {

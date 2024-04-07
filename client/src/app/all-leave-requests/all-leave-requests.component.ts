@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
-import { HeaderMergedComponent } from "../header-merged/header-merged.component";
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { HeaderMergedComponent } from '../header-merged/header-merged.component';
 
 @Component({
-    selector: 'app-list-student-request',
-    standalone: true,
-    templateUrl: './list-student-request.component.html',
-    styleUrl: './list-student-request.component.css',
-    imports: [HeaderMergedComponent,CommonModule]
+  selector: 'app-all-leave-requests',
+  standalone: true,
+  imports: [HeaderMergedComponent,CommonModule],
+  templateUrl: './all-leave-requests.component.html',
+  styleUrl: './all-leave-requests.component.css'
 })
-export class ListStudentRequestComponent {
+export class AllLeaveRequestsComponent {
 
 
+  
   fun(){
     console.log(this.studentLeaveRequests);
     console.log(this.teacherLeaveRequests);
@@ -40,5 +41,6 @@ export class ListStudentRequestComponent {
     onRoleChange(role: string) {
       this.selectedRole = role;
     }
+
 
 }

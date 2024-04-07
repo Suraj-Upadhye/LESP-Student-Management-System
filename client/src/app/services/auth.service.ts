@@ -68,6 +68,22 @@ export class AuthService {
     );
   }
 
+  changeCurrentPasswordService(oldPassword:string, newPassword:string){
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+    console.log(token);
+    
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Send HTTP GET request with headers
+    return this.http.post<any>(
+      `${apiUrls.authServiceApi}change-password`,
+     {oldPassword: oldPassword, newPassword:newPassword},
+     { headers }
+    );
+  }
+
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
