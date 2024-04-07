@@ -5,6 +5,7 @@ import { AdminService } from '../services/admin.service';
 import { Router } from '@angular/router';
 import { HeaderMergedComponent } from '../header-merged/header-merged.component';
 
+
 interface Student {
   _id: string;
   status: string;
@@ -20,12 +21,13 @@ interface Student {
   providers: [AdminService]
 })
 export class ViewAttendanceCommonBarComponent implements OnInit{
+  StudentAttendance: any = "";
 
   adminService = inject(AdminService);
   router = inject(Router);
 
-  subjectSwitchOptionList: any;
-  subjectSwitchOptionListFormatted: any;
+  subjectSwitchOptionListForViewAttendance: any;
+  subjectSwitchOptionListForViewAttendanceFormatted: any;
 
   role: any = '';
 
@@ -34,13 +36,13 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
   semester: String = '';
   branch: String = '';
   division: String = '';
-  sessionTypeList: any = '';
-  batchList: any = '';
+  modeList: any = '';
+  applicableBatchNamesList: any = '';
   subjectName: String = '';
 
   academicObj: any;
-  sessionSelected: String = '';
-  batchSelected: String = '';
+  modeSelected: String = '';
+  applicableBatchNamesSelected: String = '';
   studentList: any;
   studentListFormatted: any = '';
   flagToDisplayTableData = false;
@@ -75,26 +77,26 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
     }
   }
 
-  getSubjectSwitchOptionListFormatted() {
-    // Check if subjectSwitchOptionList exists and has data
+  getsubjectSwitchOptionListForViewAttendanceFormatted() {
+    // Check if subjectSwitchOptionListForViewAttendance exists and has data
     if (
-      this.subjectSwitchOptionList &&
-      this.subjectSwitchOptionList.data &&
-      this.subjectSwitchOptionList.data.length > 0
+      this.subjectSwitchOptionListForViewAttendance &&
+      this.subjectSwitchOptionListForViewAttendance.data &&
+      this.subjectSwitchOptionListForViewAttendance.data.length > 0
     ) {
       // Create an array to store the transformed data
       const transformedData = [];
 
       // Iterate over each item in the data array
-      for (const item of this.subjectSwitchOptionList.data) {
+      for (const item of this.subjectSwitchOptionListForViewAttendance.data) {
         // Prepare an object with all the properties from the current item
         const dataItem = {
           year: item.year,
           semester: item.semester,
           branch: item.branch,
           division: item.division,
-          sessionType: item.sessionType,
-          batch: item.batch,
+          sessionType: item.mode[0],
+          batch: item.applicableBatchNames,
           subjectName: item.subject,
         };
 
@@ -107,7 +109,7 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
 
       return transformedData;
     } else {
-      // If subjectSwitchOptionList is not properly initialized or has no data, return null or handle the error accordingly
+      // If subjectSwitchOptionListForViewAttendance is not properly initialized or has no data, return null or handle the error accordingly
       console.log(null);
       return null;
     }
@@ -119,7 +121,7 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
     this.currentIndex++;
 
     // If the current index exceeds the length of the data array, reset it to 0
-    if (this.currentIndex >= this.subjectSwitchOptionListFormatted.length) {
+    if (this.currentIndex >= this.subjectSwitchOptionListForViewAttendanceFormatted.length) {
       this.currentIndex = 0;
     }
     // Update the displayed data based on the current index
@@ -127,19 +129,19 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
   }
 
   updateDisplayedData(): void {
-    this.year = this.subjectSwitchOptionListFormatted[this.currentIndex].year;
+    this.year = this.subjectSwitchOptionListForViewAttendanceFormatted[this.currentIndex].year;
     this.semester =
-      this.subjectSwitchOptionListFormatted[this.currentIndex].semester;
+      this.subjectSwitchOptionListForViewAttendanceFormatted[this.currentIndex].semester;
     this.branch =
-      this.subjectSwitchOptionListFormatted[this.currentIndex].branch;
+      this.subjectSwitchOptionListForViewAttendanceFormatted[this.currentIndex].branch;
     this.division =
-      this.subjectSwitchOptionListFormatted[this.currentIndex].division;
-    this.sessionTypeList =
-      this.subjectSwitchOptionListFormatted[this.currentIndex].sessionType;
-    this.batchList =
-      this.subjectSwitchOptionListFormatted[this.currentIndex].batch;
+      this.subjectSwitchOptionListForViewAttendanceFormatted[this.currentIndex].division;
+    this.modeList =
+      this.subjectSwitchOptionListForViewAttendanceFormatted[this.currentIndex].sessionType;
+    this.applicableBatchNamesList =
+      this.subjectSwitchOptionListForViewAttendanceFormatted[this.currentIndex].batch;
     this.subjectName =
-      this.subjectSwitchOptionListFormatted[this.currentIndex].subjectName;
+      this.subjectSwitchOptionListForViewAttendanceFormatted[this.currentIndex].subjectName;
 
     const selectElement = document.getElementById(
       'selectSession'
@@ -151,7 +153,7 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
     ) as HTMLSelectElement;
     // alert("here1")
     // alert(firstValue)
-    if (firstValue === 'Lecture' || this.batchSelected === 'Lecture') {
+    if (firstValue === 'Lecture' || this.applicableBatchNamesSelected === 'Lecture') {
       selectElementBatch.disabled = true;
     } else {
       selectElementBatch.disabled = false;
@@ -162,14 +164,14 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
   }
 
   onSessionTypeChange(selectedValue: string) {
-    this.sessionSelected = selectedValue;
+    this.modeSelected = selectedValue;
     const selectElement = document.getElementById(
       'selectSession'
     ) as HTMLSelectElement;
     const selectElementBatch = document.getElementById(
       'selectBatch'
     ) as HTMLSelectElement;
-    if (this.batchSelected !== 'Lecture') {
+    if (this.applicableBatchNamesSelected !== 'Lecture') {
       selectElementBatch.disabled = false;
     } else {
       selectElementBatch.disabled = true;
@@ -177,7 +179,7 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
   }
 
   onBatchChange(selectedValue: string) {
-    this.batchSelected = selectedValue;
+    this.applicableBatchNamesSelected = selectedValue;
   }
 
   getCurrentDate(): string {
@@ -200,16 +202,16 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
     return formattedDate;
   }
 
+
   getSubjectData() {
-    this.adminService.getSubjectSwitchOptionListService().subscribe({
+    this.adminService.getSubjectSwitchOptionListForViewAttendanceService().subscribe({
       next: (res) => {
-        // this.subjectSwitchOptionList = res;
-        this.subjectSwitchOptionList = { ...res };
-        // console.log("also inside",this.subjectSwitchOptionList);
+        this.subjectSwitchOptionListForViewAttendance = { ...res };
+        // console.log("also inside",this.subjectSwitchOptionListForViewAttendance);
 
         console.log('inside func:', res);
-        this.subjectSwitchOptionListFormatted =
-          this.getSubjectSwitchOptionListFormatted();
+        this.subjectSwitchOptionListForViewAttendanceFormatted =
+          this.getsubjectSwitchOptionListForViewAttendanceFormatted();
       },
       error: (err) => {
         console.log(err);
@@ -220,12 +222,13 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
 
   getStudentList() {
     this.adminService
-      .getStudentsDataListForAttendanceService(this.academicObj)
+      .getAttendanceDataService(this.academicObj)
       .subscribe({
         next: (res) => {
           this.studentList = { ...res };
           console.log(res);
-          this.studentListFormatted = this.getstudentListFormatted();
+          this.StudentAttendance = res
+          // this.studentListFormatted = this.getstudentListFormatted();
           // console.log(this.studentList);
         },
         error: (err) => {
@@ -233,20 +236,6 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
           alert(err.error.message);
         },
       });
-  }
-
-  saveAttendanceData() {
-    this.adminService.fillAttendanceService(this.attendanceData).subscribe({
-      next: (res) => {
-        console.log(res);
-        alert(res.message);
-        this.router.navigate(['homepage-teacher-hod']);
-      },
-      error: (err) => {
-        console.log(err);
-        alert(err.error.message);
-      },
-    });
   }
 
   showStudentList() {
@@ -275,21 +264,21 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
   }
 
   onDetailsChange() {
-    if (this.batchSelected === '') {
+    if (this.applicableBatchNamesSelected === '') {
       const selectElement = document.getElementById(
         'selectBatch'
       ) as HTMLSelectElement;
       const selectedOption = selectElement.options[0];
       const selectedValue = selectedOption.value;
-      this.batchSelected = selectedValue;
+      this.applicableBatchNamesSelected = selectedValue;
     }
-    if (this.sessionSelected === '') {
+    if (this.modeSelected === '') {
       const selectElement = document.getElementById(
         'selectSession'
       ) as HTMLSelectElement;
       const selectedOption = selectElement.options[0];
       const selectedValue = selectedOption.value;
-      this.sessionSelected = selectedValue;
+      this.modeSelected = selectedValue;
     }
 
     this.academicObj = {
@@ -297,8 +286,8 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
       semester: this.semester,
       branch: this.branch,
       division: this.division,
-      sessionType: this.sessionSelected,
-      batch: this.batchSelected,
+      sessionType: this.modeSelected,
+      batch: this.applicableBatchNamesSelected,
       subjectName: this.subjectName,
     };
     console.log(this.academicObj);
@@ -310,23 +299,24 @@ export class ViewAttendanceCommonBarComponent implements OnInit{
   }
 
   createObjToSend() {
-    this.attendanceData = {
-      date: this.date, // Use the date for which the attendance is being recorded
-      teacherId: localStorage.getItem('_id'), // Assign the teacher's ObjectId
-      year: this.year,
-      semester: this.semester,
-      branch: this.branch,
-      subjectName: this.subjectName,
-      studentList: this.studentListFormatted.map((student: Student) => ({
-        studentId: student._id,
-        state: student.status,
-      })),
-      sessionType: this.sessionSelected, // Assign the session type (e.g., Lecture, Practical, Tutorial)
-      batchBelongs: this.batchSelected, // Assign the batch to which the attendance belongs
-      remark: this.remark, // Provide any remark or note
-    };
-    console.log(this.attendanceData);
-    this.saveAttendanceData()
+    // this.attendanceData = {
+    //   date: this.date, // Use the date for which the attendance is being recorded
+    //   teacherId: localStorage.getItem('_id'), // Assign the teacher's ObjectId
+    //   year: this.year,
+    //   semester: this.semester,
+    //   branch: this.branch,
+    //   subjectName: this.subjectName,
+    //   studentList: this.studentListFormatted.map((student: Student) => ({
+    //     studentId: student._id,
+    //     state: student.status,
+    //   })),
+    //   sessionType: this.modeSelected, // Assign the session type (e.g., Lecture, Practical, Tutorial)
+    //   batchBelongs: this.applicableBatchNamesSelected, // Assign the batch to which the attendance belongs
+    //   remark: this.remark, // Provide any remark or note
+    // };
+    // console.log(this.attendanceData);
+
+    // this.getAttendanceData()
   }
 
 }

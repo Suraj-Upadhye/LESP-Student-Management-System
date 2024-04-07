@@ -25,6 +25,7 @@ import { ViewAttendanceComponent } from './view-attendance/view-attendance.compo
 import { ViewAttendanceIndividualComponent } from './view-attendance-individual/view-attendance-individual.component';
 import { ViewUtmarksComponent } from './view-utmarks/view-utmarks.component';
 import { ViewUtmarksIndividualComponent } from './view-utmarks-individual/view-utmarks-individual.component';
+import { ViewAttendanceCommonBarComponent } from './view-attendance-common-bar/view-attendance-common-bar.component';
 
 
 export const routes: Routes = [
@@ -39,7 +40,6 @@ export const routes: Routes = [
     {path:'homepage-teacher-hod', component:HomepageTeacherHodComponent},
     {path:'homepage-student', component:HomepagestudentComponent},
 
-    {path:'forget', component:ForgotpasswordComponent},
     {path:'changepassword', component:ChangepasswordComponent},
 
     {path:'TakeAttendance', component:TakeattendanceComponent},
@@ -47,6 +47,7 @@ export const routes: Routes = [
 
     {path:'view-attendance', component:ViewAttendanceComponent},
     {path:'view-attendance-individual', component: ViewAttendanceIndividualComponent},
+    {path:'view-attendance-common', component:ViewAttendanceCommonBarComponent},
     {path: 'view-utmarks', component:ViewUtmarksComponent},
     {path: 'view-utmarks-individual', component:ViewUtmarksIndividualComponent},
 
@@ -63,8 +64,9 @@ export const routes: Routes = [
 
     {path:'viewprofilestudent', component:ViewprofilestudentComponent},
     {path:'viewprofileteacher', component:ViewprofileteacherComponent},
-    {path:'resetpass', component:ResetpassComponent},
 
+    {path:'forgot-password', component:ForgotpasswordComponent},
+    {path:'reset-password/:token', component:ResetpassComponent},
 
 
 

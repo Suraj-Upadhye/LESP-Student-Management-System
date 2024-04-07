@@ -85,8 +85,52 @@ const sendNewUserAcceptedEmail = async (email, userType, firstName) => {
     });
 };
 
+
+const sendResetPasswordEmail = async(email,userName, token) =>{
+    const mailTransporter =  nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_ADDRESS, // generated ethereal email
+          pass: process.env.EMAIL_PASSWORD // generated ethereal password
+        }
+    });
+
+    let mailDetails = {
+        from: process.env.EMAIL_ADDRESS,
+        to: email,
+        subject: "Reset Password",
+        html: `<html>
+        <head>
+            <title>Password Reset Request</title>
+        </head>
+        <body>
+            <h1>Password Reset Request</h1>
+            <p>Dear ${userName},</p>
+            <p>We have received a request to reset your password for your account with LESP Student Management System. To complete the password reset process, please click on the button below:</p>
+            <a href=${process.env.LIVE_URL}/reset-password/${token}><button style="background-color: #4CAF50; color: white; padding: 14px 20px; border: none; cursor: pointer; border-radius: 4ox;">Reset Password</button></a>
+            <p>Please note that this link is only valid for a 5 mins. If you did not request a password reset, please disregard this message.</p>
+            <p>Thank you,</p>
+            <p>Team LESP, Sangli</p>
+        </body>
+    </html>`,
+    };
+
+    return new Promise((resolve, reject) => {
+        mailTransporter.sendMail(mailDetails, (err, data) => {
+            if (err) {
+                console.error(err);
+                reject(new ApiError(500, "Something went wrong while sending the email"));
+            } else {
+                resolve();
+                console.log("Your Email has been sent successfully.");
+            }
+        });
+    });
+
+};
+
 export {
     sendOTPEmail,
     sendNewUserAcceptedEmail,
-
+    sendResetPasswordEmail,
 };

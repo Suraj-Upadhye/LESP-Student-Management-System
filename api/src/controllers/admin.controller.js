@@ -188,38 +188,6 @@ const getAdminCode = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, admin, "Admin code fetched successfully"));
 });
 
-const forgetPassword = asyncHandler(async (req, res) => {
-    const { email } = req.body;
-
-    // Generate a reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-
-    try {
-        // Find the user by email
-        let user = await User.findOne({ email });
-
-        // If user doesn't exist, return error
-        if (!user) {
-            throw new ApiError(404, "User not found");
-        }
-
-        // Set reset token and expiry time
-        user.resetToken = resetToken;
-        user.resetTokenExpire = Date.now() + 10 * 60 * 1000; // 10 minutes in milliseconds
-        await user.save();
-
-        // Send email to user with reset link
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/resetpassword/${resetToken}`;
-        const message = `To reset your password, click on this link: ${resetUrl}`;
-
-        // Code to send email (replace this with your email sending logic)
-        await sendEmail(user.email, 'Password Reset', message);
-
-        res.status(200).json(new ApiResponse(200, {}, "Password reset link sent successfully"));
-    } catch (error) {
-        throw new ApiError(500, "Error sending password reset link");
-    }
-});
 
 const resetPassword = asyncHandler(async (req, res) => {
     const { resetToken, password, confirmPassword } = req.body;
@@ -345,12 +313,13 @@ const getSubjectSwitchOptionListForViewAttendance = asyncHandler(async (req, res
                     }
                 },
                 {
-                    $unwind:"$subjectDetails" 
+                    $unwind: "$subjectDetails"
                 },
                 {
                     $project: {
                         year: "$subjectDetails.year",
                         branch: "$subjectDetails.branch",
+                        division: "$workingDetails.division"
                     }
                 }
             ]);
@@ -359,12 +328,19 @@ const getSubjectSwitchOptionListForViewAttendance = asyncHandler(async (req, res
                 return res.status(404).json({ success: false, error: "Teacher not found" });
             }
 
-            const subjectDetails = await Subject.find({ year: teacherDetails[0].year, branch: teacherDetails[0].branch }).select("_id year semester branch subject division mode applicableBatchNames");
+            const subjectDetails = await Subject.find({ year: teacherDetails[0].year, branch: teacherDetails[0].branch }).select("_id year semester branch subject mode applicableBatchNames");
 
+            // Add division name as "None" to each subject detail
+            const subjectsWithDivision = subjectDetails.map(subject => {
+                return {
+                    ...subject.toObject(),
+                    division: "None" // Add division name as "None"
+                };
+            });
             // console.log(subjectDetails);
 
             // Return the teacher's year and branch
-            res.status(200).json({ success: true, data: subjectDetails });
+            res.status(200).json({ success: true, data: subjectsWithDivision });
         } else {
             // If the user is not a teacher, return an error
             return res.status(403).json({ success: false, error: "You are not authorized to access this resource" });
@@ -612,7 +588,6 @@ export {
     updateAdminCode,
     getAdminCode,
     updateAdminProfilePhoto,
-    forgetPassword,
     resetPassword,
     getCurrentAdminEssentials,
 

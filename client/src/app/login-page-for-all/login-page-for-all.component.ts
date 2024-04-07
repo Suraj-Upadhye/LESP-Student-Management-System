@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-page-for-all',
   standalone: true,
-  imports: [RouterModule, RouterModule],
+  imports: [RouterModule, RouterModule, HttpClientModule],
   templateUrl: './login-page-for-all.component.html',
   styleUrl: './login-page-for-all.component.css',
+  providers: [AuthService]
 })
 export class LoginPageForAllComponent implements OnInit {
   profileName: any = 'Profile Name';
+
+  authService = inject(AuthService);
+  router = inject(Router)
 
   ngOnInit(): void {
     try {
@@ -18,4 +24,20 @@ export class LoginPageForAllComponent implements OnInit {
       console.log(error);
     }
   }
+
+  logout(){
+    this.authService.logoutService().subscribe({
+      next: (res) => {
+        // localStorage.removeItem('accessToken');
+        localStorage.clear();
+        alert('Logout is Success!');
+        this.router.navigate(['']);
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message);
+      },
+    });
+  }
+
 }

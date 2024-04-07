@@ -35,6 +35,26 @@ export class AdminService {
     );
   }
 
+  getSubjectSwitchOptionListForViewAttendanceService(){
+  // Get token from localStorage
+  const token = localStorage.getItem('accessToken');
+
+  // Set headers with token
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  // Send HTTP GET request with headers
+  return this.http.get<any>(
+    `${apiUrls.adminServiceApi}getSubjectSwitchOptionListForViewAttendance`, { headers }
+  );
+  }
+
+
+  getAttendanceDataService(academicObj: any){
+    return this.http.post<any>(
+      `${apiUrls.attendanceServiceApi}getAttendanceData`, academicObj
+    );
+  }
+
   fillAttendanceService(attendanceData: any){
     return this.http.post<any>(
       `${apiUrls.attendanceServiceApi}fillAttendance`, attendanceData
