@@ -6,6 +6,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
+import { Subject } from '../models/subjects.models.js';
 import { sendNewUserAcceptedEmail } from '../utils/sendEmail.js';
 
 // Done
@@ -321,7 +322,64 @@ const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
     }
 });
 
-  
+// Done
+const getSubjectSwitchOptionListForViewAttendance = asyncHandler(async (req, res) => {
+    try {
+        const { role, _id } = req.user; // Extract user role and ID from request user object
+
+        if (role === 'Teacher') {
+            // Find the teacher's details based on their ID
+            const teacherDetails = await Admin.aggregate([
+                {
+                    $match: { _id: _id }
+                },
+                {
+                    $unwind: "$workingDetails" // Unwind the workingDetails array
+                },
+                {
+                    $lookup: {
+                        from: "subjects", // The collection to join with
+                        localField: "workingDetails.subject", // Field from the Admin collection
+                        foreignField: "_id", // Field from the Subjects collection
+                        as: "subjectDetails" // Output array field
+                    }
+                },
+                {
+                    $unwind:"$subjectDetails" 
+                },
+                {
+                    $project: {
+                        year: "$subjectDetails.year",
+                        branch: "$subjectDetails.branch",
+                    }
+                }
+            ]);
+
+            if (!teacherDetails || teacherDetails.length === 0) {
+                return res.status(404).json({ success: false, error: "Teacher not found" });
+            }
+
+            const subjectDetails = await Subject.find({ year: teacherDetails[0].year, branch: teacherDetails[0].branch }).select("_id year semester branch subject division mode applicableBatchNames");
+
+            // console.log(subjectDetails);
+
+            // Return the teacher's year and branch
+            res.status(200).json({ success: true, data: subjectDetails });
+        } else {
+            // If the user is not a teacher, return an error
+            return res.status(403).json({ success: false, error: "You are not authorized to access this resource" });
+        }
+    } catch (error) {
+        // Handle errors and send appropriate response
+        console.error("Error fetching teacher year and branch:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch teacher year and branch" });
+    }
+});
+
+
+
+
+
 
 
 // high security
@@ -559,6 +617,7 @@ export {
     getCurrentAdminEssentials,
 
     getSubjectSwitchOptionList,
+    getSubjectSwitchOptionListForViewAttendance,
 
     newStudentList,
     newTeacherList,
