@@ -7,23 +7,24 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
 import { Subject } from '../models/subjects.models.js';
-import { sendNewUserAcceptedEmail } from '../utils/sendEmail.js';
+import { sendNewUserAcceptedEmail, sendUserRemovedEmail } from '../utils/sendEmail.js';
 import axios from 'axios';
 
 // Done
+// remaining for working details error in frontend
 const registerAdmin = asyncHandler(async (req, res) => {
     const {
         firstName, middleName, lastName, gender, qualification, department, teachingExperience,
         mobileNumber, email, password, workingDetails, role, address, pincode
     } = req.body;
-    let isHOD= false, isEmailVerified= false;
+    let isHOD = false, isEmailVerified = false;
 
-    if(role === "HOD"){
+    if (role === "HOD") {
         const hodResponse = await axios.post('http://localhost:8000/api/v1/hod/getEmail', {
-           department
+            department
         });
-        if(!hodResponse.data.email){
-            throw new ApiError("Department does not have a HOD assigned yet.",  406); 
+        if (!hodResponse.data.email) {
+            throw new ApiError("Department does not have a HOD assigned yet.", 406);
         } else {
             isHOD = true;
             isEmailVerified = true;
@@ -33,7 +34,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
     console.log("Email :", email);
     console.log(firstName, middleName, lastName, gender, department, qualification, teachingExperience, mobileNumber, email, password, role);
 
-    console.log("Working details:",workingDetails);
+    console.log("Working details:", workingDetails);
 
     // Check if any required field is missing or empty
     if ([firstName, middleName, lastName, gender, qualification, department, mobileNumber, email, password, role].some(field => !field?.trim())) {
@@ -43,7 +44,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
     for (const workingDetail of workingDetails) {
         const { year, semester, branch, subjectName, ...rest } = workingDetail;
-    
+
         // Step 1: Find the subject document
         const subject = await Subject.findOne({
             year,
@@ -52,23 +53,23 @@ const registerAdmin = asyncHandler(async (req, res) => {
             subject: subjectName
         });
         console.log(year, semester, branch, subjectName);
-    
+
         if (!subject) {
             return res.status(404).json({ success: false, message: 'Subject not found' });
         }
-    
+
         // Step 2: Update the workingDetail object with the subjectID
         workingDetail.subject = subject._id.toString();
-    
+
         // Optionally, remove year, semester, branch, and subjectName
         delete workingDetail.year;
         delete workingDetail.semester;
         delete workingDetail.branch;
         delete workingDetail.subjectName;
     }
-    
+
     console.log(workingDetails);
-    
+
 
     // Check if admin with the same email already exists
     const existedAdmin = await Admin.findOne({ email });
@@ -308,8 +309,8 @@ const newStudentList = asyncHandler(async (req, res) => {
                 error: "You are not a Class Teacher"
             });
         }
-        
-        const newStudents = await User.find({year:classTeacher.year, branch:classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, role:"Student", isEmailVerified:false}).select("_id firstName middleName lastName rollNo year branch semester division");
+
+        const newStudents = await User.find({ year: classTeacher.year, branch: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, role: "Student", isEmailVerified: false }).select("_id firstName middleName lastName rollNo year branch semester division");
 
         // Debugging: Log the filtered students
         // console.log("Filtered Students:", newStudents);
@@ -413,45 +414,101 @@ const classTeacherAllocation = asyncHandler(async (req, res) => {
     }
 });
 
+// Done
+const allStudentsList = asyncHandler(async (req, res) => {
 
-const allStudentsList = asyncHandler( async( req, res) =>{
-
-    const {} = req.body;
+    const { classTeacher } = req.user;
     // only teacher teaching and hod can see this
+
+    const student = await User.find({year:classTeacher.year, department:classTeacher.branch, semester: classTeacher.semester ,division: classTeacher.division, isEmailVerified: true, role: "Student"}).select("_id firstName middleName lastName rollNo");
+
+    console.log(student)
+    res.status(200).json(student);
+
 });
 
-const allTeachersList = asyncHandler( async( req, res) =>{
+// Done
+const allTeachersList = asyncHandler(async (req, res) => {
+
+    const { department } = req.user;
 
     // only hod can see this
+    const teacher = await Admin.find({department: department, isEmailVerified: true}).select("_id firstName middleName lastName");
+
+    console.log(teacher)
+    res.status(200).json(teacher);
 });
 
-const removeStudent = asyncHandler( async( req, res) =>{
+// Done
+const removeStudent = asyncHandler(async (req, res) => {
 
+    const { _id } = req.body;
     // only class teacher or hod
     // if class teacher and hod
+    const  studentToRemove = await User.findById(_id).select("email role firstName");
+    if(studentToRemove){
+        sendUserRemovedEmail(studentToRemove.email, studentToRemove.role, studentToRemove.firstName)
+        await studentToRemove.remove();
+        res.status(201).json(new ApiResponse(201,"Deleted","Student removed Successfully!"));
+    }
+    else{
+        throw new ApiError(404, 'No such student exists');
+    }
 });
 
-const removeTeacher = asyncHandler( async( req, res) =>{
+// Done
+const removeTeacher = asyncHandler(async (req, res) => {
 
+    const { _id } = req.body;
     //only hod can delete teachers
-    // if role == hod
+    // if role === hod
+     // only class teacher or hod
+    // if class teacher and hod
+    const  teacherToRemove = await Admin.findById(_id).select("email role firstName");
+    if(teacherToRemove){
+        sendUserRemovedEmail(teacherToRemove.email, teacherToRemove.role, teacherToRemove.firstName)
+        await teacherToRemove.remove();
+        res.status(201).json(new ApiResponse(201,"Deleted","Teacher removed Successfully!"));
+    }
+    else{
+        throw new ApiError(404, 'No such teacher exists');
+    }
 });
 
 
-const viewTeacherProfile = asyncHandler( async( req, res) =>{
+const viewTeacherProfile = asyncHandler(async (req, res) => {
 
+    const { _id } = req.body;
+    let teacherData=await Admin.findById(_id).select("-password -refreshToken");
+    if(!teacherData){
+      throw new ApiError(404,'This Teacher does not exist')
+    }
+    res.json(userData);
     // only hod and teacher can see this
 });
 
+// Done
+const viewHODProfile = asyncHandler(async (req, res) => {
 
-const viewHODProfile = asyncHandler( async( req, res) =>{
-
+    const { _id } = req.user;
     // only hod can see this
+    
+    const HODdata=await HOD.findOne({_id:_id, role:"HOD"}).select("-password -refreshToken");
+    if (!HODdata) {
+        throw new ApiError(403, "The user is not a HOD!");
+    }
+    return res.json(HODdata);
 });
 
-const viewStudentProfile = asyncHandler( async( req, res) =>{
+const viewStudentProfile = asyncHandler(async (req, res) => {
 
+    const { _id } = req.body;
     // only teacher teaching or hod can access this route and also student 
+    const studentData = await User.findOne({_id: _id, role:"Student"}).select("-password -refreshToken");
+    if(!studentData) {
+        throw new ApiError(404,'This Student does not exist')
+    }
+    res.json(userData);
 });
 
 

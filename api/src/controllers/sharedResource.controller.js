@@ -4,24 +4,60 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { SharedResource } from "../models/sharedResource.models.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { sendNewResourceEmail } from "../utils/sendEmail.js";
+import { User } from "../models/user.models.js";
 
 
+// Done
 // getSubjectListByCurrentAdmin useful to send which subject resource or which not
 // send email to all students
 const addSharedResource = asyncHandler(async (req, res) => {
     try {
-        const { resourceFile, description, title, resourceType, subject } = req.body;
-        const { _id: owner } = req.user; // Assuming user authentication is implemented and user ID is available in req.user
+        const { description, title, subject } = req.body;
+        const { _id, email, firstName, lastName } = req.user; // Assuming user authentication is implemented and user ID is available in req.user
+        let resourceFile = "";
+        let resourceFileLocalPath;
+        if (req.files && Array.isArray(req.files.resourceFile) && req.files.resourceFile.length > 0) {
+            resourceFileLocalPath = req.files.resourceFile[0].path
+
+
+            console.log("local path :", resourceFileLocalPath);
+
+            // if (!resourceFileLocalPath) {
+            //     const resourceFile = ""
+            // }
+            resourceFile = await uploadOnCloudinary(resourceFileLocalPath)
+
+
+            console.log("cloudinary obj :", resourceFile);
+
+            if (!resourceFile) {
+                throw new ApiError(400, "Profile photo is not uploaded properly.");
+            }
+        }
 
         // Create new shared resource
         const sharedResource = await SharedResource.create({
-            resourceFile,
+            resourceFile: resourceFile?.url || "",
             description,
             title,
-            resourceType,
+            resourceType: resourceFile?.resource_type,
             subject,
-            owner
+            owner: _id
         });
+
+
+        const { classTeacher } = req.user;
+        // only teacher teaching and hod can see this
+
+        const students = await User.find({ year: classTeacher.year, department: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, isEmailVerified: true, role: "Student" }).select("_id firstName middleName lastName rollNo");
+
+        console.log(students)
+        // res.status(200).json(students);
+        for (const student of student) {
+            await sendNewResourceEmail(email, firstName, lastName, student.firstName);
+        }
 
         res.status(201).json({
             success: true,
@@ -37,9 +73,10 @@ const addSharedResource = asyncHandler(async (req, res) => {
     }
 });
 
+// Done
 const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     try {
-        const { subject } = req.query;
+        const { subject } = req.body;
 
         // Query shared resources based on the subject
         const sharedResources = await SharedResource.find({ subject });
@@ -58,9 +95,10 @@ const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     }
 });
 
+// Done
 const getSingleSharedResource = asyncHandler(async (req, res) => {
     try {
-        const { resourceId } = req.params;
+        const { resourceId } = req.body;
 
         // Find the shared resource by its ID
         const resource = await SharedResource.findById(resourceId);
@@ -86,14 +124,16 @@ const getSingleSharedResource = asyncHandler(async (req, res) => {
     }
 });
 
+// Done
 // teacher who sent
 // getSubjectListByCurrentAdmin useful to delete which data or which not
 const deleteSharedResource = asyncHandler(async (req, res, next) => {
     try {
-        const { resourceId } = req.params;
+        const { resourceId } = req.body;
+        const { _id } = req.user;
 
         // Check if the resource exists
-        let resource = await SharedResource.findById(resourceId);
+        let resource = await SharedResource.find({_id:resourceId, owner: _id});
 
         if (!resource) {
             return res.status(404).json({
@@ -118,6 +158,9 @@ const deleteSharedResource = asyncHandler(async (req, res, next) => {
     }
 });
 
+
+
+// Future Scope
 
 // future scope
 const addSharedResources = asyncHandler(async (req, res) => {

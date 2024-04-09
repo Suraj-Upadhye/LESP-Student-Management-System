@@ -29,6 +29,10 @@ const leaveSchema = new Schema(
             type: String,
             enum: ['Pending', 'Approved', 'Rejected'],
             default: 'Pending'
+        },
+        userType: {
+            type: String,
+            enum: ["Student", "Teacher"]
         }
     },
     {

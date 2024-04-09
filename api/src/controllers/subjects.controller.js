@@ -205,9 +205,26 @@ const getSubjectListByCurrentAdmin = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, subjects: subjectNames });
 });
 
-// pending
+// Done
 // for teacher to assign batch to student
 const getBatchListByYSBSub = asyncHandler( async(req, res)=>{
+
+    const {year, semester, branch } = req.body;
+
+     // Get the subject ID based on the subject name
+     const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectListByYSB', {
+        year,
+        branch,
+        semester,
+    });
+    const batchList = subjectResponse.data[0].applicableBatchNames
+    console.log(batchList)
+    
+    if(!batchList){
+        return res.status(404).send("No Batches Found");
+    }else{
+        res.status(200).json({success :true , data : batchList})
+    }
 
 })
 

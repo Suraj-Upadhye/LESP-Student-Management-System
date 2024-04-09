@@ -146,6 +146,7 @@ const getAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
 });
 
 
+// Done  
 // deletion of ut1 or ut2 of that subject
 // return success
 // one subject all student

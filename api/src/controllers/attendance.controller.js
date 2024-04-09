@@ -104,11 +104,15 @@ const fillAttendance = asyncHandler(async (req, res) => {
     }
 });
 
+
+// Remaining
 // Done // one subject all user
+
 const getAttendanceData = asyncHandler(async (req, res) => {
     try {
         // Extract request parameters
-        const { subjectName, sessionType, batch } = req.body;
+        const { year, semester, branch, division, subjectName, sessionType, batch} = req.body;
+        // const { subjectName, sessionType, batch } = req.body;
 
         // Find the subject
         const subject = await Subject.findOne({ subject: subjectName });
@@ -186,10 +190,12 @@ const getAttendanceData = asyncHandler(async (req, res) => {
 });
 
 // Done
+// Remaining
 const getAttendanceSubjectWiseSingleStudent = asyncHandler(async (req, res) => {
     try {
         // Extract request parameters
-        const { subjectName, sessionType, rollNo } = req.body;
+        const { year, semester, branch, division ,batch} = req.user;
+        const { subjectName, sessionType } = req.body;
 
         // Find the subject
         const subject = await Subject.findOne({ subject: subjectName });

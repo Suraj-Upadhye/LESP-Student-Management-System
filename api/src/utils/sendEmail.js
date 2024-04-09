@@ -171,7 +171,7 @@ const sendNewUserRejectedEmail = async (email, userType, firstName) => {
 };
 
 // Done
-const sendNewUserLeaveAcceptedEmail = async (email, userType, firstName) => {
+const sendLeaveAcceptedEmail = async (email, userType, firstName) => {
     const mailTransporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -212,7 +212,7 @@ const sendNewUserLeaveAcceptedEmail = async (email, userType, firstName) => {
     });
 };
 
-const sendNewUserLeaveRejectedEmail = async (email, userType, firstName) => {
+const sendLeaveRejectedEmail = async (email, userType, firstName) => {
     const mailTransporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -344,9 +344,11 @@ export {
     sendNewUserAcceptedEmail,
     sendNewUserRejectedEmail,
 
-    sendNewUserLeaveAcceptedEmail,
-    sendNewUserLeaveRejectedEmail,
+    sendLeaveAcceptedEmail,
+    sendLeaveRejectedEmail,
 
     sendUserRemovedEmail,
+
+    sendNewResourceEmail,
 
 };
