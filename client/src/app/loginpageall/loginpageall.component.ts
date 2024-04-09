@@ -48,6 +48,7 @@ export class LoginpageallComponent implements OnInit {
             'user_name',
             res.data.admin.firstName + ' ' + res.data.admin.lastName
           );
+          localStorage.setItem('profilePhotoURL', res.data.admin.profilePhoto)
           localStorage.setItem('_id', res.data.admin._id)
           this.role = res.data.admin.role;
           localStorage.setItem('role', res.data.admin.role);
@@ -57,6 +58,7 @@ export class LoginpageallComponent implements OnInit {
             'user_name',
             res.data.user.firstName + ' ' + res.data.user.lastName
           );
+          localStorage.setItem('profilePhotoURL', res.data.user.profilePhoto)
           localStorage.setItem('_id', res.data.user._id);
           this.role = res.data.user.role;
           localStorage.setItem('role', res.data.user.role);

@@ -1,6 +1,5 @@
 import {Router} from "express";
 import { registerAdmin,
-    changeCurrentPassword,
     newTeacherList,
     acceptNewTeacher,
     newStudentList,
@@ -38,9 +37,6 @@ router.route("/classTeacherAllocation/:teacherId").post(classTeacherAllocation)
 
 router.route("/getSubjectSwitchOptionList").get(verifyJWT,getSubjectSwitchOptionList)
 router.route("/getSubjectSwitchOptionListForViewAttendance").get(verifyJWT, getSubjectSwitchOptionListForViewAttendance);
-
-// not done    
-router.route("/changeCurrentPassword").post(changeCurrentPassword)
 
 
 

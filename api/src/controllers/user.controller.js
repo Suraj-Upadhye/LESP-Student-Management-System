@@ -317,7 +317,7 @@ const getCurrentUserEssentials = asyncHandler(async (req, res) => {
 
 
 
-const getAdminProfile = asyncHandler( async( req, res) =>{
+const getStudentProfile = asyncHandler( async( req, res) =>{
 
 });
 

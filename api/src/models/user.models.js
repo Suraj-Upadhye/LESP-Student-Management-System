@@ -43,7 +43,8 @@ const userSchema = new Schema(
         // },
         profilePhoto: {
             type: String,
-            required: false
+            required: false,
+            default: "https://res.cloudinary.com/dk5cr6qga/image/upload/v1710748095/xowjbmq7hqz5vr9iyjkb.jpg"
         },
 
         // academicDetails :-

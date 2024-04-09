@@ -1,11 +1,31 @@
 <div class="header">
     <div class="profile"
+    *ngIf="role === 'Student'"
     routerLink="/viewprofilestudent">
-        <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1710748095/xowjbmq7hqz5vr9iyjkb.jpg"
+        <img [src]="profilePhotoURL"
             alt="profileImg" class="profileImg cursor-pointer
             " height="40px" width="40px">
         <p class="profileName cursor-pointer">{{profileName}}</p>
     </div>
+
+    <div class="profile"
+    *ngIf="role === 'Teacher'"
+    routerLink="/viewprofileteacher">
+        <img [src]="profilePhotoURL"
+            alt="profileImg" class="profileImg cursor-pointer
+            " height="40px" width="40px">
+        <p class="profileName cursor-pointer">{{profileName}}</p>
+    </div>
+
+    <div class="profile"
+    *ngIf="role === 'HOD'"
+    routerLink="/viewprofilehod">
+        <img [src]="profilePhotoURL"
+            alt="profileImg" class="profileImg cursor-pointer
+            " height="40px" width="40px">
+        <p class="profileName cursor-pointer">{{profileName}}</p>
+    </div>
+
     <div class="logout">
         <button
         (click)="logout()"

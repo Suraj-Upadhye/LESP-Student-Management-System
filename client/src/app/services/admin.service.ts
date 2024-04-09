@@ -61,6 +61,20 @@ export class AdminService {
     );
   }
 
+  registerAdminService(registerObj: any) {
+    return this.http.post<any>(
+      `${apiUrls.adminServiceApi}registerAdmin`,
+      registerObj
+    );
+  }
+
+  getSubjectListByYSBService(year:string, semester:string, branch:string){
+    return this.http.post<any>(
+      `${apiUrls.subjectServiceApi}getSubjectListByYSB`,
+      {year: year, semester: semester, branch: branch}
+    );
+  }
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   isLoggedIn() {

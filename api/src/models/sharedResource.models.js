@@ -26,6 +26,10 @@ const sharedResourceSchema = new Schema(
             type: String,
             required: [true, 'resourceType field is required'],
         },
+        subject:{
+            type: String,
+            required: [true, 'subject name is required']
+        },
         owner: {
             type: Schema.Types.ObjectId,
             ref: "Admin"

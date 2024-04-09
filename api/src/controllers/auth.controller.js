@@ -613,7 +613,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
             }
 
             admin.password = newPassword
-            await user.save({ validateBeforeSave: false })
+            await admin.save({ validateBeforeSave: false })
 
             return res
                 .status(200)

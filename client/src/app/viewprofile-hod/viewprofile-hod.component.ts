@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-viewprofile-hod',
@@ -7,6 +7,13 @@ import { Component } from '@angular/core';
   templateUrl: './viewprofile-hod.component.html',
   styleUrl: './viewprofile-hod.component.css'
 })
-export class ViewprofileHODComponent {
+export class ViewprofileHODComponent implements OnInit {
+ 
+  
+ 
+  ngOnInit(): void {
+    
+  }
+
 
 }

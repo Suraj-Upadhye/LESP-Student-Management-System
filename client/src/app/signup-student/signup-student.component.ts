@@ -1,132 +1,188 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject} from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { first } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-signup-student',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule],
+  imports: [FormsModule, CommonModule, HttpClientModule, RouterModule],
   templateUrl: './signup-student.component.html',
-  styleUrl: './signup-student.component.css'
+  styleUrl: './signup-student.component.css',
+  providers: [AuthService],
 })
-export class SignupStudentComponent implements OnInit{
+export class SignupStudentComponent {
+  authService = inject(AuthService);
+  router = inject(Router);
 
-  fb = inject(FormBuilder);
+  otpVerified: boolean = false;
+  images: any;
+  fileSelected= false;
 
-  signupForm!: FormGroup;
-imageUrl: any;
+  isFormSubmited: boolean = false;
+  password: string = '';
+  repassword: string = '';
+  userObj: any = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    gender: '',
+    address: '',
+    pincode: '',
+    year: '',
+    branch: '',
+    division: '',
+    enrollmentNo: '',
+    rollNo: '',
+    semester: '',
+    studentMobileNumber: '',
+    fatherMobileNumber: '',
+    motherMobileNumber: '',
+    email: '',
+    otp: '',
+    password: '',
+    role: 'student',
+  };
 
-
-  ngOnInit(): void {
-    this.signupForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(3)]],
-      middleName: ['', [Validators.required, Validators.minLength(3)]],
-      lastName: ['', [Validators.required, Validators.minLength(3)]],
-      gender: ['', Validators.required],
-      address: ['', [Validators.required, Validators.minLength(27)]],
-      pincode: ['', [Validators.required, Validators.pattern('^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$')]],
-      year: ['', Validators.required],
-      semester: ['', Validators.required],
-      branch: ['', Validators.required],
-      division: ['', Validators.required],
-      enrollmentNo: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
-      rollNo: ['', [Validators.required, Validators.pattern('[0-9]{6}')]],
-      studentMobileNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
-      fatherMobileNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
-      motherMobileNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
-      Email: ['', [Validators.required, Validators.email]],
-      Otp: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
-      password: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
-      confirmPassword: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]]
-    });
-  }
-
-  // Function to access form controls easily in the HTML template
-  get f() {
-    return this.signupForm.controls;
+  fyn() {
+    console.log(this.userObj);
   }
 
   onSubmit() {
-    if (this.signupForm.invalid) {
+    console.log(this.userObj);
+    this.isFormSubmited = true;
+    if (this.password !== this.repassword) {
+      console.log('password Does Not Match:');
       return;
+    } else {
+      const formData = new FormData();
+      formData.append('profilePhoto', this.images);
+
+      // Add other user information to formData
+      Object.entries(this.userObj).forEach(([key, value]) => {
+        // Check if the value is a File (profile photo) or a string
+        if (value instanceof File) {
+          formData.append(key, value, value.name); // Cast value to Blob and include filename
+        } else {
+          formData.append(key, String(value)); // Cast value to string
+        }
+      });
+      if (this.otpVerified) {
+        this.registerUser(formData);
+      } else {
+        alert('Please Verify Your Email First');
+        const email = document.getElementById('email') as HTMLInputElement;
+        email.focus();
+      }
+      // this.password='';
+      // this.repassword='';
+      // console.log("password are same")
     }
   }
 
+  registerUser(formData: FormData) {
+    this.authService.registerUserService(formData).subscribe({
+      next: (res) => {
+        console.log(res);
+        alert(
+          'Your Registration request sent Successfully! Please wait for Class Teacher approval. We will notify you by Email'
+        );
+        this.router.navigate(['login']);
+        // this.userObj.email = '';
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message);
+      },
+    });
+  }
 
-//   isFormSubmited: boolean=false;
-//   password:string='';
-//   repassword:string='';
-//   userObj: any={
-//     firstName:'',
-//     middleName:'',
-//     lastName:'',
-//     gender: '',
-//     address:'',
-//     pincode:'',
-//     year: '',
-//     semester: '',
-//     branch: '',
-//     division: '',
-//     enrollmentNo:'',
-//     rollNo:'',
-//     studentMobileNumber:'',
-//     fatherMobileNumber:'',
-//     motherMobileNumber:'',
-//     Email:'',
-//     Otp:'',
-//     password:'',
-//     repassword:'',
-//   }
+  sendOTP(): any {
+    const email = this.userObj.email;
+    // var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    var pattern =
+      /(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[$@$!%?&])[A-Za-z\d$@$!%?&].{8,}/;
 
+    if (email === '') {
+      alert('Please enter valid email id');
+      return false;
+    } else {
+      this.createAndStoreOTP();
+    }
+  }
 
-//   users= [
-    
+  createAndStoreOTP() {
+    this.authService.createAndStoreOTPService(this.userObj.email).subscribe({
+      next: (res) => {
+        alert('OTP is Sent Successfully!');
+        console.log(res);
+        // this.userObj.email = '';
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message);
+      },
+    });
+  }
 
-//   ]
-//   onSubmit(){
-//     this.isFormSubmited=true;
-//     if(this.password !== this.repassword){
-//       console.log("password Does Not Match:")
-//       return;
-//     }
-//     else{
-//       this.password='';
-//       this.repassword='';
-//       console.log("password are same")
-//     }
-//   }
-   
+  verifyOTP() {
+    this.authService
+      .verifyOTPService(this.userObj.email, this.userObj.otp)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          alert('OTP Verified Successfully');
+          this.otpVerified = true;
+          // this.userObj.email = '';
+        },
+        error: (err) => {
+          console.log(err);
+          alert(err.error.message);
+        },
+      });
+  }
 
+  imageUrl: string | ArrayBuffer | null = null;
 
-//   imageUrl: string | ArrayBuffer | null = null;
+  constructor() {}
 
-//   constructor() { }
+  handleFileInput(event: any): void {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      // Check if the file is an image
+      if (file.type.startsWith('image/')) {
+        // It's an image file
+        this.fileSelected = true;
+        this.images = file;
+    } else {
+      // It's not an image file
+      this.fileSelected = false;
+      console.error('Selected file is not an image.');
+      alert('Please select a valid Image File!');
+      // Optionally, you can reset the selected file to null
+      this.images = null;
+    }
+  }
+  const file = event.target.files[0];
+  const reader = new FileReader();
 
-//   handleFileInput(event: any): void {
-//     const file = event.target.files[0];
-//     const reader = new FileReader();
+        reader.onload = () => {
+          this.imageUrl = reader.result;
+          // console.log(this.imageUrl);
+          
+        };
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
 
-//     reader.onload = () => {
-//       this.imageUrl = reader.result;
-//     };
-//     if (file) {
-//       reader.readAsDataURL(file);
-//     }
-//   }
-
-handleFileInput(event: any):void{
-  
-}
-
-//   handleUploadClick(): void {
-//     const uploadInput = document.getElementById('upload');
-//     uploadInput?.click();
-//   }
-
+  handleUploadClick(): void {
+    const uploadInput = document.getElementById('upload');
+    uploadInput?.click();
+  }
 }
 
 //validation

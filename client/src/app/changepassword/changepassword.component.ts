@@ -25,19 +25,16 @@ export class ChangepasswordComponent {
     onSubmit() {
       // Check the newPassword and confirmPassword match
       if (this.newPassword !== this.confirmPassword) {
-        // If passwords do not match
-        // set passwordMatchError to true
-        this.passwordMatchError = true
-        return; // return the function
+        alert("Passwords do not match.");
+        return;
       }
-  
-      // its passwords match, continue with form submission and further logic
-      // console.log('New Password:', this.newPassword);
-      // console.log('Confirm Password:', this.confirmPassword);
-  
-      // Reset password  error
-      this.passwordMatchError = false;
+      else{
+        this.changePassword()
+        
+      // this.newPassword = '';
+      // this.confirmPassword = '';
     }
+  }
   
     changePassword(){
       // changeCurrentPasswordService

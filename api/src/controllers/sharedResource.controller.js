@@ -8,7 +8,7 @@ import { SharedResource } from "../models/sharedResource.models.js";
 
 const addSharedResource = asyncHandler(async (req, res) => {
     try {
-        const { resourceFile, description, title, resourceType } = req.body;
+        const { resourceFile, description, title, resourceType, subject } = req.body;
         const { _id: owner } = req.user; // Assuming user authentication is implemented and user ID is available in req.user
 
         // Create new shared resource
@@ -17,6 +17,7 @@ const addSharedResource = asyncHandler(async (req, res) => {
             description,
             title,
             resourceType,
+            subject,
             owner
         });
 
@@ -55,7 +56,7 @@ const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     }
 });
 
-const getSharedResourcesListAllSubjects = asyncHandler(async (req, res) => {
+const getSharedResourcesListAllSubjectsMerged = asyncHandler(async (req, res) => {
     try {
         // Query all shared resources
         const sharedResources = await SharedResource.find();
@@ -64,25 +65,6 @@ const getSharedResourcesListAllSubjects = asyncHandler(async (req, res) => {
             success: true,
             message: 'Shared resources fetched successfully',
             data: sharedResources
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
-    }
-});
-
-const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
-    try {
-        // Query only the shared resources with resourceType as "Notice"
-        const notices = await SharedResource.find({ resourceType: "Notice" });
-
-        res.status(200).json({
-            success: true,
-            message: 'Notice shared resources fetched successfully',
-            data: notices
         });
     } catch (error) {
         console.error(error);
@@ -229,12 +211,31 @@ const updateSharedResource = asyncHandler(async (req, res, next) => {
     }
 });
 
+// future scope
+const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
+    try {
+        // Query only the shared resources with resourceType as "Notice"
+        const notices = await SharedResource.find({ resourceType: "Notice" });
+
+        res.status(200).json({
+            success: true,
+            message: 'Notice shared resources fetched successfully',
+            data: notices
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
 
 
 export {
     addSharedResource,
     getSharedResourcesListSubjectWise,
-    getSharedResourcesListAllSubjects,
+    getSharedResourcesListAllSubjectsMerged,
     getSharedResourcesListNoticesOnly,
     getSingleSharedResource,
     deleteSharedResource,

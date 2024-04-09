@@ -25,6 +25,8 @@ import { ViewAttendanceCommonBarComponent } from './view-attendance-common-bar/v
 import { AllUsersListComponent } from './all-users-list/all-users-list.component';
 import { NewUserRequestsComponent } from './new-user-requests/new-user-requests.component';
 import { AllLeaveRequestsComponent } from './all-leave-requests/all-leave-requests.component';
+import { SignupHodComponent } from './signup-hod/signup-hod.component';
+import { ViewprofileHODComponent } from './viewprofile-hod/viewprofile-hod.component';
 
 
 export const routes: Routes = [
@@ -33,8 +35,9 @@ export const routes: Routes = [
     {path:'about-us', component:AboutUspageComponent},
     {path:'contect-us', component:ContectUsComponent},
     
-    {path:'signup', component:SignupStudentComponent},
-    {path:'signup1', component:SignupteacherComponent},
+    {path:'signup-student', component:SignupStudentComponent},
+    {path:'signup-teacher', component:SignupteacherComponent},
+    {path:'signup-hod', component:SignupHodComponent},
 
     {path:'homepage-teacher-hod', component:HomepageTeacherHodComponent},
     {path:'homepage-student', component:HomepagestudentComponent},
@@ -61,6 +64,7 @@ export const routes: Routes = [
 
     {path:'viewprofilestudent', component:ViewprofilestudentComponent},
     {path:'viewprofileteacher', component:ViewprofileteacherComponent},
+    {path:'viewprofilehod', component:ViewprofileHODComponent},
 
     {path:'forgot-password', component:ForgotpasswordComponent},
     {path:'reset-password/:token', component:ResetpassComponent},

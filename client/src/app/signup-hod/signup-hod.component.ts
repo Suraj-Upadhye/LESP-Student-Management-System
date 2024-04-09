@@ -19,7 +19,7 @@ interface ExtractedSubject {
 }
 
 @Component({
-  selector: 'app-signupteacher',
+  selector: 'app-signup-hod',
   standalone: true,
   imports: [
     FormsModule,
@@ -28,11 +28,11 @@ interface ExtractedSubject {
     HttpClientModule,
     RouterModule,
   ],
-  templateUrl: './signupteacher.component.html',
-  styleUrl: './signupteacher.component.css',
+  templateUrl: './signup-hod.component.html',
+  styleUrl: './signup-hod.component.css',
   providers: [AuthService, AdminService],
 })
-export class SignupteacherComponent {
+export class SignupHodComponent {
   authService = inject(AuthService);
   adminService = inject(AdminService);
   router = inject(Router);
@@ -90,7 +90,7 @@ export class SignupteacherComponent {
     email: 'premelabkhot@gmail.com',
     otp: '',
     password: '12345',
-    role: 'Teacher'
+    role: 'HOD'
   };
 
   onSubmit() {

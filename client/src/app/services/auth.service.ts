@@ -17,12 +17,7 @@ export class AuthService {
   http = inject(HttpClient);
   isloggedIn$ = new BehaviorSubject<boolean>(false);
 
-  registerService(registerObj: any) {
-    return this.http.post<any>(
-      `${apiUrls.authServiceApi}register`,
-      registerObj
-    );
-  }
+
 
   loginService(loginObj: any) {
     return this.http.post<any>(`${apiUrls.authServiceApi}login`, loginObj);
@@ -81,6 +76,27 @@ export class AuthService {
       `${apiUrls.authServiceApi}change-password`,
      {oldPassword: oldPassword, newPassword:newPassword},
      { headers }
+    );
+  }
+
+  createAndStoreOTPService(email: string){
+    return this.http.post<any>(
+      `${apiUrls.authServiceApi}createAndStoreOTP`,
+     {email: email}
+    );
+  }
+
+  verifyOTPService(email: string, otp: string){
+    return this.http.post<any>(
+      `${apiUrls.authServiceApi}verifyOTP`,
+     {email: email, otp:otp}
+    );
+  }
+
+  registerUserService(formData: FormData){
+    return this.http.post<any>(
+      `${apiUrls.userServiceApi}register`,
+    formData
     );
   }
 

@@ -8,13 +8,27 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
 import { Subject } from '../models/subjects.models.js';
 import { sendNewUserAcceptedEmail } from '../utils/sendEmail.js';
+import axios from 'axios';
 
 // Done
 const registerAdmin = asyncHandler(async (req, res) => {
     const {
         firstName, middleName, lastName, gender, qualification, department, teachingExperience,
-        mobileNumber, email, password, workingDetails, hodDepartment, role
+        mobileNumber, email, password, workingDetails, role, address, pincode
     } = req.body;
+    let isHOD= false, isEmailVerified= false;
+
+    if(role === "HOD"){
+        const hodResponse = await axios.post('http://localhost:8000/api/v1/hod/getEmail', {
+           department
+        });
+        if(!hodResponse.data.email){
+            throw new ApiError("Department does not have a HOD assigned yet.",  406); 
+        } else {
+            isHOD = true;
+            isEmailVerified = true;
+        }
+    }
 
     console.log("Email :", email);
     console.log(firstName, middleName, lastName, gender, department, qualification, teachingExperience, mobileNumber, email, password, role);
@@ -74,8 +88,9 @@ const registerAdmin = asyncHandler(async (req, res) => {
     // Create new admin
     const admin = await Admin.create({
         firstName, middleName, lastName, gender, qualification, teachingExperience, department,
-        mobileNumber, email: email.toLowerCase(), password, profilePhoto: profilePhotoUrl,
-        workingDetails, hodDepartment, role
+        isHOD, isEmailVerified,
+        mobileNumber, email: email.toLowerCase(), password, profilePhoto: profilePhotoUrl, address, pincode,
+        workingDetails, role
     });
 
     // Return success response
@@ -86,21 +101,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse(200, createdAdmin, "Admin registered successfully"));
 });
 
-const changeCurrentPassword = asyncHandler(async (req, res) => {
-    const { oldPassword, newPassword } = req.body;
 
-    const admin = await Admin.findById(req.user._id);
-    const isPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
-
-    if (!isPasswordCorrect) {
-        throw new ApiError(400, "Invalid old password");
-    }
-
-    admin.password = newPassword;
-    await admin.save({ validateBeforeSave: false });
-
-    return res.status(200).json(new ApiResponse(200, {}, "Password changed successfully"));
-});
 
 const getCurrentAdmin = asyncHandler(async (req, res) => {
     const admin = await Admin.findById(req.user._id).select("-password -refreshToken");
@@ -215,38 +216,6 @@ const getAdminCode = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, admin, "Admin code fetched successfully"));
 });
 
-
-const resetPassword = asyncHandler(async (req, res) => {
-    const { resetToken, password, confirmPassword } = req.body;
-
-    try {
-        // Find user by reset token and check if reset token is valid
-        const user = await User.findOne({ resetToken, resetTokenExpire: { $gt: Date.now() } });
-
-        // If user not found or reset token expired, throw error
-        if (!user) {
-            throw new ApiError(400, "Invalid or expired reset token");
-        }
-
-        // Validate password and confirmPassword match
-        if (password !== confirmPassword) {
-            throw new ApiError(400, "Passwords do not match");
-        }
-
-        // Set new password and clear reset token fields
-        user.password = password;
-        user.resetToken = undefined;
-        user.resetTokenExpire = undefined;
-
-        // Save updated user
-        await user.save();
-
-        // Send success response
-        res.status(200).json(new ApiResponse(200, {}, "Password reset successfully"));
-    } catch (error) {
-        throw new ApiError(500, "Error resetting password");
-    }
-});
 
 const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
     try {
@@ -378,10 +347,6 @@ const getSubjectSwitchOptionListForViewAttendance = asyncHandler(async (req, res
         res.status(500).json({ success: false, message: "Failed to fetch teacher year and branch" });
     }
 });
-
-
-
-
 
 
 
@@ -614,16 +579,20 @@ const allowToChangeAcademicDetails = asyncHandler(async (req, res) => {
 });
 
 
+const getTeacherProfile = asyncHandler( async( req, res) =>{
+
+});
+
+
+
 
 export {
     registerAdmin,
-    changeCurrentPassword,
     getCurrentAdmin,
     updateAccountDetails,
     updateAdminCode,
     getAdminCode,
     updateAdminProfilePhoto,
-    resetPassword,
     getCurrentAdminEssentials,
 
     getSubjectSwitchOptionList,

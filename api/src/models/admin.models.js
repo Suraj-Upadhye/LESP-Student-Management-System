@@ -56,7 +56,8 @@ const adminSchema = new Schema(
         // },
         profilePhoto: {
             type: String,
-            required: false
+            required: false,
+            default: "https://res.cloudinary.com/dk5cr6qga/image/upload/v1710748095/xowjbmq7hqz5vr9iyjkb.jpg"
         },
         // securityDetails:-
         mobileNumber: {
@@ -66,6 +67,10 @@ const adminSchema = new Schema(
         email: {
             type: String,
             required: [true, 'Email id is required'],
+            unique: true,
+            lowercase: true,
+            trim: true,
+            index: true
         },
         password: {
             type: String,

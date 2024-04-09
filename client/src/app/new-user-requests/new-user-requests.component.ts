@@ -11,8 +11,6 @@ import { CommonModule } from '@angular/common';
 })
 export class NewUserRequestsComponent {
 
-
-  
   fun(){
     
     console.log(this.teachers)

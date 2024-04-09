@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SidebarComponent implements OnInit {
   profileName: any = 'Profile Name';
+  profilePhotoURL: any = "";
   role: any = '';
 
   teacherSection = ['New User Requests', 'All Leave Requests', 'All Users List'];
@@ -41,15 +42,16 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     try {
       this.profileName = localStorage.getItem('user_name');
+      this.profilePhotoURL = localStorage.getItem('profilePhotoURL');
+      this.role = localStorage.getItem('role');
     } catch (error) {
       console.log(error);
     }
-    this.role = localStorage.getItem('role');
-    try {
-      this.profileName = localStorage.getItem('user_name');
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   this.profileName = localStorage.getItem('user_name');
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   logout(){
