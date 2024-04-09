@@ -118,26 +118,24 @@ const adminSchema = new Schema(
                     }
                 }
             ],
-        classTeacher: [
-            {
-                year: {
-                    type: String,
-                    required: false,
-                },
-                branch: {
-                    type: String,
-                    required: false,
-                },
-                semester: {
-                    type: String,
-                    required: false,
-                },
-                division: {
-                    type: String,
-                    required: false
-                }
+        classTeacher: {
+            year: {
+                type: String,
+                required: false,
+            },
+            branch: {
+                type: String,
+                required: false,
+            },
+            semester: {
+                type: String,
+                required: false,
+            },
+            division: {
+                type: String,
+                required: false
             }
-        ],
+        },
         department: {
             type: String,
             required: [true, 'department is required'],

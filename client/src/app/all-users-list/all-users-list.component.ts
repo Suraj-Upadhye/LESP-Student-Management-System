@@ -37,7 +37,6 @@ export class AllUsersListComponent implements OnInit{
   onRoleChange(role: string) {
     this.selectedRole = role;
   }
-
   ngOnInit(): void {
     this.role = localStorage.getItem('role');
   }

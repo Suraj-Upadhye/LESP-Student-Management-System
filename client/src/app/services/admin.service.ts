@@ -61,10 +61,10 @@ export class AdminService {
     );
   }
 
-  registerAdminService(registerObj: any) {
+  registerAdminService(formData: FormData) {
     return this.http.post<any>(
       `${apiUrls.adminServiceApi}registerAdmin`,
-      registerObj
+      formData
     );
   }
 

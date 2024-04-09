@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderMergedComponent } from '../header-merged/header-merged.component';
 import { CommonModule } from '@angular/common';
 
@@ -9,7 +9,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './new-user-requests.component.html',
   styleUrl: './new-user-requests.component.css'
 })
-export class NewUserRequestsComponent {
+export class NewUserRequestsComponent implements OnInit{
+
+
+  role: any;
 
   fun(){
     
@@ -33,6 +36,7 @@ export class NewUserRequestsComponent {
       {  name: 'Teacher 2' },
       // Other teacher data
     ];
+    this.role = localStorage.getItem('role')
   }
   
   selectedRole: string = 'student'; // Default role is 'student'

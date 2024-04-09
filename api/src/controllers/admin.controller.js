@@ -33,7 +33,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
     console.log("Email :", email);
     console.log(firstName, middleName, lastName, gender, department, qualification, teachingExperience, mobileNumber, email, password, role);
 
-    console.log("Working details:", workingDetails);
+    console.log("Working details:",workingDetails);
 
     // Check if any required field is missing or empty
     if ([firstName, middleName, lastName, gender, qualification, department, mobileNumber, email, password, role].some(field => !field?.trim())) {
@@ -51,6 +51,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
             branch,
             subject: subjectName
         });
+        console.log(year, semester, branch, subjectName);
     
         if (!subject) {
             return res.status(404).json({ success: false, message: 'Subject not found' });
@@ -423,45 +424,27 @@ const acceptNewTeacher = asyncHandler(async (req, res) => {
 
 // Done
 const newStudentList = asyncHandler(async (req, res) => {
-    // get list of student who's email is not verified
     try {
-        // 1. Extract the class name information of the teacher from the JWT token.
-        const { classTeacher, isClassTeacher } = req.user; // Assuming class teacher information is stored in the user object
+        // Extract class teacher information from the JWT token
+        const { classTeacher, isClassTeacher } = req.user;
 
-        // Debugging: Log the class teacher of class value
-        console.log("Class Teacher of :", classTeacher);
+        // Debugging: Log the class teacher information
+        console.log("Class Teacher:", classTeacher);
 
-
-        if (isClassTeacher === false) {
+        // Check if the user is a class teacher
+        if (!isClassTeacher) {
             return res.status(500).json({
                 success: false,
-                error: "Teacher is not a Class Teacher"
+                error: "You are not a Class Teacher"
             });
         }
+        
+        const newStudents = await User.find({year:classTeacher.year, branch:classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, role:"Student", isEmailVerified:false}).select("_id firstName middleName lastName rollNo year branch semester division");
 
-        // 2. Use aggregation to filter students who belong to the same class and have unverified emails.
-        const newStudents = await User.aggregate([
-            {
-                $match: {
-                    year: classTeacher[0].year, // Filter by year branch semester division
-                    branch: classTeacher[0].branch,
-                    semester: classTeacher[0].semester,
-                    division: classTeacher[0].division,
-                    role: "Student", // Filter by role
-                    isEmailVerified: false // Filter by unverified email
-                }
-            },
-            {
-                $project: {
-                    password: 0,
-                    refreshToken: 0 // Exclude password and refreshToken fields from the results
-                }
-            }
-        ]);
+        // Debugging: Log the filtered students
+        // console.log("Filtered Students:", newStudents);
 
-        console.log("Filtered Students:", newStudents);
-
-        // 3. Return the filtered list of Students as the response.
+        // Return the filtered students as the response
         res.status(200).json({
             success: true,
             data: newStudents
@@ -475,6 +458,7 @@ const newStudentList = asyncHandler(async (req, res) => {
         });
     }
 });
+
 
 // Done
 const acceptNewStudent = asyncHandler(async (req, res) => {

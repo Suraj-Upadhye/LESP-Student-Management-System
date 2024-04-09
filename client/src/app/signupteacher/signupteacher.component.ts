@@ -38,10 +38,14 @@ export class SignupteacherComponent {
   router = inject(Router);
 
   otpVerified: boolean = false;
+  images: any;
+  fileSelected = false;
 
   subjectdata: any;
 
   isFormSubmited: boolean = false;
+  password: string = '';
+  repassword: string = '';
 
   fieldData: any[] = [
     {
@@ -90,20 +94,51 @@ export class SignupteacherComponent {
     email: 'premelabkhot@gmail.com',
     otp: '',
     password: '12345',
-    role: 'Teacher'
+    role: 'Teacher',
   };
 
   onSubmit() {
     this.isFormSubmited = true;
-    console.log(this.fieldData);
-    console.log(this.userObj);
     this.userObj.workingDetails = this.fieldData;
-    console.log(this.userObj.workingDetails);
-    this.registerAdmin();
+    // console.log(this.fieldData);
+    // console.log(this.userObj);
+    // console.log(this.userObj.workingDetails);
+    // console.log(this.userObj);
+
+    if (this.password !== this.repassword) {
+      console.log('password Does Not Match:');
+      return;
+    } else {
+      const formData = new FormData();
+      formData.append('profilePhoto', this.images);
+
+      Object.entries(this.userObj).forEach(([key, value]) => {
+        if (key === 'workingDetails') {
+          // Convert the array to JSON string and append it to formData
+          formData.append(key, JSON.stringify(value));
+        } else if (value instanceof File) {
+          formData.append(key, value, value.name);
+        } else {
+          formData.append(key, String(value));
+        }
+      });
+      if (this.otpVerified) {
+        this.registerAdmin(formData);
+      } else {
+        alert('Please Verify Your Email First');
+        const email = document.getElementById('email') as HTMLInputElement;
+        email.focus();
+      }
+    }
   }
 
-  registerAdmin() {
-    this.adminService.registerAdminService(this.userObj).subscribe({
+  registerAdmin(formData: FormData) {
+    console.log('FormData contents:');
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    this.adminService.registerAdminService(formData).subscribe({
       next: (res) => {
         console.log(res);
         alert(
@@ -166,26 +201,24 @@ export class SignupteacherComponent {
 
   extractSubjects(data: SubjectData[]): ExtractedSubject[] {
     const subjectsArray: ExtractedSubject[] = [];
-  
+
     data.forEach((subject: SubjectData) => {
       const { subject: subjectName, mode, applicableBatchNames } = subject;
-  
+
       // Create an object for each subject containing its name, session types, and batches
       const subjectObject: ExtractedSubject = {
         subjectName,
         sessionTypes: mode.flat(),
         batches: applicableBatchNames,
       };
-  
+
       // Push the subject object to the subjects array
       subjectsArray.push(subjectObject);
       this.subjectdata = subjectsArray;
     });
-  
+
     return subjectsArray;
   }
-  
-
 
   // subjectdata: any[] = []; // Assuming this contains the subject data returned from the function
   selectedSubject: string = '';
@@ -195,7 +228,10 @@ export class SignupteacherComponent {
   batches: string[] = [];
 
   onSubjectChange() {
-    const selectedSubjectData = this.subjectdata.find((subject: { subjectName: string; }) => subject.subjectName === this.selectedSubject);
+    const selectedSubjectData = this.subjectdata.find(
+      (subject: { subjectName: string }) =>
+        subject.subjectName === this.selectedSubject
+    );
     if (selectedSubjectData) {
       this.sessionTypes = selectedSubjectData.sessionTypes;
       this.batches = selectedSubjectData.batches;
@@ -206,7 +242,6 @@ export class SignupteacherComponent {
       this.batches = [];
     }
   }
-  
 
   subjectData() {
     // this.isFormSubmited = true;
@@ -240,20 +275,36 @@ export class SignupteacherComponent {
   imageUrl: string | ArrayBuffer | null = null;
 
   handleFileInput(event: any): void {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      // Check if the file is an image
+      if (file.type.startsWith('image/')) {
+        // It's an image file
+        this.fileSelected = true;
+        this.images = file;
+      } else {
+        // It's not an image file
+        this.fileSelected = false;
+        console.error('Selected file is not an image.');
+        alert('Please select a valid Image File!');
+        // Optionally, you can reset the selected file to null
+        this.images = null;
+      }
+    }
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onload = () => {
       this.imageUrl = reader.result;
+      // console.log(this.imageUrl);
     };
-
     if (file) {
       reader.readAsDataURL(file);
     }
   }
 
-  handleUploadClick(): void {
-    const uploadInput = document.getElementById('upload');
-    uploadInput?.click();
-  }
+  // handleUploadClick(): void {
+  //   const uploadInput = document.getElementById('upload');
+  //   uploadInput?.click();
+  // }
 }

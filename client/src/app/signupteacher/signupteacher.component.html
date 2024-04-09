@@ -62,12 +62,11 @@
 
           <!-- Right side content -->
           <div class="w-full lg:w-4/12 px-4 mt-4 flex justify-center">
-            <label for="upload" class="mt-10 p-12 mb-4 border-2 rounded-lg items-center cursor-pointer"
+            <label for="upload" class=" mt-10 p-12 mb-4 border-2 rounded-lg items-center cursor-pointer"
               [style.backgroundImage]="'url(' + imageUrl + ')'"
-              style="background-size: cover; background-position: center; width: 150px; height: 170px; background-color:white; position: relative;">
-              <input id="upload" type="file" #fileInput class="hidden" accept="image/*"
-                (change)="handleFileInput($event)" (click)="fileInput.click()" />
-              <span class="upload-text" *ngIf="!imageUrl">Upload your photo</span>
+              style="background-size: cover; background-position: center; width: 150px; height: 170px; background-color: white;">
+              <input id="upload" type="file" class="hidden" accept="image/*" (change)="handleFileInput($event)" />
+              <span class="upload-text" *ngIf="!fileSelected">Upload your photo</span>
             </label>
           </div>
 
@@ -199,6 +198,7 @@
                 Email
               </label>
               <input type="email" name="email" #email="ngModel" [(ngModel)]="userObj.email"
+              id="email"
                 pattern="^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$" [disabled]="otpVerified"
                 [ngClass]="{ 'disabled-component': otpVerified }"
                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -365,6 +365,7 @@
                     <option value="" disabled selected hidden>--select Division--</option>
                     <option>Div1</option>
                     <option>Div2</option>
+                    <option>None</option>
                   </select>
                 </div>
               </div>

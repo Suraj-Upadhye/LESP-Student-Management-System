@@ -20,7 +20,7 @@ export class SignupStudentComponent {
 
   otpVerified: boolean = false;
   images: any;
-  fileSelected= false;
+  fileSelected = false;
 
   isFormSubmited: boolean = false;
   password: string = '';
@@ -157,32 +157,31 @@ export class SignupStudentComponent {
         // It's an image file
         this.fileSelected = true;
         this.images = file;
-    } else {
-      // It's not an image file
-      this.fileSelected = false;
-      console.error('Selected file is not an image.');
-      alert('Please select a valid Image File!');
-      // Optionally, you can reset the selected file to null
-      this.images = null;
+      } else {
+        // It's not an image file
+        this.fileSelected = false;
+        console.error('Selected file is not an image.');
+        alert('Please select a valid Image File!');
+        // Optionally, you can reset the selected file to null
+        this.images = null;
+      }
+    }
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.imageUrl = reader.result;
+      // console.log(this.imageUrl);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
     }
   }
-  const file = event.target.files[0];
-  const reader = new FileReader();
 
-        reader.onload = () => {
-          this.imageUrl = reader.result;
-          // console.log(this.imageUrl);
-          
-        };
-        if (file) {
-          reader.readAsDataURL(file);
-        }
-      }
-
-  handleUploadClick(): void {
-    const uploadInput = document.getElementById('upload');
-    uploadInput?.click();
-  }
+  // handleUploadClick(): void {
+  //   const uploadInput = document.getElementById('upload');
+  //   uploadInput?.click();
+  // }
 }
 
 //validation
