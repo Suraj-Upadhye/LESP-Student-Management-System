@@ -11,6 +11,9 @@ import { UnitTest } from '../models/unitTest.models.js';
 // if-else
 // update subject marks which is changed
 // return success msg with object
+
+// one subject all student
+// 1. main
 const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
     // Extracting data from request body
     const { subject, marks } = req.body;
@@ -57,38 +60,12 @@ const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
     });
 });
 
-// subject wise ut1 and ut2 single user
-// return rollno, name, ut1 marks, ut2 marks, average, class ranking
-const getUserMarksSubjectWise = asyncHandler(async (req, res) => {
-    // Extracting data from request parameters
-    const { rollNo, subject } = req.params;
-
-    // Fetching UT marks for the given subject and user
-    const userMarks = await UnitTest.findOne({ student: rollNo, subject });
-
-    // Assuming you have logic to calculate average marks and class ranking
-    // You may need to adjust this based on your actual implementation
-
-    // Calculate average marks
-    const averageMarks = (userMarks.ut1 + userMarks.ut2) / 2;
-
-    // Calculate class ranking
-    // For simplicity, let's assume the ranking is stored in a separate model named UserRanking
-    const classRanking = await UserRanking.findOne({ subject, user: rollNo });
-
-    // Sending response with user marks, average, and class ranking
-    res.status(200).json({
-        rollNo,
-        name: userMarks.studentName,
-        ut1: userMarks.ut1,
-        ut2: userMarks.ut2,
-        average: averageMarks,
-        classRanking
-    });
-});
 
 // All subjects marks ut1 and ut2 single user
 // return rollno, name, subjectname (ut2 marks, ut2 marks), average of all, class ranking
+
+// all subjects one student
+// 2. main
 const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
     // Extracting data from request parameters
     const { rollNo } = req.params;
@@ -129,6 +106,9 @@ const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
 
 // subject wise ut1 and ut2
 // return rollno, name, ut1 marks, ut2 marks, average, class ranking
+
+// one subject all student
+// 3. main
 const getAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
     // Fetching all user marks for the specified subject
     const { subjectId } = req.params;
@@ -165,8 +145,61 @@ const getAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
     });
 });
 
+
+// deletion of ut1 or ut2 of that subject
+// return success
+// one subject all student
+// 4. maintainance
+const deleteAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
+    const { subjectId } = req.params;
+
+    // Assuming you have logic to delete all marks for a specific subject
+    await UnitTest.deleteMany({ subject: subjectId });
+
+    // Sending success response
+    res.status(200).json({ success: true, message: 'All marks for the subject have been deleted successfully.' });
+});
+
+
+
+// future scope
+
+// subject wise ut1 and ut2 single user
+// return rollno, name, ut1 marks, ut2 marks, average, class ranking
+
+// one subject one student
+const getUserMarksSubjectWise = asyncHandler(async (req, res) => {
+    // Extracting data from request parameters
+    const { rollNo, subject } = req.params;
+
+    // Fetching UT marks for the given subject and user
+    const userMarks = await UnitTest.findOne({ student: rollNo, subject });
+
+    // Assuming you have logic to calculate average marks and class ranking
+    // You may need to adjust this based on your actual implementation
+
+    // Calculate average marks
+    const averageMarks = (userMarks.ut1 + userMarks.ut2) / 2;
+
+    // Calculate class ranking
+    // For simplicity, let's assume the ranking is stored in a separate model named UserRanking
+    const classRanking = await UserRanking.findOne({ subject, user: rollNo });
+
+    // Sending response with user marks, average, and class ranking
+    res.status(200).json({
+        rollNo,
+        name: userMarks.studentName,
+        ut1: userMarks.ut1,
+        ut2: userMarks.ut2,
+        average: averageMarks,
+        classRanking
+    });
+});
+
 // All subjects marks ut1 and ut2
 // return rollno, name, subjectname (ut2 marks, ut2 marks), average of all, class ranking
+
+// all subject all student
 const getAllUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
     // Fetching all user marks for all subjects
     const userMarks = await UnitTest.find().populate('student').populate('subject');
@@ -206,24 +239,9 @@ const getAllUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
     });
 });
 
-// deletion of ut1 or ut2 of that subject
-// return success
-const deleteAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
-    const { subjectId } = req.params;
-
-    // Assuming you have logic to delete all marks for a specific subject
-    await UnitTest.deleteMany({ subject: subjectId });
-
-    // Sending success response
-    res.status(200).json({ success: true, message: 'All marks for the subject have been deleted successfully.' });
-});
-
-
 export {
     addAndUpdateMarksSubjectWise,
-    getUserMarksSubjectWise,
     getUserMarksAllSubjectsCombined,
     getAllUserMarksSubjectWise,
-    getAllUserMarksAllSubjectsCombined,
     deleteAllUserMarksSubjectWise,
 };

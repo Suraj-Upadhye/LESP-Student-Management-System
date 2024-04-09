@@ -103,136 +103,6 @@ const registerAdmin = asyncHandler(async (req, res) => {
 });
 
 
-
-const getCurrentAdmin = asyncHandler(async (req, res) => {
-    const admin = await Admin.findById(req.user._id).select("-password -refreshToken");
-
-    if (!admin) {
-        throw new ApiError(404, "Admin not found");
-    }
-
-    return res.status(200).json(new ApiResponse(200, admin, "Admin fetched successfully"));
-});
-
-const updateAccountDetails = asyncHandler(async (req, res) => {
-    const {
-        firstName, middleName, lastName, gender, address, pincode, qualification, teachingExperience,
-        mobileNumber, email
-    } = req.body;
-
-    const admin = await Admin.findById(req.user._id);
-
-    if (!admin) {
-        throw new ApiError(404, "Admin not found");
-    }
-
-    // Update the admin's details
-    admin.firstName = firstName || admin.firstName;
-    admin.middleName = middleName || admin.middleName;
-    admin.lastName = lastName || admin.lastName;
-    admin.gender = gender || admin.gender;
-    admin.address = address || admin.address;
-    admin.pincode = pincode || admin.pincode;
-    admin.qualification = qualification || admin.qualification;
-    admin.teachingExperience = teachingExperience || admin.teachingExperience;
-    admin.mobileNumber = mobileNumber || admin.mobileNumber;
-    admin.email = email || admin.email;
-
-    await admin.save();
-
-    return res.status(200).json(new ApiResponse(200, admin, "Account details updated successfully"));
-});
-
-const updateAdminProfilePhoto = asyncHandler(async (req, res) => {
-    const admin = await Admin.findById(req.user._id);
-
-    if (!admin) {
-        throw new ApiError(404, "Admin not found");
-    }
-
-    // Check if there is a profile photo file in the request
-    if (!req.file) {
-        throw new ApiError(400, "No file uploaded");
-    }
-
-    const profilePhotoLocalPath = req.file.path;
-
-    // Upload the profile photo to Cloudinary
-    const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
-
-    if (!profilePhoto) {
-        throw new ApiError(500, "Failed to upload profile photo");
-    }
-
-    // Update the admin's profile photo URL
-    admin.profilePhoto = {
-        url: profilePhoto.url,
-        public_id: profilePhoto.public_id
-    };
-
-    await admin.save();
-
-    // Return the updated admin document
-    return res.status(200).json(new ApiResponse(200, admin, "Admin profile photo updated successfully"));
-});
-
-const updateAdminCode = asyncHandler(async (req, res) => {
-    const { newAdminCode } = req.body;
-    const adminId = req.user._id; // Assuming admin ID is available in the request
-
-    if (!newAdminCode) {
-        throw new ApiError(400, "New admin code is required");
-    }
-
-    // Check if the new admin code is unique
-    const isExistingAdminCode = await Admin.findOne({ adminCode: newAdminCode });
-    if (isExistingAdminCode) {
-        throw new ApiError(409, "New admin code already exists");
-    }
-
-    // Update admin code
-    const admin = await Admin.findByIdAndUpdate(
-        adminId,
-        { adminCode: newAdminCode },
-        { new: true }
-    );
-
-    if (!admin) {
-        throw new ApiError(404, "Admin not found");
-    }
-
-    res.status(200).json(new ApiResponse(200, admin, "Admin code updated successfully"));
-});
-
-const getAdminCode = asyncHandler(async (req, res) => {
-    const adminId = req.user._id; // Assuming admin ID is available in the request
-
-    // Find admin by ID and select only the admin code
-    const admin = await Admin.findById(adminId).select("adminCode");
-
-    if (!admin) {
-        throw new ApiError(404, "Admin not found");
-    }
-
-    res.status(200).json(new ApiResponse(200, admin, "Admin code fetched successfully"));
-});
-
-
-const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
-    try {
-        // Find the current admin by ID and select essential fields
-        const admin = await Admin.findById(req.user.id).select("firstName lastName profilePhoto email");
-
-        // Send response with admin essentials
-        res.json({
-            success: true,
-            data: admin
-        });
-    } catch (error) {
-        throw new ApiError(500, "Error fetching admin essentials");
-    }
-});
-
 // Done
 // returns subjects list assigned to teacher/hod(admin) along with year, sem , branch, theory/practical/tutorial, batch options
 const getSubjectSwitchOptionList = asyncHandler(async (req, res) => {
@@ -521,12 +391,12 @@ const classTeacherAllocation = asyncHandler(async (req, res) => {
             teacherId,
             {
                 $set: {
-                    classTeacher: [{
+                    classTeacher: {
                         year: year,
                         branch: branch,
                         semester: semester,
                         division: division,
-                    }],
+                    },
                     isClassTeacher: true
                 }
             },
@@ -542,6 +412,50 @@ const classTeacherAllocation = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error allocating class teacher");
     }
 });
+
+
+const allStudentsList = asyncHandler( async( req, res) =>{
+
+    const {} = req.body;
+    // only teacher teaching and hod can see this
+});
+
+const allTeachersList = asyncHandler( async( req, res) =>{
+
+    // only hod can see this
+});
+
+const removeStudent = asyncHandler( async( req, res) =>{
+
+    // only class teacher or hod
+    // if class teacher and hod
+});
+
+const removeTeacher = asyncHandler( async( req, res) =>{
+
+    //only hod can delete teachers
+    // if role == hod
+});
+
+
+const viewTeacherProfile = asyncHandler( async( req, res) =>{
+
+    // only hod and teacher can see this
+});
+
+
+const viewHODProfile = asyncHandler( async( req, res) =>{
+
+    // only hod can see this
+});
+
+const viewStudentProfile = asyncHandler( async( req, res) =>{
+
+    // only teacher teaching or hod can access this route and also student 
+});
+
+
+// future scope
 
 // allow user to change their academic details if the academic year is completed
 const allowToChangeAcademicDetails = asyncHandler(async (req, res) => {
@@ -562,22 +476,136 @@ const allowToChangeAcademicDetails = asyncHandler(async (req, res) => {
     }
 });
 
+const getCurrentAdminEssentials = asyncHandler(async (req, res) => {
+    try {
+        // Find the current admin by ID and select essential fields
+        const admin = await Admin.findById(req.user.id).select("firstName lastName profilePhoto email");
 
-const getTeacherProfile = asyncHandler( async( req, res) =>{
-
+        // Send response with admin essentials
+        res.json({
+            success: true,
+            data: admin
+        });
+    } catch (error) {
+        throw new ApiError(500, "Error fetching admin essentials");
+    }
 });
 
+const getCurrentAdmin = asyncHandler(async (req, res) => {
+    const admin = await Admin.findById(req.user._id).select("-password -refreshToken");
 
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
 
+    return res.status(200).json(new ApiResponse(200, admin, "Admin fetched successfully"));
+});
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+    const {
+        firstName, middleName, lastName, gender, address, pincode, qualification, teachingExperience,
+        mobileNumber, email
+    } = req.body;
+
+    const admin = await Admin.findById(req.user._id);
+
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
+
+    // Update the admin's details
+    admin.firstName = firstName || admin.firstName;
+    admin.middleName = middleName || admin.middleName;
+    admin.lastName = lastName || admin.lastName;
+    admin.gender = gender || admin.gender;
+    admin.address = address || admin.address;
+    admin.pincode = pincode || admin.pincode;
+    admin.qualification = qualification || admin.qualification;
+    admin.teachingExperience = teachingExperience || admin.teachingExperience;
+    admin.mobileNumber = mobileNumber || admin.mobileNumber;
+    admin.email = email || admin.email;
+
+    await admin.save();
+
+    return res.status(200).json(new ApiResponse(200, admin, "Account details updated successfully"));
+});
+
+const updateAdminProfilePhoto = asyncHandler(async (req, res) => {
+    const admin = await Admin.findById(req.user._id);
+
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
+
+    // Check if there is a profile photo file in the request
+    if (!req.file) {
+        throw new ApiError(400, "No file uploaded");
+    }
+
+    const profilePhotoLocalPath = req.file.path;
+
+    // Upload the profile photo to Cloudinary
+    const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
+
+    if (!profilePhoto) {
+        throw new ApiError(500, "Failed to upload profile photo");
+    }
+
+    // Update the admin's profile photo URL
+    admin.profilePhoto = {
+        url: profilePhoto.url,
+        public_id: profilePhoto.public_id
+    };
+
+    await admin.save();
+
+    // Return the updated admin document
+    return res.status(200).json(new ApiResponse(200, admin, "Admin profile photo updated successfully"));
+});
+
+const updateAdminCode = asyncHandler(async (req, res) => {
+    const { newAdminCode } = req.body;
+    const adminId = req.user._id; // Assuming admin ID is available in the request
+
+    if (!newAdminCode) {
+        throw new ApiError(400, "New admin code is required");
+    }
+
+    // Check if the new admin code is unique
+    const isExistingAdminCode = await Admin.findOne({ adminCode: newAdminCode });
+    if (isExistingAdminCode) {
+        throw new ApiError(409, "New admin code already exists");
+    }
+
+    // Update admin code
+    const admin = await Admin.findByIdAndUpdate(
+        adminId,
+        { adminCode: newAdminCode },
+        { new: true }
+    );
+
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
+
+    res.status(200).json(new ApiResponse(200, admin, "Admin code updated successfully"));
+});
+
+const getAdminCode = asyncHandler(async (req, res) => {
+    const adminId = req.user._id; // Assuming admin ID is available in the request
+
+    // Find admin by ID and select only the admin code
+    const admin = await Admin.findById(adminId).select("adminCode");
+
+    if (!admin) {
+        throw new ApiError(404, "Admin not found");
+    }
+
+    res.status(200).json(new ApiResponse(200, admin, "Admin code fetched successfully"));
+});
 
 export {
     registerAdmin,
-    getCurrentAdmin,
-    updateAccountDetails,
-    updateAdminCode,
-    getAdminCode,
-    updateAdminProfilePhoto,
-    getCurrentAdminEssentials,
 
     getSubjectSwitchOptionList,
     getSubjectSwitchOptionListForViewAttendance,
@@ -588,6 +616,14 @@ export {
     acceptNewTeacher,
     studentBatchAllocation,
     classTeacherAllocation,
-    allowToChangeAcademicDetails,
+
+
+    allStudentsList,
+    allTeachersList,
+    removeStudent,
+    removeTeacher,
+    viewTeacherProfile,
+    viewHODProfile,
+    viewStudentProfile,
 
 }

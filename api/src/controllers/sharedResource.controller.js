@@ -6,6 +6,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { SharedResource } from "../models/sharedResource.models.js";
 
 
+// getSubjectListByCurrentAdmin useful to send which subject resource or which not
+// send email to all students
 const addSharedResource = asyncHandler(async (req, res) => {
     try {
         const { resourceFile, description, title, resourceType, subject } = req.body;
@@ -56,25 +58,6 @@ const getSharedResourcesListSubjectWise = asyncHandler(async (req, res) => {
     }
 });
 
-const getSharedResourcesListAllSubjectsMerged = asyncHandler(async (req, res) => {
-    try {
-        // Query all shared resources
-        const sharedResources = await SharedResource.find();
-
-        res.status(200).json({
-            success: true,
-            message: 'Shared resources fetched successfully',
-            data: sharedResources
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
-    }
-});
-
 const getSingleSharedResource = asyncHandler(async (req, res) => {
     try {
         const { resourceId } = req.params;
@@ -103,6 +86,8 @@ const getSingleSharedResource = asyncHandler(async (req, res) => {
     }
 });
 
+// teacher who sent
+// getSubjectListByCurrentAdmin useful to delete which data or which not
 const deleteSharedResource = asyncHandler(async (req, res, next) => {
     try {
         const { resourceId } = req.params;
@@ -132,6 +117,7 @@ const deleteSharedResource = asyncHandler(async (req, res, next) => {
         });
     }
 });
+
 
 // future scope
 const addSharedResources = asyncHandler(async (req, res) => {
@@ -231,12 +217,30 @@ const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
     }
 });
 
+// future scope
+const getSharedResourcesListAllSubjectsMerged = asyncHandler(async (req, res) => {
+    try {
+        // Query all shared resources
+        const sharedResources = await SharedResource.find();
+
+        res.status(200).json({
+            success: true,
+            message: 'Shared resources fetched successfully',
+            data: sharedResources
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
 
 export {
     addSharedResource,
     getSharedResourcesListSubjectWise,
-    getSharedResourcesListAllSubjectsMerged,
-    getSharedResourcesListNoticesOnly,
     getSingleSharedResource,
     deleteSharedResource,
 }

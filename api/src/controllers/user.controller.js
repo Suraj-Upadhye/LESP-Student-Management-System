@@ -7,7 +7,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 
-// 
+// Done
 const registerUser = asyncHandler(async (req, res) => {
 
     const {
@@ -106,6 +106,10 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 
+
+
+// future scope
+
 // tested
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
@@ -116,7 +120,6 @@ const getCurrentUser = asyncHandler(async (req, res) => {
             "User fetched successfully"
         ))
 });
-
 
 // bug in update account details
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -188,7 +191,6 @@ const updateRollNo = asyncHandler(async (req, res) => {
 });
          // only can change when hod allows to all future scope
 
-
 // bug in update user profile photo
 const updateUserProfilePhoto = asyncHandler(async(req, res) => {
 
@@ -224,70 +226,6 @@ console.log(profilePhotoLocalPath)
     )
 })
 
-const forgetPassword = asyncHandler(async (req, res) => {
-    const { email } = req.body;
-
-    // Validation: Check if email is provided
-    if (!email) {
-        throw new ApiError(400, 'Email is required');
-    }
-
-    // Check if user exists with the provided email
-    const user = await User.findOne({ email });
-    if (!user) {
-        throw new ApiError(404, 'User with this email does not exist');
-    }
-
-    // Generate reset token and expiration time
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
-
-    // Update user document with reset token and expiration time
-    user.resetToken = resetToken;
-    user.resetTokenExpire = resetTokenExpire;
-    await user.save();
-
-    // Construct the reset password URL
-    const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/users/reset-password/${resetToken}`;
-
-    // Send reset password instructions to the user's email
-    const message = `Please click on the following link to reset your password: ${resetPasswordUrl}`;
-    // You need to implement your email sending logic here
-
-    res.status(200).json({ success: true, message: 'Reset password instructions sent to your email' });
-});
-
-
-const resetPassword = asyncHandler(async (req, res) => {
-    const { resetToken, password, confirmPassword } = req.body;
-
-    // Validation: Check if reset token, password, and confirmPassword are provided
-    if (!resetToken || !password || !confirmPassword) {
-        throw new ApiError(400, 'Reset token, password, and confirmPassword are required');
-    }
-
-    // Check if passwords match
-    if (password !== confirmPassword) {
-        throw new ApiError(400, 'Passwords do not match');
-    }
-
-    // Find user by reset token and check if it's valid
-    const user = await User.findOne({ resetToken, resetTokenExpire: { $gt: Date.now() } });
-    if (!user) {
-        throw new ApiError(400, 'Invalid or expired reset token');
-    }
-
-    // Reset user's password and clear reset token
-    user.password = password;
-    user.resetToken = undefined;
-    user.resetTokenExpire = undefined;
-    await user.save();
-
-    // Send response indicating successful password reset
-    res.status(200).json({ success: true, message: 'Password reset successfully' });
-});
-
-
 //   name profile photo email 
 const getCurrentUserEssentials = asyncHandler(async (req, res) => {
     try {
@@ -317,21 +255,7 @@ const getCurrentUserEssentials = asyncHandler(async (req, res) => {
 
 
 
-const getStudentProfile = asyncHandler( async( req, res) =>{
-
-});
-
-
-
 
 export {
     registerUser,
-    getCurrentUser,
-    updateAccountDetails,
-    updateRollNo,       
-    updateUserProfilePhoto,
-    forgetPassword,
-    resetPassword,
-    getCurrentUserEssentials, 
-
 }

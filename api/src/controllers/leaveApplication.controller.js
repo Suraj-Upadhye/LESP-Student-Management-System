@@ -6,11 +6,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Leave } from '../models/leaveApplication.models.js';
 import { User } from '../models/user.models.js';
 
-
-
-// All Future Scope
-
-const addLeaveApplication = asyncHandler(async (req, res) => {
+// student
+const addLeaveApplicationStudent = asyncHandler(async (req, res) => {
     const { userId, adminId, startDate, endDate, reason, status } = req.body;
 
     // Create a new leave application
@@ -31,7 +28,30 @@ const addLeaveApplication = asyncHandler(async (req, res) => {
     });
 });
 
-const getLeaveApplication = asyncHandler(async (req, res) => {
+// teacher
+const addLeaveApplicationTeacher = asyncHandler(async (req, res) => {
+    const { userId, adminId, startDate, endDate, reason, status } = req.body;
+
+    // Create a new leave application
+    const leave = await Leave.create({
+        userId,
+        adminId,
+        startDate,
+        endDate,
+        reason,
+        status
+    });
+
+    // Send response
+    res.status(201).json({
+        success: true,
+        data: leave,
+        message: 'Leave application added successfully'
+    });
+});
+
+// class teacher
+const getLeaveApplicationListStudent = asyncHandler(async (req, res) => {
     // Find all leave applications
     const leaveApplications = await Leave.find();
 
@@ -62,7 +82,40 @@ const getLeaveApplication = asyncHandler(async (req, res) => {
     });
 });
 
-const approveLeaveApplication = asyncHandler(async (req, res) => {
+// hod
+const getLeaveApplicationListTeacher = asyncHandler(async (req, res) => {
+    // Find all leave applications
+    const leaveApplications = await Leave.find();
+
+    // Construct array to hold leave application details
+    const leaveDetails = await Promise.all(leaveApplications.map(async (leave) => {
+        // Find user details associated with the leave application
+        const user = await User.findById(leave.userId).select('firstName lastName rollNo');
+
+        // Check if leave is valid or not based on current date
+        const currentDate = new Date();
+        const validForLeave = currentDate >= leave.startDate && currentDate <= leave.endDate;
+
+        // Return leave application details
+        return {
+            startDate: leave.startDate,
+            endDate: leave.endDate,
+            user: `${user.firstName} ${user.lastName}`,
+            rollNo: user.rollNo,
+            validForLeave
+        };
+    }));
+
+    // Send response
+    res.status(200).json({
+        success: true,
+        data: leaveDetails,
+        message: 'Leave applications retrieved successfully'
+    });
+});
+
+// class teacher
+const approveLeaveApplicationStudent = asyncHandler(async (req, res) => {
     // Extract leave application ID from request parameters
     const { id } = req.params;
 
@@ -82,8 +135,50 @@ const approveLeaveApplication = asyncHandler(async (req, res) => {
     }
 });
 
+// hod
+const approveLeaveApplicationTeacher = asyncHandler(async (req, res) => {
+    // Extract leave application ID from request parameters
+    const { id } = req.params;
 
-const rejectLeaveApplication = asyncHandler(async (req, res) => {
+    try {
+        // Find the leave application by ID and update its status to 'Approved'
+        const leave = await Leave.findByIdAndUpdate(id, { status: 'Approved' }, { new: true });
+
+        if (!leave) {
+            return res.status(404).json({ success: false, message: 'Leave application not found' });
+        }
+
+        // Send success response with updated leave application
+        res.status(200).json({ success: true, data: leave, message: 'Leave application approved successfully' });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// class teacher
+const rejectLeaveApplicationStudent = asyncHandler(async (req, res) => {
+    // Extract leave application ID from request parameters
+    const { id } = req.params;
+
+    try {
+        // Find the leave application by ID and update its status to 'Rejected'
+        const leave = await Leave.findByIdAndUpdate(id, { status: 'Rejected' }, { new: true });
+
+        if (!leave) {
+            return res.status(404).json({ success: false, message: 'Leave application not found' });
+        }
+
+        // Send success response with updated leave application
+        res.status(200).json({ success: true, data: leave, message: 'Leave application rejected successfully' });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// hod
+const rejectLeaveApplicationTeacher = asyncHandler(async (req, res) => {
     // Extract leave application ID from request parameters
     const { id } = req.params;
 
@@ -125,6 +220,13 @@ const listPendingLeaveApplication = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
+// class teacher and  hod
+const removeAcceptedLeaveApplicationFromDB = asyncHandler(async(req,res)=>{
+
+})
+
+
 
 // future scope
 const listApprovedLeaveApplication = asyncHandler(async (req, res) => {
@@ -197,9 +299,19 @@ const deleteLeaveApplication = asyncHandler(async (req, res) => {
 
 
 export {
-    addLeaveApplication,
-    getLeaveApplication,
-    approveLeaveApplication,
-    rejectLeaveApplication,
+    
+    addLeaveApplicationStudent,
+    addLeaveApplicationTeacher,
+
+    getLeaveApplicationListStudent,
+    getLeaveApplicationListTeacher,
+
+    approveLeaveApplicationStudent,
+    approveLeaveApplicationTeacher,
+
+    rejectLeaveApplicationStudent,
+    rejectLeaveApplicationTeacher,
+
     listPendingLeaveApplication,
+    removeAcceptedLeaveApplicationFromDB
 }

@@ -1,9 +1,6 @@
 import { Router } from "express";
 import {
-    getCurrentUser,
     registerUser,
-    updateAccountDetails,
-    updateUserProfilePhoto
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
@@ -25,10 +22,9 @@ router.route("/register").post(
 // router.route("/login").post(loginUser)
 
 // secured routes 
-router.route("/current-user").get(verifyJWT, getCurrentUser);
-router.route("/update-account").patch(verifyJWT, updateAccountDetails);
+// router.route("/update-account").patch(verifyJWT, updateAccountDetails);
 
-router.route("/profilePhoto").patch(verifyJWT, upload.single("profilePhoto"), updateUserProfilePhoto);
+// router.route("/profilePhoto").patch(verifyJWT, upload.single("profilePhoto"), updateUserProfilePhoto);
 // router.route("/c/:adminCode").get(verifyJWT, getAdminProfile) //getAdmin profile
 
 export default router;

@@ -7,10 +7,7 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 const sharedResourceSchema = new Schema(
     {
         resourceFile: {
-            type: {
-                url: String,
-                public_id: String
-            },       // cloudinary url
+            type: String,
             required: [true, 'Please provide a file']
         },
         description: {

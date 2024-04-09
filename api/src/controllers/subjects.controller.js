@@ -47,53 +47,6 @@ const getAllSubject = asyncHandler(async (req, res) => {
     }
 });
 
-// future scope
-const updateSubject = asyncHandler(async (req, res) => {
-    try {
-        const { id } = req.params; // Extract subject id from request parameters
-        const { year, branch, semester, subject, mode, applicableBatchNames } = req.body; // Extract updated subject details from request body
-
-        // Find the subject by id and update its details
-        const updatedSubject = await Subject.findByIdAndUpdate(
-            id,
-            { year, branch, semester, subject, mode, applicableBatchNames },
-            { new: true }
-        );
-
-        // If subject is not found, return 404 error
-        if (!updatedSubject) {
-            return res.status(404).json({ success: false, error: "Subject not found" });
-        }
-
-        // Return success response with the updated subject details
-        res.status(200).json({ success: true, data: updatedSubject });
-    } catch (error) {
-        // Handle errors and send appropriate response
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// future scope
-const deleteSubject = asyncHandler(async (req, res) => {
-    try {
-        const { id } = req.params; // Extract subject id from request parameters
-
-        // Find the subject by id and delete it
-        const deletedSubject = await Subject.findByIdAndDelete(id);
-
-        // If subject is not found, return 404 error
-        if (!deletedSubject) {
-            return res.status(404).json({ success: false, error: "Subject not found" });
-        }
-
-        // Return success response with the deleted subject details
-        res.status(200).json({ success: true, data: deletedSubject });
-    } catch (error) {
-        // Handle errors and send appropriate response
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
 // Done
 const getSubjectIDByOther = asyncHandler(async (req, res) => {
     const { year, semester, branch, subjectName } = req.body;
@@ -258,9 +211,57 @@ const getBatchListByYSBSub = asyncHandler( async(req, res)=>{
 
 })
 
+// future scope
+const updateSubject = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params; // Extract subject id from request parameters
+        const { year, branch, semester, subject, mode, applicableBatchNames } = req.body; // Extract updated subject details from request body
+
+        // Find the subject by id and update its details
+        const updatedSubject = await Subject.findByIdAndUpdate(
+            id,
+            { year, branch, semester, subject, mode, applicableBatchNames },
+            { new: true }
+        );
+
+        // If subject is not found, return 404 error
+        if (!updatedSubject) {
+            return res.status(404).json({ success: false, error: "Subject not found" });
+        }
+
+        // Return success response with the updated subject details
+        res.status(200).json({ success: true, data: updatedSubject });
+    } catch (error) {
+        // Handle errors and send appropriate response
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// future scope
+const deleteSubject = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params; // Extract subject id from request parameters
+
+        // Find the subject by id and delete it
+        const deletedSubject = await Subject.findByIdAndDelete(id);
+
+        // If subject is not found, return 404 error
+        if (!deletedSubject) {
+            return res.status(404).json({ success: false, error: "Subject not found" });
+        }
+
+        // Return success response with the deleted subject details
+        res.status(200).json({ success: true, data: deletedSubject });
+    } catch (error) {
+        // Handle errors and send appropriate response
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 export {
     addSubject,
     getAllSubject,
+    getBatchListByYSBSub,
     getSubjectIDByOther,
     getSubjectDetailsBySubjectID,
     getSemByYearBranch,

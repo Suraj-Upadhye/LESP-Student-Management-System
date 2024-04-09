@@ -104,7 +104,7 @@ const fillAttendance = asyncHandler(async (req, res) => {
     }
 });
 
-// Done
+// Done // one subject all user
 const getAttendanceData = asyncHandler(async (req, res) => {
     try {
         // Extract request parameters
@@ -252,8 +252,6 @@ const getAttendanceSubjectWiseSingleStudent = asyncHandler(async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch attendance data." });
     }
 });
-
-
 
 
 
