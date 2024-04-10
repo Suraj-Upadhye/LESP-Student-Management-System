@@ -95,7 +95,7 @@ export class SignupStudentComponent {
       },
       error: (err) => {
         console.log(err);
-        alert(err.error.message);
+        alert(err.error.message + "The User already exists with this credientials");
       },
     });
   }

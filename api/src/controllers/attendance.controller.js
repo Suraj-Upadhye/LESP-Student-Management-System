@@ -107,34 +107,48 @@ const fillAttendance = asyncHandler(async (req, res) => {
 
 // Remaining
 // Done // one subject all user
-
 const getAttendanceData = asyncHandler(async (req, res) => {
     try {
         // Extract request parameters
         const { year, semester, branch, division, subjectName, sessionType, batch} = req.body;
         // const { subjectName, sessionType, batch } = req.body;
 
-        // Find the subject
-        const subject = await Subject.findOne({ subject: subjectName });
-        if (!subject) {
+
+        const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectIDByOther', {
+            year,
+            branch,
+            semester,
+            subjectName
+        });
+
+        if(!subjectResponse){
             return res.status(404).json({ success: false, error: "Subject not found" });
         }
+        const subjectId = subjectResponse.data.subjectID;
+
+        // Find the subject
+        // const subject = await Subject.findOne({ subject: subjectName });
+        // if (!subject) {
+        //     return res.status(404).json({ success: false, error: "Subject not found" });
+        // }
 
         // Fetch attendance data based on sessionType
         let attendanceData;
         if (sessionType === "Lecture") {
             attendanceData = await Attendance.find({
-                "attendanceData.subjectId": subject._id,
-                "attendanceData.sessionType": "Lecture"
+                "attendanceData.subjectId": subjectId,
+                "attendanceData.sessionType": "Lecture",
+                "attendanceData.division": division
             }).populate({
                 path: "attendanceData.studentList.studentId",
                 select: "firstName lastName middleName rollNo year semester branch"
             }).select("date attendanceData.studentList.state");
         } else if (sessionType === "Practical" || sessionType === "Tutorial") {
             attendanceData = await Attendance.find({
-                "attendanceData.subjectId": subject._id,
+                "attendanceData.subjectId": subjectId,
                 "attendanceData.sessionType": sessionType,
-                "attendanceData.batchBelongs": batch
+                "attendanceData.batchBelongs": batch,
+                "attendanceData.division": division
             }).populate({
                 path: "attendanceData.studentList.studentId",
                 select: "firstName lastName middleName rollNo year semester branch"

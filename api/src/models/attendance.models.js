@@ -40,6 +40,10 @@ const AttendanceSchema = new Schema({
                 type: String,
                 required: false
             },
+            division :{
+                type: String,
+                required: true
+            },
             remark: {
                 type: String,
                 // required: [true, 'Remark / Note is required'],

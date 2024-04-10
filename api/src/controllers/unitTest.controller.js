@@ -13,10 +13,18 @@ import { UnitTest } from '../models/unitTest.models.js';
 // return success msg with object
 
 // one subject all student
-// 1. main
+// 1. main      // for teacher and hod only
 const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
     // Extracting data from request body
-    const { subject, marks } = req.body;
+    const { year, branch, semester, division, subject } = req.body; // subjectId
+
+    const { _id } = req.user;
+
+    const { rollNo, studentName ,ut1, ut2, studentId, studentList } = req.body;
+
+    // return success msg
+
+    // studentList  = student, ut1, ut2
 
     // Checking if the subject and marks are provided
     if (!subject || !marks) {
@@ -65,10 +73,12 @@ const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
 // return rollno, name, subjectname (ut2 marks, ut2 marks), average of all, class ranking
 
 // all subjects one student
-// 2. main
+// 2. main      // for student only
 const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
     // Extracting data from request parameters
-    const { rollNo } = req.params;
+    const { rollNo } = req.params;      // not needed
+
+    const { _id } = req.user;
 
     // Fetching all subjects marks for the given user
     const userMarks = await UnitTest.find({ student: rollNo }).populate('subject');
@@ -108,10 +118,13 @@ const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
 // return rollno, name, ut1 marks, ut2 marks, average, class ranking
 
 // one subject all student
-// 3. main
+// 3. main          // for teacher and hod only
 const getAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
     // Fetching all user marks for the specified subject
-    const { subjectId } = req.params;
+
+    const { year, branch, semester, division, subjectName } = req.body; // subject finding
+
+    const { subjectId } = req.params;       // not needed
     const userMarks = await UnitTest.find({ subject: subjectId }).populate('student');
 
     // Assuming you have logic to calculate average marks and class ranking
@@ -152,7 +165,7 @@ const getAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
 // one subject all student
 // 4. maintainance
 const deleteAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
-    const { subjectId } = req.params;
+    const { subjectId } = req.body;
 
     // Assuming you have logic to delete all marks for a specific subject
     await UnitTest.deleteMany({ subject: subjectId });
@@ -244,5 +257,5 @@ export {
     addAndUpdateMarksSubjectWise,
     getUserMarksAllSubjectsCombined,
     getAllUserMarksSubjectWise,
-    deleteAllUserMarksSubjectWise,
+    deleteAllUserMarksSubjectWise
 };

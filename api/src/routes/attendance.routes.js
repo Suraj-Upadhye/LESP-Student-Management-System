@@ -5,8 +5,8 @@ import { fillAttendance, getAttendanceData, getAttendanceSubjectWiseSingleStuden
 
 const router = Router();
 
-router.route("/fillAttendance").post(fillAttendance)
 router.route("/getStudentsDataListForAttendance").post(getStudentsDataListForAttendance)
+router.route("/fillAttendance").post(fillAttendance)
 router.route("/getAttendanceData").post(getAttendanceData);
 router.route("/getAttendanceSubjectWiseSingleStudent").post(getAttendanceSubjectWiseSingleStudent)
 // router.route("/getAttendanceSubjectWiseAllStudents/:teacherId").get(getAttendanceSubjectWiseAllStudents)
