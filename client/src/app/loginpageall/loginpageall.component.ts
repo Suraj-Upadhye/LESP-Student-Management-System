@@ -82,5 +82,8 @@ export class LoginpageallComponent implements OnInit {
         alert(err.error.message);
       },
     });
+
   }
+
+  
 }

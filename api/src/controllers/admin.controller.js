@@ -243,8 +243,10 @@ const newTeacherList = asyncHandler(async (req, res) => {
             },
             {
                 $project: {
-                    password: 0,
-                    refreshToken: 0 // Exclude password and refreshToken fields from the results
+                    _id: 1,
+                    firstName: 1,
+                    middleName: 1,
+                    lastName: 1
                 }
             }
         ]);
@@ -420,7 +422,7 @@ const allStudentsList = asyncHandler(async (req, res) => {
     const { classTeacher } = req.user;
     // only teacher teaching and hod can see this
 
-    const student = await User.find({year:classTeacher.year, department:classTeacher.branch, semester: classTeacher.semester ,division: classTeacher.division, isEmailVerified: true, role: "Student"}).select("_id firstName middleName lastName rollNo");
+    const student = await User.find({ year: classTeacher.year, department: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, isEmailVerified: true, role: "Student" }).select("_id firstName middleName lastName rollNo");
 
     console.log(student)
     res.status(200).json(student);
@@ -433,7 +435,7 @@ const allTeachersList = asyncHandler(async (req, res) => {
     const { department } = req.user;
 
     // only hod can see this
-    const teacher = await Admin.find({department: department, isEmailVerified: true}).select("_id firstName middleName lastName");
+    const teacher = await Admin.find({ department: department, isEmailVerified: true }).select("_id firstName middleName lastName");
 
     console.log(teacher)
     res.status(200).json(teacher);
@@ -445,13 +447,13 @@ const removeStudent = asyncHandler(async (req, res) => {
     const { _id } = req.body;
     // only class teacher or hod
     // if class teacher and hod
-    const  studentToRemove = await User.findById(_id).select("email role firstName");
-    if(studentToRemove){
+    const studentToRemove = await User.findById(_id).select("email role firstName");
+    if (studentToRemove) {
         sendUserRemovedEmail(studentToRemove.email, studentToRemove.role, studentToRemove.firstName)
         await studentToRemove.remove();
-        res.status(201).json(new ApiResponse(201,"Deleted","Student removed Successfully!"));
+        res.status(201).json(new ApiResponse(201, "Deleted", "Student removed Successfully!"));
     }
-    else{
+    else {
         throw new ApiError(404, 'No such student exists');
     }
 });
@@ -462,15 +464,15 @@ const removeTeacher = asyncHandler(async (req, res) => {
     const { _id } = req.body;
     //only hod can delete teachers
     // if role === hod
-     // only class teacher or hod
+    // only class teacher or hod
     // if class teacher and hod
-    const  teacherToRemove = await Admin.findById(_id).select("email role firstName");
-    if(teacherToRemove){
+    const teacherToRemove = await Admin.findById(_id).select("email role firstName");
+    if (teacherToRemove) {
         sendUserRemovedEmail(teacherToRemove.email, teacherToRemove.role, teacherToRemove.firstName)
         await teacherToRemove.remove();
-        res.status(201).json(new ApiResponse(201,"Deleted","Teacher removed Successfully!"));
+        res.status(201).json(new ApiResponse(201, "Deleted", "Teacher removed Successfully!"));
     }
-    else{
+    else {
         throw new ApiError(404, 'No such teacher exists');
     }
 });
@@ -479,9 +481,9 @@ const removeTeacher = asyncHandler(async (req, res) => {
 const viewTeacherProfile = asyncHandler(async (req, res) => {
 
     const { _id } = req.body;
-    let teacherData=await Admin.findById(_id).select("-password -refreshToken");
-    if(!teacherData){
-      throw new ApiError(404,'This Teacher does not exist')
+    let teacherData = await Admin.findById(_id).select("-password -refreshToken");
+    if (!teacherData) {
+        throw new ApiError(404, 'This Teacher does not exist')
     }
     res.json(userData);
     // only hod and teacher can see this
@@ -492,8 +494,8 @@ const viewHODProfile = asyncHandler(async (req, res) => {
 
     const { _id } = req.user;
     // only hod can see this
-    
-    const HODdata=await HOD.findOne({_id:_id, role:"HOD"}).select("-password -refreshToken");
+
+    const HODdata = await HOD.findOne({ _id: _id, role: "HOD" }).select("-password -refreshToken");
     if (!HODdata) {
         throw new ApiError(403, "The user is not a HOD!");
     }
@@ -504,9 +506,9 @@ const viewStudentProfile = asyncHandler(async (req, res) => {
 
     const { _id } = req.body;
     // only teacher teaching or hod can access this route and also student 
-    const studentData = await User.findOne({_id: _id, role:"Student"}).select("-password -refreshToken");
-    if(!studentData) {
-        throw new ApiError(404,'This Student does not exist')
+    const studentData = await User.findOne({ _id: _id, role: "Student" }).select("-password -refreshToken");
+    if (!studentData) {
+        throw new ApiError(404, 'This Student does not exist')
     }
     res.json(userData);
 });

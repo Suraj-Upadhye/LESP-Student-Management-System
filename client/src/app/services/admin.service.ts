@@ -25,39 +25,43 @@ export class AdminService {
 
     // Send HTTP GET request with headers
     return this.http.get<any>(
-      `${apiUrls.adminServiceApi}getSubjectSwitchOptionList`, { headers }
+      `${apiUrls.adminServiceApi}getSubjectSwitchOptionList`,
+      { headers }
     );
   }
 
-  getStudentsDataListForAttendanceService(academicObj: any){
+  getStudentsDataListForAttendanceService(academicObj: any) {
     return this.http.post<any>(
-      `${apiUrls.attendanceServiceApi}getStudentsDataListForAttendance`, academicObj
+      `${apiUrls.attendanceServiceApi}getStudentsDataListForAttendance`,
+      academicObj
     );
   }
 
-  getSubjectSwitchOptionListForViewAttendanceService(){
-  // Get token from localStorage
-  const token = localStorage.getItem('accessToken');
+  getSubjectSwitchOptionListForViewAttendanceService() {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
 
-  // Set headers with token
-  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-  // Send HTTP GET request with headers
-  return this.http.get<any>(
-    `${apiUrls.adminServiceApi}getSubjectSwitchOptionListForViewAttendance`, { headers }
-  );
-  }
-
-
-  getAttendanceDataService(academicObj: any){
-    return this.http.post<any>(
-      `${apiUrls.attendanceServiceApi}getAttendanceData`, academicObj
+    // Send HTTP GET request with headers
+    return this.http.get<any>(
+      `${apiUrls.adminServiceApi}getSubjectSwitchOptionListForViewAttendance`,
+      { headers }
     );
   }
 
-  fillAttendanceService(attendanceData: any){
+  getAttendanceDataService(academicObj: any) {
     return this.http.post<any>(
-      `${apiUrls.attendanceServiceApi}fillAttendance`, attendanceData
+      `${apiUrls.attendanceServiceApi}getAttendanceData`,
+      academicObj
+    );
+  }
+
+  fillAttendanceService(attendanceData: any) {
+    return this.http.post<any>(
+      `${apiUrls.attendanceServiceApi}fillAttendance`,
+      attendanceData
     );
   }
 
@@ -68,11 +72,37 @@ export class AdminService {
     );
   }
 
-  getSubjectListByYSBService(year:string, semester:string, branch:string){
+  getSubjectListByYSBService(year: string, semester: string, branch: string) {
     return this.http.post<any>(
       `${apiUrls.subjectServiceApi}getSubjectListByYSB`,
-      {year: year, semester: semester, branch: branch}
+      { year: year, semester: semester, branch: branch }
     );
+  }
+
+  getNewStudentListService() {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Send HTTP GET request with headers
+    return this.http.get<any>(`${apiUrls.adminServiceApi}newStudentList`, {
+      headers,
+    });
+  }
+
+  getNewTeacherListService() {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Send HTTP GET request with headers
+    return this.http.get<any>(`${apiUrls.adminServiceApi}newTeacherList`, {
+      headers,
+    });
   }
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
