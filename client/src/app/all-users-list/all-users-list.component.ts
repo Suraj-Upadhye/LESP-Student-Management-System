@@ -1,45 +1,127 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HeaderMergedComponent } from '../header-merged/header-merged.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { AdminService } from '../services/admin.service';
 
 @Component({
   selector: 'app-all-users-list',
   standalone: true,
-  imports: [HeaderMergedComponent, CommonModule, RouterModule],
+  imports: [HeaderMergedComponent, CommonModule, RouterModule, HttpClientModule],
   templateUrl: './all-users-list.component.html',
-  styleUrl: './all-users-list.component.css'
+  styleUrl: './all-users-list.component.css',
+  providers: [AdminService]
 })
 export class AllUsersListComponent implements OnInit{
 
+  adminService = inject(AdminService);
+  router = inject(Router);
+
   role: any;
+  selectedRole: string = 'Student'; // Default role is 'student'
+  // selectedYear: string = "FY";
+  studentList: any;
+  teacherList: any;
+
   
-  fun(){
-    console.log(this.students);
+  // fun(){
+  //   console.log(this.students);
     
+  // }
+
+  // students: any[] = [
+  //   { rollNo: '233206', name: 'Manas Chnadrashekhar patil' },
+  //   { rollNo: '233207', name: 'shubham Dhondiram Sargar' },
+  //   // Add more student data here
+  // ];
+  // teachers: any[] = [
+  //   { srNo: '01', name: 'Mr. Pravin Maruti Rupnar' },
+  //   { srNo: '02', name: 'Mr. Suraj shantinath Upadhye' },
+  //   // Add more teacher data here
+  // ];
+
+
+  ngOnInit(): void {
+    this.role = localStorage.getItem('role');
+
+    if (this.role === 'Teacher') {
+      this.getAllStudentListData();
+    }
+
+    if (this.selectedRole === 'Student') {
+      this.getAllStudentListData();
+    }
+    if (this.selectedRole === 'Teacher') {
+      this.getAllTeacherListData();
+    }
   }
 
-  students: any[] = [
-    { rollNo: '233206', name: 'Manas Chnadrashekhar patil' },
-    { rollNo: '233207', name: 'shubham Dhondiram Sargar' },
-    // Add more student data here
-  ];
-  teachers: any[] = [
-    { srNo: '01', name: 'Mr. Pravin Maruti Rupnar' },
-    { srNo: '02', name: 'Mr. Suraj shantinath Upadhye' },
-    // Add more teacher data here
-  ];
+  // getAllStudentListService
+  // getAllTeacherListService
 
-    selectedRole: string = 'student'; // Default role is 'student'
+  getAllStudentListData(){
+    this.adminService.getAllStudentListService().subscribe({
+      next: (res) => {
+        console.log('Successfully got All Student data');
+        console.log(res);
+        this.studentList = res;
+        console.log(this.studentList);
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message);
+      },
+    });
+  }
 
+  getAllTeacherListData(){
+    this.adminService.getAllTeacherListService().subscribe({
+      next: (res) => {
+        console.log('Successfully got All Teacher data');
+        console.log(res);
+        this.teacherList = res;
+        console.log(this.teacherList);
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message);
+      },
+    });
+  }
 
   // Method to handle role changes
   onRoleChange(role: string) {
     this.selectedRole = role;
+    if (role === 'Student') {
+      this.getAllStudentListData();
+    }
+    if (role === 'Teacher') {
+      this.getAllTeacherListData();
+    }
   }
-  ngOnInit(): void {
-    this.role = localStorage.getItem('role');
+
+
+  teacherViewProfileClick(_id:any){
+    alert("Teacher id :"+ _id)
   }
+
+  studentViewProfileClick(_id:any){
+      alert("Student id :" + _id)
+  }
+
+  teacherRemoveClick(_id:any){
+    alert("Teacher id :"+ _id)
+  }
+
+  studentRemoveClick(_id:any){
+      alert("Student id :" + _id)
+  }
+
+  // onYearChange(year: string){
+  //   this.selectedYear = year;
+  //   this.getAllStudentListData();
+  // }
 
 
   

@@ -100,10 +100,49 @@ export class AdminService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     // Send HTTP GET request with headers
-    return this.http.get<any>(`${apiUrls.adminServiceApi}newTeacherList`, {
-      headers,
-    });
+    return this.http.post<any>(
+      `${apiUrls.adminServiceApi}getLeaveApplicationListStudentTeacher`,
+      {
+        headers,
+      }
+    );
   }
+
+  getStudentTeacherLeaveService(userType: string) {
+    // Send HTTP GET request
+    return this.http.post<any>(
+      `${apiUrls.leaveServiceApi}getLeaveApplicationListStudentTeacher`,
+      { userType: userType }
+    );
+  }
+
+  getAllStudentListService() {
+     // Get token from localStorage
+     const token = localStorage.getItem('accessToken');
+
+     // Set headers with token
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+ 
+     // Send HTTP GET request with headers
+    return this.http.get<any>(
+      `${apiUrls.adminServiceApi}allStudentsList`,
+      {headers}
+    );
+  }
+
+  getAllTeacherListService() {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Send HTTP GET request with headers
+   return this.http.get<any>(
+     `${apiUrls.adminServiceApi}allTeachersList`,
+     {headers}
+   );
+ }
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 

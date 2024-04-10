@@ -57,12 +57,12 @@ const addLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
 // class teacher hod
 const getLeaveApplicationListStudentTeacher = asyncHandler(async (req, res) => {
     try {
-        const { userType } = req.body;
+        const { userType, year } = req.body;
         let leaveApplications;
         let userField;
 
         if (userType === "Student") {
-            leaveApplications = await Leave.find({ userType: userType, status: "Pending" })
+            leaveApplications = await Leave.find({ userType: userType, status: "Pending", year: year })
                 .sort('-createdAt')
                 .select('userId startDate endDate reason');
             userField = 'userId';

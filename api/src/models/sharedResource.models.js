@@ -38,7 +38,7 @@ const sharedResourceSchema = new Schema(
     }
 );
 
-sharedResourceSchema.plugin(mongoose.mongooseAggregatePaginate)
+// sharedResourceSchema.plugin(mongoose.mongooseAggregatePaginate)
 
 export const SharedResource = mongoose.model("SharedResource", sharedResourceSchema);
 

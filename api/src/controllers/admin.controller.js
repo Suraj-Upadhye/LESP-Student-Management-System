@@ -421,8 +421,11 @@ const allStudentsList = asyncHandler(async (req, res) => {
 
     const { classTeacher } = req.user;
     // only teacher teaching and hod can see this
+    console.log(classTeacher);
 
-    const student = await User.find({ year: classTeacher.year, department: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, isEmailVerified: true, role: "Student" }).select("_id firstName middleName lastName rollNo");
+    const student = await User.find({ year: classTeacher.year, branch: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, isEmailVerified: true, role: "Student" }).select("_id firstName middleName lastName rollNo division");
+
+    // { year:"TY", branch: "Computer Engineering", semester: "5", division: "None", isEmailVerified: true, role: "Student" }
 
     console.log(student)
     res.status(200).json(student);
@@ -435,7 +438,7 @@ const allTeachersList = asyncHandler(async (req, res) => {
     const { department } = req.user;
 
     // only hod can see this
-    const teacher = await Admin.find({ department: department, isEmailVerified: true }).select("_id firstName middleName lastName");
+    const teacher = await Admin.find({ department: department, isEmailVerified: true, role:"Teacher" }).select("_id firstName middleName lastName");
 
     console.log(teacher)
     res.status(200).json(teacher);

@@ -58,6 +58,7 @@ router.route("/getSubjectSwitchOptionListForViewAttendance").get(verifyJWT, getS
 
 router.route("/allStudentsList").get(verifyJWT, allStudentsList);
 router.route("/allTeachersList").get(verifyJWT, allTeachersList);
+
 router.route("/removeStudent").post(removeStudent);
 router.route("/removeTeacher").post(removeTeacher);
 router.route("/viewTeacherProfile").post(viewTeacherProfile);
