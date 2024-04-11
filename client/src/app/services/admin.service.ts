@@ -100,8 +100,8 @@ export class AdminService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     // Send HTTP GET request with headers
-    return this.http.post<any>(
-      `${apiUrls.adminServiceApi}getLeaveApplicationListStudentTeacher`,
+    return this.http.get<any>(
+      `${apiUrls.adminServiceApi}newTeacherList`,
       {
         headers,
       }
@@ -117,17 +117,16 @@ export class AdminService {
   }
 
   getAllStudentListService() {
-     // Get token from localStorage
-     const token = localStorage.getItem('accessToken');
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
 
-     // Set headers with token
-     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
- 
-     // Send HTTP GET request with headers
-    return this.http.get<any>(
-      `${apiUrls.adminServiceApi}allStudentsList`,
-      {headers}
-    );
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Send HTTP GET request with headers
+    return this.http.get<any>(`${apiUrls.adminServiceApi}allStudentsList`, {
+      headers,
+    });
   }
 
   getAllTeacherListService() {
@@ -138,11 +137,37 @@ export class AdminService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     // Send HTTP GET request with headers
-   return this.http.get<any>(
-     `${apiUrls.adminServiceApi}allTeachersList`,
-     {headers}
-   );
- }
+    return this.http.get<any>(`${apiUrls.adminServiceApi}allTeachersList`, {
+      headers,
+    });
+  }
+
+  getViewTeacherProfileService(_id: string) {
+    // Send HTTP GET request
+    return this.http.post<any>(`${apiUrls.adminServiceApi}viewTeacherProfile`, {
+      _id: _id,
+    });
+  }
+
+  getViewHODProfileService(_id: string) {
+     // Get token from localStorage
+     const token = localStorage.getItem('accessToken');
+
+     // Set headers with token
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+ 
+     // Send HTTP GET request with headers
+    return this.http.get<any>(`${apiUrls.adminServiceApi}viewHODProfile`, {
+     headers
+    });
+  }
+
+  getViewStudentProfileService(_id: string) {
+    // Send HTTP GET request
+    return this.http.post<any>(`${apiUrls.adminServiceApi}viewStudentProfile`, {
+      _id: _id,
+    });
+  }
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 

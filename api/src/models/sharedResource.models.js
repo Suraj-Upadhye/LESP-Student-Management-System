@@ -14,15 +14,6 @@ const sharedResourceSchema = new Schema(
             type: String,
             required: [true, 'Please add a description'],
         },
-        title: {
-            type: String,
-            required: [true, 'title field is required'],
-            default: 'Notice'
-        },
-        resourceType: {
-            type: String,
-            required: [true, 'resourceType field is required'],
-        },
         subject:{
             type: String,
             required: [true, 'subject name is required']

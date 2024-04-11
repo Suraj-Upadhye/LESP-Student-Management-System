@@ -46,7 +46,7 @@ export class NewUserRequestsComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        alert(err.error.message);
+        alert(err.error.message + "Teacher data not found");
       },
     });
   }

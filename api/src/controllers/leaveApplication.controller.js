@@ -7,6 +7,7 @@ import { Leave } from '../models/leaveApplication.models.js';
 import { User } from '../models/user.models.js';
 import { Admin } from "../models/admin.models.js";
 import { sendLeaveAcceptedEmail, sendLeaveRejectedEmail } from "../utils/sendEmail.js";
+import { assign } from "nodemailer/lib/shared/index.js";
 
 // student // teacher
 // Done
@@ -16,7 +17,7 @@ const addLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
     const { startDate, endDate, reason } = req.body;
 
     let userId, adminId;
-
+    console.log(startDate, endDate, reason, _id, role);
     if (role === "Student") {
         userId = _id.toString();
         // Create a new leave application
@@ -57,12 +58,19 @@ const addLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
 // class teacher hod
 const getLeaveApplicationListStudentTeacher = asyncHandler(async (req, res) => {
     try {
-        const { userType, year } = req.body;
+        const { userType } = req.body;
+        if (!userType) {
+            console.log("its null");
+        }
+        else {
+            console.log("ok")
+        }
+        console.log(userType);
         let leaveApplications;
         let userField;
 
         if (userType === "Student") {
-            leaveApplications = await Leave.find({ userType: userType, status: "Pending", year: year })
+            leaveApplications = await Leave.find({ userType: userType, status: "Pending" })
                 .sort('-createdAt')
                 .select('userId startDate endDate reason');
             userField = 'userId';
@@ -84,7 +92,7 @@ const getLeaveApplicationListStudentTeacher = asyncHandler(async (req, res) => {
             return {
                 startDate: leave.startDate,
                 endDate: leave.endDate,
-                user: `${user.firstName} ${user.lastName}`,
+                user: `${user.firstName} ${user.middleName} ${user.lastName}`,
                 rollNo: user.rollNo || '', // Assuming rollNo is specific to students
                 validForLeave
             };
@@ -112,8 +120,13 @@ const approveLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
 
     if (userType === "Student") {
         try {
+
             // Find the leave application by ID and update its status to 'Approved'
-            const leave = await Leave.findByIdAndUpdate(_id, { status: 'Approved' }, { new: true }).populate('userId');
+            const leave = await Leave.findOneAndUpdate(
+                { userId: _id, status: 'Pending' }, // Filter criteria
+                { status: 'Approved' }, // Update
+                { new: true } // Options
+            ).populate('userId');
 
             if (!leave) {
                 return res.status(404).json({ success: false, message: 'Leave application not found' });
@@ -125,7 +138,8 @@ const approveLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
             }
 
             //email
-            sendLeaveAcceptedEmail(user.email, userType, user.firstName);
+            await sendLeaveAcceptedEmail(user.email, userType, user.firstName);
+            await removeRejectedAndOutdatedLeaves();
             // then delete that leave application
             // Send success response with updated leave application
             res.status(200).json({ success: true, data: leave, message: 'Leave application approved successfully' });
@@ -136,8 +150,13 @@ const approveLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
     }
     if (userType === "Teacher") {
         try {
+            console.log(_id)
             // Find the leave application by ID and update its status to 'Approved'
-            const leave = await Leave.findByIdAndUpdate(_id, { status: 'Approved' }, { new: true }).populate('adminId');
+            const leave = await Leave.findOneAndUpdate(
+                { adminId: _id, status: 'Pending' }, // Filter criteria
+                { status: 'Approved' }, // Update
+                { new: true } // Options
+            ).populate('adminId');
 
             if (!leave) {
                 return res.status(404).json({ success: false, message: 'Leave application not found' });
@@ -149,7 +168,8 @@ const approveLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
             }
 
             //email
-            sendLeaveAcceptedEmail(admin.email, userType, admin.firstName);
+            await sendLeaveAcceptedEmail(admin.email, userType, admin.firstName);
+            await removeRejectedAndOutdatedLeaves();
             // then delete that leave application
             // Send success response with updated leave application
             res.status(200).json({ success: true, data: leave, message: 'Leave application approved successfully' });
@@ -169,8 +189,13 @@ const rejectLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
 
     if (userType === "Student") {
         try {
-            // Find the leave application by ID and update its status to 'Approved'
-            const leave = await Leave.findByIdAndUpdate(_id, { status: 'Rejected' }, { new: true }).populate('userId');
+
+            // Find the leave application by ID and update its status to 'Rejected'
+            const leave = await Leave.findOneAndUpdate(
+                { userId: _id, status: 'Pending' }, // Filter criteria
+                { status: 'Rejected' }, // Update
+                { new: true } // Options
+            ).populate('userId');
 
             if (!leave) {
                 return res.status(404).json({ success: false, message: 'Leave application not found' });
@@ -182,7 +207,8 @@ const rejectLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
             }
 
             //email
-            sendLeaveRejectedEmail(user.email, userType, user.firstName);
+            await sendLeaveRejectedEmail(user.email, userType, user.firstName);
+            await removeRejectedAndOutdatedLeaves();
             // then delete that leave application
             // Send success response with updated leave application
             res.status(200).json({ success: true, data: leave, message: 'Leave application rejected!' });
@@ -194,7 +220,11 @@ const rejectLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
     if (userType === "Teacher") {
         try {
             // Find the leave application by ID and update its status to 'Rejected'
-            const leave = await Leave.findByIdAndUpdate(_id, { status: 'Rejected' }, { new: true }).populate('adminId');
+            const leave = await Leave.findOneAndUpdate(
+                { adminId: _id, status: 'Pending' }, // Filter criteria
+                { status: 'Rejected' }, // Update
+                { new: true } // Options
+            ).populate('adminId');
 
             if (!leave) {
                 return res.status(404).json({ success: false, message: 'Leave application not found' });
@@ -206,7 +236,8 @@ const rejectLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
             }
 
             //email
-            sendLeaveRejectedEmail(admin.email, userType, admin.firstName);
+            await sendLeaveRejectedEmail(admin.email, userType, admin.firstName);
+            await removeRejectedAndOutdatedLeaves();
             // then delete that leave application
             // Send success response with updated leave application
             res.status(200).json({ success: true, data: leave, message: 'Leave application rejected!' });

@@ -14,8 +14,9 @@ import { User } from "../models/user.models.js";
 // send email to all students
 const addSharedResource = asyncHandler(async (req, res) => {
     try {
-        const { description, title, subject } = req.body;
+        const { description, subject } = req.body;
         const { _id, email, firstName, lastName } = req.user; // Assuming user authentication is implemented and user ID is available in req.user
+        console.log(_id);
         let resourceFile = "";
         let resourceFileLocalPath;
         if (req.files && Array.isArray(req.files.resourceFile) && req.files.resourceFile.length > 0) {
@@ -33,7 +34,7 @@ const addSharedResource = asyncHandler(async (req, res) => {
             console.log("cloudinary obj :", resourceFile);
 
             if (!resourceFile) {
-                throw new ApiError(400, "Profile photo is not uploaded properly.");
+                throw new ApiError(400, "File is not uploaded properly.");
             }
         }
 
@@ -41,23 +42,22 @@ const addSharedResource = asyncHandler(async (req, res) => {
         const sharedResource = await SharedResource.create({
             resourceFile: resourceFile?.url || "",
             description,
-            title,
-            resourceType: resourceFile?.resource_type,
             subject,
             owner: _id
         });
 
 
         const { classTeacher } = req.user;
+        console.log(classTeacher);
         // only teacher teaching and hod can see this
 
         const students = await User.find({ year: classTeacher.year, department: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, isEmailVerified: true, role: "Student" }).select("_id firstName middleName lastName rollNo");
 
         console.log(students)
-        // res.status(200).json(students);
-        for (const student of student) {
-            await sendNewResourceEmail(email, firstName, lastName, student.firstName);
-        }
+        // // res.status(200).json(students);
+        // for (const student of student) {
+        //     await sendNewResourceEmail(email, firstName, lastName, student.firstName);
+        // }
 
         res.status(201).json({
             success: true,
@@ -173,14 +173,12 @@ const addSharedResources = asyncHandler(async (req, res) => {
 
         // Iterate over each resource in the request body and create a shared resource
         for (const resourceData of resources) {
-            const { resourceFile, description, title, resourceType } = resourceData;
+            const { resourceFile, description } = resourceData;
 
             // Create new shared resource
             const sharedResource = await SharedResource.create({
                 resourceFile,
                 description,
-                title,
-                resourceType,
                 owner
             });
 
@@ -205,7 +203,7 @@ const addSharedResources = asyncHandler(async (req, res) => {
 const updateSharedResource = asyncHandler(async (req, res, next) => {
     try {
         const { resourceId } = req.params;
-        const { resourceFile, description, title, resourceType } = req.body;
+        const { resourceFile, description } = req.body;
 
         // Check if the resource exists
         let resource = await SharedResource.findById(resourceId);
@@ -220,8 +218,6 @@ const updateSharedResource = asyncHandler(async (req, res, next) => {
         // Update the resource fields
         resource.resourceFile = resourceFile;
         resource.description = description;
-        resource.title = title;
-        resource.resourceType = resourceType;
 
         // Save the updated resource
         await resource.save();
@@ -230,26 +226,6 @@ const updateSharedResource = asyncHandler(async (req, res, next) => {
             success: true,
             message: 'Shared resource updated successfully',
             data: resource
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
-    }
-});
-
-// future scope
-const getSharedResourcesListNoticesOnly = asyncHandler(async (req, res) => {
-    try {
-        // Query only the shared resources with resourceType as "Notice"
-        const notices = await SharedResource.find({ resourceType: "Notice" });
-
-        res.status(200).json({
-            success: true,
-            message: 'Notice shared resources fetched successfully',
-            data: notices
         });
     } catch (error) {
         console.error(error);

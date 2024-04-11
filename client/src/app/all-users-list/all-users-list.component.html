@@ -74,7 +74,6 @@
                                         <td class="flex">
                                             <button 
                                             (click)="studentViewProfileClick(student._id)" 
-                                            routerLink="/viewprofilestudent"
                                                 class="flex-shrink-0 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2">
                                                 View
                                             </button>
@@ -173,43 +172,32 @@
                                         <td class="whitespace-nowrap px-6 py-4 items-center">{{ teacher.firstName }} {{teacher.middleName}} {{teacher.lastName}} </td>
                                         <td class="flex">
                                             <button 
-                                            (click)="teacherViewProfileClick(teacher._id)"
-                                            routerLink="/viewprofileteacher"
+                                                (click)="teacherViewProfileClick(teacher._id)"
                                                 class="flex-shrink-0 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2">
                                                 View
                                             </button>
+                                        
                                             <div class="fixed inset-0 collapse z-50 w-full">
-                                                <input type="checkbox" id="Remove"
-                                                    class="peer appearance-none collapse opacity-0">
-                                                <div
-                                                    class="absolute bg-slate-800 bg-opacity-60 px-10 inset-0 w-full flex justify-center items-center invisible opacity-0 peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100 transition-all">
-                                                    <div
-                                                        class="relative z-40 max-h-[calc(100vh-5em)] w-11/12 md:w-4/12 max-w-screen-md cursor-auto overflow-y-auto rounded-sm bg-white py-6 px-6 md:px-8 scale-90 md:scale-100 transition-all text-center rounded-lg">
-                                                        <label for="Remove"
-                                                            class="group absolute top-5 right-5 cursor-pointer w-auto transition-all rounded-full">
-                                                            <svg class="h-4 w-auto group-hover:opacity-50 transition-all"
-                                                                width="40" height="48" viewBox="0 0 48 48" fill="none">
-                                                                <path d="M3 45L45 3" stroke="#1E293B" stroke-width="5"
-                                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                                <path d="M45 45L3 3" stroke="#1E293B" stroke-width="5"
-                                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <input type="checkbox" id="Remove" class="peer appearance-none collapse opacity-0">
+                                                <div class="absolute bg-slate-800 bg-opacity-60 px-10 inset-0 w-full flex justify-center items-center invisible opacity-0 peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100 transition-all">
+                                                    <div class="relative z-40 max-h-[calc(100vh-5em)] w-11/12 md:w-4/12 max-w-screen-md cursor-auto overflow-y-auto rounded-sm bg-white py-6 px-6 md:px-8 scale-90 md:scale-100 transition-all text-center rounded-lg">
+                                                        <label for="Remove" class="group absolute top-5 right-5 cursor-pointer w-auto transition-all rounded-full">
+                                                            <svg class="h-4 w-auto group-hover:opacity-50 transition-all" width="40" height="48" viewBox="0 0 48 48" fill="none">
+                                                                <path d="M3 45L45 3" stroke="#1E293B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                <path d="M45 45L3 3" stroke="#1E293B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
                                                             </svg>
                                                         </label>
-
-                                                        <p class="text-lg md:text-2xl mb-4">Are You Want to Remove?
-                                                        </p>
-                                                        <div
-                                                            class="w-full flex justify-center items-center flex-row gap-4 flex-wrap">
-                                                            <div
+                                        
+                                                        <p class="text-lg md:text-2xl mb-4">Are You Want to Remove?</p>
+                                                        <div class="w-full flex justify-center items-center flex-row gap-4 flex-wrap">
+                                                            <div (click)="closePrompt()"
                                                                 class="bg-white-300 hover:bg-white-600 text-black font-bold py-2 px-4 border border-blue-700 rounded-full cursor-pointer">
-                                                                Cancel</div>
-
-
-                                                            <div
-                                                            (click)="teacherRemoveClick(teacher._id)"
+                                                                Cancel
+                                                            </div>
+                                                            <div (click)="confirmRemove(teacher._id)"
                                                                 class="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-full cursor-pointer">
-                                                                Remove</div>
-
+                                                                Remove
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,11 +206,14 @@
                                                 class="flex-shrink-0 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2 ml-3">Remove
                                             </label>
                                         </td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>

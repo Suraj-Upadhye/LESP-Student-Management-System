@@ -2,18 +2,26 @@
 <div class="w-full lg:w-9/12 px-4 mx-auto mt-6">
     <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
-            <div class="text-center flex justify-between">
+
+            <div class="text-center flex justify-between ml-10  text-fuchsia-700" *ngIf="role==='HOD'">
                 <h2 class="text-blueGray-700 text-xl font-bold">
-                    My profile
+                    Teacher Profile
                 </h2>
             </div>
+
+            <div class="text-center flex justify-between text-fuchsia-700 ml-10" *ngIf="role==='Teacher'">
+                <h2 class="text-blueGray-700 text-xl font-bold">
+                    My Profile
+                </h2>
+            </div>
+
             <div class="src flex justify-center items-center">
                 <div
                     class="relative w-20 h-20 overflow-hidden bg-white rounded-full dark:bg-white-600 flex justify-center items-center">
-                    <img src="" alt="profile photo teacher">
+                    <img src="{{teacherData.profilePhoto}}" alt="profile photo teacher">
                 </div>
             </div>
-            <div class="w-full lg:w-4/12 px-4 mt-4">
+            <!-- <div class="w-full lg:w-4/12 px-4 mt-4">
                 <div class="relative w-full mb-3">
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlfor="grid-password">
                         Class Allocation
@@ -25,7 +33,7 @@
                         <option>Third Year</option>
                     </select>
                 </div>
-            </div>
+            </div> -->
             <div class="flex-auto px-4 lg:px-10 py-10 mt-4 pt-0">
                 <h2 class="text-blueGray-400 text-sm mt-1 mb-6 font-bold uppercase">
                     Personal Information:-
@@ -38,6 +46,7 @@
                                 First name
                             </label>
                             <input type="text"
+                            value="{{teacherData.firstName}}" 
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="lucky.jesse">
                         </div>
@@ -49,6 +58,7 @@
                                 Middle name
                             </label>
                             <input type="middle"
+                            value="{{teacherData.middleName}}" 
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="ex.com">
                         </div>
@@ -60,6 +70,7 @@
                                 Last Name
                             </label>
                             <input type="text"
+                            value="{{ teacherData.lastName }}" 
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="ex.se">
                         </div>
@@ -71,6 +82,7 @@
                                 Gender
                             </label>
                             <input type="text"
+                            value="{{teacherData.gender}}" disabled="true"
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="ex.male">
                         </div>
@@ -82,6 +94,7 @@
                                 Address
                             </label>
                             <input type="text"
+                            value="{{teacherData.address}}"
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
                         </div>
@@ -93,6 +106,7 @@
                                 pincode
                             </label>
                             <input type="text"
+                            value="{{teacherData.pincode}}"
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="pincode">
                         </div>
@@ -106,6 +120,7 @@
                                 Qualification
                             </label>
                             <input type="Qualification"
+                            value="{{teacherData.qualification}}"
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="ex.xyz">
                         </div>
@@ -117,6 +132,7 @@
                                 Teaching Experience
                             </label>
                             <input type="text"
+                            value="{{teacherData.teachingExperience}}"
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="ex.abc">
                         </div>
@@ -128,6 +144,7 @@
                                 Mobile No
                             </label>
                             <input type="text"
+                            value="{{teacherData.mobileNumber}}"
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="91*********">
                         </div>
@@ -147,17 +164,17 @@
                                 Email
                             </label>
                             <input type="text"
+                            value="{{teacherData.email}}"
                                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                 placeholder="abc@gmail.com">
                         </div>
                     </div>
-                    <div class="w-full lg:w-4/12 px-4 mt-10 ml-5">
+                    <div class="w-full lg:w-4/12 px-4 mt-10 ml-5" *ngIf="role==='Teacher'">
                         <div class="relative w-full mb-3">
-                            <a href="/changepassword">
                             <button type="button"
+                           routerLink="/changepassword"
                                 class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Change
                                 Password</button>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -168,19 +185,16 @@
                 <h4 class="font-bold">Note : Teacher have to select the total no of subjects they are teaching for
                     current
                     Semester. Simply click on plus (+) button on page.</h4>
-                <div class="flex flex-wrap">
+                <div class="flex flex-wrap" *ngFor="let workingDetail of teacherData.workingDetails">
                     <div class="w-full lg:w-1/6 px-6 mt-4">
                         <div class="relative w-full mb-3">
                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="year">
                                 Year
                             </label>
-                            <select
-                                class="block py-2.5 px-0 w-full text-sm text-gray-500 border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                <option>NONE</option>
-                                <option>First Year</option>
-                                <option>Second Year</option>
-                                <option>Third Year</option>
-                            </select>
+                            <input type="text"
+                            value="{{workingDetail}}"
+                                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                placeholder="year">
                         </div>
                     </div>
 
@@ -189,16 +203,10 @@
                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
                                 Semester
                             </label>
-                            <select
-                                class="block py-2.5 px-0 w-full text-sm text-gray-500 border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                <option>NONE</option>
-                                <option>First sem</option>
-                                <option>Second sem</option>
-                                <option>Third sem</option>
-                                <option>fourth sem</option>
-                                <option>fifth sem</option>
-                                <option>sixth sem</option>
-                            </select>
+                            <input type="text"
+                            value="{{workingDetail.semester}}"
+                                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                placeholder="semester">
                         </div>
                     </div>
 
@@ -207,15 +215,10 @@
                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="branch">
                                 Branch
                             </label>
-                            <select
-                                class="block py-2.5 px-0 w-full text-sm text-gray-500 border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                <option>NONE</option>
-                                <option>Computer</option>
-                                <option>Electrical</option>
-                                <option>Electronic</option>
-                                <option>Civil</option>
-                                <option>Mechanical</option>
-                            </select>
+                            <input type="text"
+                            value="{{workingDetail.branch}}"
+                                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                placeholder="branch">
                         </div>
                     </div>
 
@@ -224,15 +227,13 @@
                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="division">
                                 Division
                             </label>
-                            <select
-                                class="block py-2.5 px-0 w-full text-sm text-gray-500 border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                <option>NONE</option>
-                                <option>Division1</option>
-                                <option>Division2</option>
-                            </select>
+                            <input type="text"
+                            value="{{workingDetail.division}}"
+                                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                placeholder="division">
                         </div>
                     </div>
-
+                    
                     <div class="w-full lg:w-1/6 px-6 mt-4">
                         <div class="relative w-full mb-3">
                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="sessionType">
@@ -240,9 +241,7 @@
                             </label>
                             <select
                                 class="block py-2.5 px-0 w-full text-sm text-gray-500 border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                <option>NONE</option>
-                                <option> Theory</option>
-                                <option>Practical</option>
+                                <option *ngFor="let session of workingDetail.sessionType">{{session}}</option>
                             </select>
                         </div>
                     </div>
@@ -254,13 +253,7 @@
                             </label>
                             <select
                                 class="block py-2.5 px-0 w-full text-sm text-gray-500 border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                <option>NONE</option>
-                                <option> T1</option>
-                                <option>T2</option>
-                                <option>T3</option>
-                                <option>s1</option>
-                                <option>s2</option>
-                                <option>s3</option>
+                                <option *ngFor="let batch of workingDetail.batch">{{batch}}</option>
                             </select>
                         </div>
                     </div>

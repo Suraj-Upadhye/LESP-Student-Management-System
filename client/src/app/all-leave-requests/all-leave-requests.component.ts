@@ -56,7 +56,8 @@ export class AllLeaveRequestsComponent implements OnInit {
   }
 
   getTeacherLeaveData(){
-    this.adminService.getStudentTeacherLeaveService("Teacher").subscribe({
+    const userType = "Teacher"
+    this.adminService.getStudentTeacherLeaveService(userType).subscribe({
       next: (res) => {
         console.log('Successfully got teacher the data');
         console.log(res);
@@ -71,7 +72,8 @@ export class AllLeaveRequestsComponent implements OnInit {
   }
 
   getStudentLeaveData(){
-    this.adminService.getStudentTeacherLeaveService("Student").subscribe({
+    const userType = "Student"
+    this.adminService.getStudentTeacherLeaveService(userType).subscribe({
       next: (res) => {
         console.log('Successfully got teacher the data');
         console.log(res);

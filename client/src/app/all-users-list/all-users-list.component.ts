@@ -103,10 +103,15 @@ export class AllUsersListComponent implements OnInit{
 
 
   teacherViewProfileClick(_id:any){
+    localStorage.setItem("view_teacher_profile_id", _id);
+    this.router.navigate(["/viewprofileteacher"])
+    // this.router.navigate(['/pages/users/user-details', _id]);
     alert("Teacher id :"+ _id)
   }
 
   studentViewProfileClick(_id:any){
+    localStorage.setItem("view_student_profile_id", _id);
+    this.router.navigate(["/viewprofilestudent"])
       alert("Student id :" + _id)
   }
 
@@ -117,6 +122,28 @@ export class AllUsersListComponent implements OnInit{
   studentRemoveClick(_id:any){
       alert("Student id :" + _id)
   }
+
+  closePrompt() {
+    const checkbox = document.getElementById('Remove') as HTMLInputElement;
+    checkbox.checked = false;
+}
+
+confirmRemove(teacherId: string) {
+  // Display alert message
+  const confirmMessage = confirm('Are you sure you want to remove this teacher?');
+  
+  // If user confirms, proceed with removal
+  if (confirmMessage) {
+      // Call the method to remove the teacher
+      this.teacherRemoveClick(teacherId);
+      
+      // Close the prompt
+      const checkbox = document.getElementById('Remove') as HTMLInputElement;
+      checkbox.checked = false;
+  }
+}
+
+
 
   // onYearChange(year: string){
   //   this.selectedYear = year;

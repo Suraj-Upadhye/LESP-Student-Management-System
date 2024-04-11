@@ -232,6 +232,7 @@ const newTeacherList = asyncHandler(async (req, res) => {
         // Debugging: Log the department value
         console.log("Department:", department);
 
+        console.log(department);
         // 2. Use aggregation to filter teachers who belong to the same department and have unverified emails.
         const newTeachers = await Admin.aggregate([
             {
@@ -252,11 +253,11 @@ const newTeacherList = asyncHandler(async (req, res) => {
         ]);
 
         console.log("Filtered Teachers:", newTeachers);
-
+ 
         // 3. Return the filtered list of teachers as the response.
         res.status(200).json({
             success: true,
-            data: newTeachers
+            data: newTeachers 
         });
     } catch (error) {
         // Error handling: Log and send error response
@@ -302,7 +303,7 @@ const newStudentList = asyncHandler(async (req, res) => {
         const { classTeacher, isClassTeacher } = req.user;
 
         // Debugging: Log the class teacher information
-        console.log("Class Teacher:", classTeacher);
+        // console.log("Class Teacher:", classTeacher);
 
         // Check if the user is a class teacher
         if (!isClassTeacher) {
@@ -438,7 +439,7 @@ const allTeachersList = asyncHandler(async (req, res) => {
     const { department } = req.user;
 
     // only hod can see this
-    const teacher = await Admin.find({ department: department, isEmailVerified: true, role:"Teacher" }).select("_id firstName middleName lastName");
+    const teacher = await Admin.find({ department: department, isEmailVerified: true, role: "Teacher" }).select("_id firstName middleName lastName");
 
     console.log(teacher)
     res.status(200).json(teacher);
@@ -484,11 +485,31 @@ const removeTeacher = asyncHandler(async (req, res) => {
 const viewTeacherProfile = asyncHandler(async (req, res) => {
 
     const { _id } = req.body;
-    let teacherData = await Admin.findById(_id).select("-password -refreshToken");
+    let teacherData = await Admin.findById(_id.toString()).select("-password -refreshToken");
     if (!teacherData) {
         throw new ApiError(404, 'This Teacher does not exist')
     }
-    res.json(userData);
+    const workingDetails = teacherData.workingDetails;
+    const updatedworkingDetails = [];
+    for (let index in workingDetails) {
+        let sub = workingDetails[index];
+        const subjectData = await Subject.findById(sub.subject.toString()).select("year branch semester subject")
+        updatedworkingDetails.push(subjectData)
+        // console.log(updatedworkingDetails);
+    }
+    for( let index in workingDetails){
+        let sub = workingDetails[index];
+        delete sub.subject;
+        sub["subject"] = updatedworkingDetails[index].subject;
+        console.log( updatedworkingDetails[index].subject);
+        sub.year = updatedworkingDetails[index].year;
+        sub["semester"] = updatedworkingDetails[index].semseter;
+        sub["branch"] = updatedworkingDetails[index].branch;
+        console.log("this is sub",sub);
+    }
+    console.log(workingDetails);
+    // teacherData.workingDetails = updatedworkingDetails;
+    return res.json(teacherData);
     // only hod and teacher can see this
 });
 
