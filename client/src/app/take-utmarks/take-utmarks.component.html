@@ -15,7 +15,7 @@
                             Year
                         </label>
                         <input type="text" 
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
@@ -25,57 +25,58 @@
                             Branch
                         </label>
                         <input type="text" 
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
-
+            
                 <div class="w-full lg:w-1/6 px-6 mt-4">
                     <div class="relative w-full mb-3">
                         <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
                             Semester
                         </label>
                         <input type="text" name="semester"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
-
+            
                 <div class="w-full lg:w-1/6 px-6 mt-4">
                     <div class="relative w-full mb-3">
                         <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="division">
                             Division
                         </label>
                         <input type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
-
+            
                 <div class="w-full lg:w-2/6 px-6 mt-4">
                     <div class="relative w-full mb-3">
                         <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
                             Subject Name
                         </label>
                         <input type="text" 
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
                 <div class="w-full lg:w-1/6 px-6 mt-7">
                     <div class="relative w-full mb-3">
                         <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
-                            Switch
+                            Switch 
                         </button>
                     </div>
                 </div>
             </div>
+            
 
             <div class="flex flex-col space-y-4 mt-4">
                 <div class="-m-1.5 overflow-x-auto">
                     <div class="p-1.5 min-w-full inline-block align-middle">
                         <div class="overflow-hidden">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <table class="min-w-full divide-y divide-gray-200">
                                 <thead>
                                     <tr>
                                         <th scope="col"
@@ -92,7 +93,7 @@
                                             UT2</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                <tbody class="divide-y divide-gray-200">
                                     <tr *ngFor="let user of users">
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
@@ -121,10 +122,11 @@
             </div>
             <div class="relative w-full mb-3 text-end">
                 <button type="button" (click)="fun()"
-                    class="bg-blue-500 text-end active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-5 ease-linear transition-all duration-150s mt-8 self-end">
+                    class="bg-blue-500 active:bg-blue-600 text-end font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-5 ease-linear transition-all duration-150s mt-8 self-end">
                     Done
                 </button>
             </div>
+            
 
         </div>
 

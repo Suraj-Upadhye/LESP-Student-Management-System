@@ -33,7 +33,7 @@ export const routes: Routes = [
     {path:'', component:LandingpagesComponent},
     {path:'login', component:LoginpageallComponent},
     {path:'about-us', component:AboutUspageComponent},
-    {path:'contect-us', component:ContectUsComponent},
+    {path:'contact-us', component:ContectUsComponent},
     
     {path:'signup-student', component:SignupStudentComponent},
     {path:'signup-teacher', component:SignupteacherComponent},

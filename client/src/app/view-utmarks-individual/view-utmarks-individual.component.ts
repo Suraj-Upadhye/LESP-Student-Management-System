@@ -25,7 +25,7 @@ export class ViewUtmarksIndividualComponent {
         }],
         Orientation: 'landscape'
       };
-      pdfMake.createPdf(docDefinition).download("attendance.pdf");
+      pdfMake.createPdf(docDefinition).download("utmarks_student.pdf");
     });
 
 }

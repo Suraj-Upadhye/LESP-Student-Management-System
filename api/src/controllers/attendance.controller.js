@@ -67,6 +67,7 @@ const getStudentsDataListForAttendance = asyncHandler(async (req, res) => {
 const fillAttendance = asyncHandler(async (req, res) => {
     const { date, teacherId, year, semester, branch, subjectName, studentList, sessionType, batchBelongs, remark } = req.body;
 
+    
     try {
         // Get the subject ID based on the subject name
         const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectIDByOther', {
@@ -76,6 +77,7 @@ const fillAttendance = asyncHandler(async (req, res) => {
             subjectName
         });
         const subjectId = subjectResponse.data.subjectID;
+        console.log(subjectId);
 
         // Find or create attendance record for the given date
         let attendanceRecord = await Attendance.findOne({ date });

@@ -14,4 +14,7 @@ import { HeaderMergedComponent } from "../header-merged/header-merged.component"
 })
 export class TeacherLeaveApplicationComponent {
 
+    onSubmit(){
+        alert("Your Leave request has been submitted successfully. We will notify you by  email once the application is processed.");
+    }
 }

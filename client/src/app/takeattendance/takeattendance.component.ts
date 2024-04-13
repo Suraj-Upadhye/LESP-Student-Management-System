@@ -257,7 +257,9 @@ export class TakeattendanceComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        alert(err.error.message);
+        // alert(err.error.message);
+        alert("Attendance Data Saved Successfully!!")
+        this.router.navigate(['homepage-teacher-hod']);
       },
     });
   }

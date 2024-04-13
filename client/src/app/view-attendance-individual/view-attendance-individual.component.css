@@ -60,3 +60,15 @@ td {
 .row {
   width: 90px;
 }
+
+
+.vertical-text {
+  writing-mode: vertical-lr; /* Text direction: vertical from left to right */
+  transform: rotate(180deg); /* Rotate text 180 degrees */
+}
+
+.vertical-date {
+  writing-mode: vertical-lr; /* Text direction: vertical from left to right */
+  transform: rotate(180deg); /* Rotate text 180 degrees */
+  white-space: nowrap; /* Prevent line breaks */
+}

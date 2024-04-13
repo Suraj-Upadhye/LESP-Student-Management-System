@@ -75,7 +75,7 @@ const registerUser = asyncHandler(async (req, res) => {
         gender,
         address,
         pincode,
-        profilePhoto: profilePhoto?.url || "",
+        profilePhoto: profilePhoto?.url,
         year,
         semester,
         branch,

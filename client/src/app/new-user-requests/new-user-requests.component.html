@@ -6,26 +6,13 @@
 
         <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
             <div class="flex flex-wrap">
-                <!-- <div class="w-full lg:w-1/5 px-6 mt-4">
-                    <div class="relative w-full mb-3">
-                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="session">
-                            Filter
-                        </label>
-                        <select id="Filter"
-                            class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option>TY CO</option>
-                            <option>SY CO</option>
-                            <option>FY CO</option>
-                        </select>
-                    </div>
-                </div> -->
                 <div class="w-full lg:w-1/4 px-6 mt-4" *ngIf="role === 'HOD'">
                     <div class="relative w-full mb-3">
                         <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="session">
                             All New User Requests
                         </label>
                         <select #selectRole (change)="onRoleChange(selectRole.value)"
-                            class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                             <option value="Student">Student</option>
                             <option value="Teacher">Teacher</option>
                         </select>
@@ -38,7 +25,7 @@
                             All New User Requests
                         </label>
                         <input type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
                            value="Student" disabled>
                     </div>
                 </div>
@@ -50,13 +37,12 @@
                     <div class="flex flex-col" *ngIf="selectedRole === 'Student'">
                         <div class="-m-1.5 overflow-x-auto">
                             <div class="p-1.5 min-w-full inline-block align-middle" >
-                                <div class="border rounded-lg dark:border-gray-700">
+                                <div class="border rounded-lg">
                                     <div class="overflow-hidden">
-                                        <table class="min-w-full text-left text-sm font-light text-surface  w-full">
-                                            <!-- dark:text-white -->
+                                        <table class="min-w-full text-left text-sm font-light w-full">
                                             <tbody>
 
-                                                <tr class="border-b border-neutral-200 dark:border-black/10" 
+                                                <tr class="border-b border-neutral-200" 
                                                 *ngFor="let student of studentList"
                                                 >
                                                    
@@ -85,13 +71,13 @@
                     <div class="flex flex-col" *ngIf="selectedRole === 'Teacher'">
                         <div class="-m-1.5 overflow-x-auto">
                             <div class="p-1.5 min-w-full inline-block align-middle" >
-                                <div class="border rounded-lg dark:border-gray-700">
+                                <div class="border rounded-lg">
                                     <div class="overflow-hidden">
-                                        <table class="min-w-full text-left text-sm font-light text-surface w-full">
+                                        <table class="min-w-full text-left text-sm font-light w-full">
 
                                             <tbody> 
                                                 <!-- (click)="fun() -->
-                                                <tr class="border-b border-neutral-200 dark:border-black/10" *ngFor="let teacher of teacherList">
+                                                <tr class="border-b border-neutral-200" *ngFor="let teacher of teacherList">
                                                     <td class="whitespace-nowrap px-6 py-4 items-center">
                                                         {{ teacher.firstName }} {{teacher.middleName}} {{teacher.lastName}} wants to register as a new teacher
                                                         </td>
@@ -119,4 +105,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> 

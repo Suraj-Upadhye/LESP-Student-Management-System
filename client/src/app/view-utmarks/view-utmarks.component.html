@@ -5,7 +5,7 @@
         <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
             <div class="text-center flex justify-center">
                 <h1 class="text-blueGray-700 text-xl font-bold mt-6">
-                    Fill UTMarks
+                    View UT Marks All Students
                 </h1>
             </div>
             <div class="flex flex-wrap mt-6">
@@ -15,7 +15,17 @@
                             Year
                         </label>
                         <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            disabled>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/6 px-6 mt-4">
+                    <div class="relative w-full mb-3">
+                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                            Semester
+                        </label>
+                        <input type="text" id="first_name"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
@@ -25,7 +35,7 @@
                             Branch
                         </label>
                         <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
@@ -35,7 +45,7 @@
                             Division
                         </label>
                         <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
@@ -45,33 +55,35 @@
                             Subject Name
                         </label>
                         <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
-                <div class="w-full lg:w-1/6 px-6 mt-7">
+                <div class="w-full lg:w-1/6 px-6 mt-10">
                     <div class="relative w-full mb-3">
                         <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
                             Switch
                         </button>
                     </div>
                 </div>
+
+                <div class="w-full lg:w-1/6 px-6 mt-10">
+                    <div class="relative w-full mb-3">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+
             </div>
 
-            <div class="flex flex-col space-y-4 mt-4">
-                <div class="-m-1.5 overflow-x-auto">
-                </div>
-            </div>
-        </div>
-        <div class="relative w-full mb-3">
-            <button type="button"
-                class="bg-blue-500 text-end active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-5 ease-linear transition-all duration-150s mt-8 self-end">
-                Done
-            </button>
+    
         </div>
 
     </div>
 </div>
+
 
 
 <div id="tblinfo">
@@ -79,11 +91,17 @@
     <table id="fir" width="auto">
         <thead>
             <tr>
-                <th class="logo" rowspan="2" > <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1712349324/fgpjrap6buflvvjexshz.jpg" alt="logo"></th>
-                <th id="heading1" colspan="29">Latthe Education Society's Polytechnic, Sangli</th>
+                <th class="logo" rowspan="2" > 
+                    <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1712349324/fgpjrap6buflvvjexshz.jpg" alt="logo" height="100px" width="100px">
+                </th>
+                <th id="heading1" colspan="29">Latthe Education Society's
+                    <br><br>
+                    POLYTECHNIC SANGLI
+                </th>
+                <!-- <th id="heading1" colspan="29">Latthe Education Society's Polytechnic, Sangli</th> -->
             </tr>
             <tr>
-                <th id="heading2" colspan="29">POLYTECHNIC KUPWAD MIDC</th>
+                <!-- <th id="heading2" colspan="29">POLYTECHNIC SANGLI</th> -->
             </tr>
             <tr><th class="rln" rowspan="2">Roll No.</th>
                 <th class="stn" rowspan="2">Student Name</th>
@@ -98,89 +116,12 @@
 
         </thead>
         <tbody>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>manas</td>
-                <td>21</td>
-                <td>23</td>
-                <td>4</td>
+            <tr *ngFor="let student of students">
+                <td>{{student.rollNo}}</td>
+                <td>{{student.name}}</td>
+                <td>{{student.ut1Marks}}</td>
+                <td>{{student.ut2Marks}}</td>
+                <td>{{student.rank}}</td>
             </tr>
         </tbody>
     </table>

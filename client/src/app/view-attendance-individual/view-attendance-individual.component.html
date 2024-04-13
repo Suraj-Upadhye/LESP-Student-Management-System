@@ -1,3 +1,25 @@
+<app-header-merged/>
+
+<div class="flex flex-wrap ml-16">
+    <div class="w-full lg:w-1/6 px-6 mt-4">
+        <div class="relative w-full mb-3">
+            <label class="block uppercase text-gray-600 text-xs font-bold mb-2" for="batch">
+                SubjectName
+            </label>
+            <select id="batch"
+                class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="select subjec">
+                <option>---Selection---</option>
+                <option>ENVIRONMENTAL STUDIES</option>
+                <option>OPERATING SYSTEMS</option>
+                <option>ADVANCED JAVA PROGRAMMING</option>
+                <option>SOFTWARE TESTING</option>
+                <option>CLIENT-SIDE SCRIPTING LANGUAGE</option>
+            </select>
+        </div>
+    </div>
+</div>
+
 <div id="tblinfo" class="overflow-x-auto">
 
     <table id="fir" width="75%">
@@ -15,20 +37,20 @@
             <tr>
                 <th rowspan="2" colspan="2"></th>
                 <th colspan="7" rowspan="2">Name of Teacher</th>
-                <th colspan="10" rowspan="2"></th>
+                <th colspan="10" rowspan="2">Pravin Maruti Rupnar</th>
                 <th rowspan="2" colspan="3">Subject</th>
-                <th rowspan="2" colspan="12"></th>
+                <th rowspan="2" colspan="12">ADVANCED JAVA PROGRAMMING</th>
             </tr>
         </thead>
         <thead>
             <tr>
                 <th rowspan="2" colspan="2"></th>
                 <th rowspan="2" colspan="3">Semester</th>
-                <th rowspan="2" colspan="7"></th>
+                <th rowspan="2" colspan="7">5</th>
                 <th rowspan="2" colspan="2">Class</th>
-                <th rowspan="2" colspan="7"></th>
+                <th rowspan="2" colspan="7">CO</th>
                 <th rowspan="2" colspan="2">Year</th>
-                <th rowspan="2" colspan="7"></th>
+                <th rowspan="2" colspan="7">TY</th>
             </tr>
         </thead>
         <thead>
@@ -36,12 +58,39 @@
                 <td rowspan="2" class="row"><b>Sr No.</b></td>
                 <td rowspan="2" class="stn"><b>Subject Name</b></td>
                 <td class="vertical-text"><b>Date</b></td>
-                <td *ngFor="let num of range(1, totalLecture)"></td>
+                <td class="vertical-date">4/2/2024</td>
+                <td class="vertical-date">5/2/2024</td>
+                <td class="vertical-date">9/2/2024</td>
+                <td class="vertical-date">11/2/2024</td>
+                <td class="vertical-date">12/2/2024</td>
+                <td class="vertical-date">16/2/2024</td>
+                <td class="vertical-date">18/2/2024</td>
+                <td class="vertical-date">19/2/2024</td>
+                <td class="vertical-date">23/2/2024</td>
+                <td class="vertical-date">25/2/2024</td>
+                <td class="vertical-date">26/2/2024</td>
+                <td class="vertical-date">1/3/2024</td>
+                <td class="vertical-date">3/3/2024</td>
+                <td class="vertical-date">4/3/2024</td>
+                <td class="vertical-date">8/3/2024</td>
+                <td class="vertical-date">10/3/2024</td>
+                <td class="vertical-date">11/3/2024</td>
+                <td class="vertical-date">15/3/2024</td>
+                <td class="vertical-date">17/3/2024</td>
+                <td class="vertical-date">18/3/2024</td>
+                <td class="vertical-date">22/3/2024</td>
+                <td class="vertical-date">24/3/2024</td>
+                <td class="vertical-date">25/3/2024</td>
+                <td class="vertical-date">29/3/2024</td>
                 
-                <td class="vertical-text" rowspan="2"><b>Total Present</b></td>
-                <td class="vertical-text" rowspan="2"><b>Total Absent</b></td>
-                <td class="vertical-text" rowspan="2"><b>Per.</b></td>
+                <!-- Repeat this for each date -->
+                <td *ngFor="let num of range(1, totalLecture-24)"></td>
+                
+                <td rowspan="2" class="vertical-text"><b>Total Present</b></td>
+                <td rowspan="2" class="vertical-text"><b>Total Absent</b></td>
+                <td rowspan="2" class="vertical-text"><b>Per.</b></td>
             </tr>
+            
             <tr class="sec">
                 <td class="vertical-text"><b>Lecture No.</b></td>
                 <td *ngFor="let num of range(1, totalLecture)">{{num}}</td>
@@ -50,34 +99,35 @@
         <tbody>
             <tr>
             <td>1</td>
-            <td colspan="2">PWP</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
-            <td>p</td>
-            <td>a</td>
+            <td colspan="2">ADVANCED JAVA PROGRAMMING</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
+            <td>P</td>
+            <td>A</td>
             <td>12</td>
             <td>12</td>
-            <td>50%</td>
+            <td><span style="text-transform: uppercase;">50%</span></td>
+            
         </tbody>
     </table>
 </div>

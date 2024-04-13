@@ -7,22 +7,29 @@
                 <div class="flex flex-wrap">
                     <div class="w-full lg:w-1/6 px-6 mt-4">
                         <div class="relative w-full mb-3">
-                            <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="batch">
+                            <label class="block uppercase text-gray-600 text-xs font-bold mb-2" for="batch">
                                 SubjectName
                             </label>
                             <select id="batch"
-                                class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option>Selection</option>
+                                class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="select subjec">
+                                <option>---Selection---</option>
+                                <option>ENVIRONMENTAL STUDIES</option>
+                                <option>OPERATING SYSTEMS</option>
+                                <option>ADVANCED JAVA PROGRAMMING</option>
+                                <option>SOFTWARE TESTING</option>
+                                <option>CLIENT-SIDE SCRIPTING LANGUAGE</option>
                             </select>
                         </div>
                     </div>
                 </div>
+
                 <div class="flex flex-col mt-10">
                     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                             <div class="overflow-hidden">
-                                <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
-                                    <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+                                <table class="min-w-full text-left text-sm font-light text-surface">
+                                    <thead class="border-b border-neutral-200 font-medium">
                                         <tr>
                                             <th scope="col" class="px-6 py-4">Type</th>
                                             <th scope="col" class="px-6 py-4">Description</th>
@@ -30,24 +37,26 @@
                                             <th scope="col" class="px-6 py-4">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                     <tbody>
                                         <tr *ngFor="let table of tableData"
-                                            class="border-b border-neutral-200 dark:border-white/10">
+                                            class="border-b border-neutral-200">
                                             <td class="whitespace-nowrap px-6 py-4">{{ table.type }}</td>
                                             <td class="whitespace-nowrap px-6 py-4">{{ table.description }}</td>
                                             <td class="whitespace-nowrap px-6 py-4">{{ table.dateTime }}</td>
                                             <td class="whitespace-nowrap px-6 py-4">
                                                 <button (click)="fun()"
-                                                    class="text-white bg-blue-700 mt-2 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Delete</button>
+                                                    class="text-white bg-blue-700 mt-2 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2 focus:outline-none">Download</button>
                                             </td>
                                         </tr>
-                                    </tbody>
+                                    </tbody> 
                                 </table>
 
                             </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>

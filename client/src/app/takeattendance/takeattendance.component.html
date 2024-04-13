@@ -1,7 +1,6 @@
-
 <app-header-merged></app-header-merged>
 <div class="w-full lg:w-12/12 px-4 mx-auto mt-6">
-    <div class="relative flex flex-col min-w-0 w-full mb-6 shadow-lg rounded-lg bg-blueGray-100  h-3/4 border-0 bg-gray-100">
+    <div class="relative flex flex-col min-w-0 w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 h-3/4 border-0 bg-gray-100">
         
         <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
             <div class="text-center flex justify-center">
@@ -16,13 +15,8 @@
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="datepicker">
                         Date
                     </label>
-                    <!-- <mat-form-field class="max-h-[60px] w-[150px]">
-                        <input matInput [matDatepicker]="datepicker" placeholder="Select Date">
-                        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-                        <mat-datepicker #datepicker></mat-datepicker>
-                    </mat-form-field> -->
                     <input type="text" id="first_name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     [value]="date"
                     disabled>
                 </div>
@@ -33,7 +27,7 @@
                         Year
                     </label>
                     <input type="text" id="first_name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         [value]="year"
                         disabled>
                 </div>
@@ -44,7 +38,7 @@
                         Semester
                     </label>
                     <input type="text" id="first_name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         [value]="semester"
                         disabled>
                 </div>
@@ -55,7 +49,7 @@
                         Branch
                     </label>
                     <input type="text" id="first_name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         [value]="branch"
                         disabled>
                 </div>
@@ -66,7 +60,7 @@
                         Division
                     </label>
                     <input type="text" id="first_name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         [value]="division"
                         disabled>
                 </div>
@@ -78,7 +72,7 @@
                     </label>
                     <select id="selectSession" 
                     #sessionTypeSelect (change)="onSessionTypeChange(sessionTypeSelect.value)"
-                        class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                         <option *ngFor="let sessionType of sessionTypeList">{{sessionType}}</option>
                     </select>
                 </div>
@@ -90,7 +84,7 @@
                     </label>
                     <select id="selectBatch"
                     #batchSelect (change)="onBatchChange(batchSelect.value)"
-                        class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                         <option *ngFor="let batch of batchList">{{batch}}</option>
                     </select>
                 </div>
@@ -101,7 +95,7 @@
                         Subject Name
                     </label>
                     <input type="text" id="first_name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         [value]="subjectName"
                         disabled>
                 </div>
@@ -132,31 +126,29 @@
                 <div class="flex flex-col">
                     <div class="-m-1.5 overflow-x-auto">
                         <div class="p-1.5 min-w-full inline-block align-middle">
-                            <div class="border rounded-lg overflow-hidden dark:border-gray-700">
-                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                            <div class="border rounded-lg overflow-hidden">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
                                         <tr>
                                             <th scope="col"
-                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-gray-400 roll">
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase roll">
                                                 Roll No
                                             </th>
                                             <th scope="col"
-                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-gray-400 name">
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase name">
                                                 Name
                                             </th>
                                             <th scope="col"
-                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-gray-400 attence">
+                                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase attence">
                                                 Attendance
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-200  dark:divide-gray-700"
+                                    <tbody class="divide-y divide-gray-200"
                                     *ngIf="flagToDisplayTableData">
                                         <tr  *ngFor="let student of studentListFormatted;let i = index">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">{{ student.rollNo }}</td>
-                                            <!-- dark:text-gray-200 -->
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">{{ student.name }}</td>
-                                            <!-- dark:text-gray-200 -->
                                             <td class="px-6 py-4 whitespace-nowrap text-start text-sm font-medium">
                                                 <button (click)="changeColorAttendance(i)" [style.backgroundColor]="student.status === 'Present' ? 'green' : student.status === 'Absent' ? 'red' : student.status === 'Leave' ? 'orange' : 'initial'" class="uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-5 ease-linear transition-all duration-150s w-22">
                                                     {{ student.status}}
@@ -178,8 +170,6 @@
                         </div>
                     </div>
                 </div>
-                
-                
             </div>
         </div>
     </div>

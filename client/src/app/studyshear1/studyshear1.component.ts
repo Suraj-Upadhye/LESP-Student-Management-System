@@ -14,13 +14,13 @@ export class Studyshear1Component {
     tableData = [
         {
           type: "PDF",
-          description: "Description of the PDF whatever may be",
-          dateTime: "31/3/2024 8:00"
+          description: "Environmental Studies MCQ Part-2",
+          dateTime: "31/03/2024 8:17"
         },
         {
             type: "PDF",
-            description: "Description of the PDF whatever may be",
-            dateTime: "32/3/2024 9:00"
+            description: "Environmental Studies MCQ Part-1",
+            dateTime: "31/03/2024 8:17"
           },
         
       ];
