@@ -65,18 +65,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- (click)="fun()" -->
                                     <tr *ngFor="let student of studentList">
                                         <td class="whitespace-nowrap px-6 py-4 font-balck">{{ student.rollNo }}</td>
                                         <td class="whitespace-nowrap px-6 py-4 items-center">{{ student.firstName }} {{
                                             student.middleName}} {{student.lastName}} </td>
                                         <td class="whitespace-nowrap px-6 py-4 font-balck">{{ student.division }}</td>
                                         <td class="flex">
-                                            <button 
+                                            <!-- <button 
                                             (click)="studentViewProfileClick(student._id)" 
                                                 class="flex-shrink-0 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2">
                                                 View
-                                            </button>
+                                            </button> -->
                                             <div class="fixed inset-0 collapse z-50 w-full">
                                                 <input type="checkbox" id="Remove"
                                                     class="peer appearance-none collapse opacity-0">
@@ -99,10 +98,11 @@
                                                         <div
                                                             class="w-full flex justify-center items-center flex-row gap-4 flex-wrap">
                                                             <div
+                                                            (click)="closePrompt()"
                                                                 class="bg-white-300 hover:bg-white-600 text-black font-bold py-2 px-4 border border-blue-700 rounded-full cursor-pointer">
                                                                 Cancel</div>
                                                             <div
-                                                            (click)="studentRemoveClick(student._id)"
+                                                            (click)="confirmRemoveStudent(student._id)"
                                                                 class="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-full cursor-pointer">
                                                                 Remove</div>
                                                         </div>
@@ -162,16 +162,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- (click)="fun()" -->
                                     <tr *ngFor="let teacher of teacherList; let i = index">
                                         <td class="whitespace-nowrap px-6 py-4 font-balck">{{i+1}}</td>
                                         <td class="whitespace-nowrap px-6 py-4 items-center">{{ teacher.firstName }} {{teacher.middleName}} {{teacher.lastName}} </td>
                                         <td class="flex">
-                                            <button 
+                                            <!-- <button 
                                                 (click)="teacherViewProfileClick(teacher._id)"
                                                 class="flex-shrink-0 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2">
                                                 View
-                                            </button>
+                                            </button> -->
                                         
                                             <div class="fixed inset-0 collapse z-50 w-full">
                                                 <input type="checkbox" id="Remove" class="peer appearance-none collapse opacity-0">
@@ -190,7 +189,7 @@
                                                                 class="bg-white-300 hover:bg-white-600 text-black font-bold py-2 px-4 border border-blue-700 rounded-full cursor-pointer">
                                                                 Cancel
                                                             </div>
-                                                            <div (click)="confirmRemove(teacher._id)"
+                                                            <div (click)="confirmRemoveTeacher(teacher._id)"
                                                                 class="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-full cursor-pointer">
                                                                 Remove
                                                             </div>

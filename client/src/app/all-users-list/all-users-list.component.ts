@@ -102,41 +102,68 @@ export class AllUsersListComponent implements OnInit{
   }
 
 
-  teacherViewProfileClick(_id:any){
-    localStorage.setItem("view_teacher_profile_id", _id);
-    this.router.navigate(["/viewprofileteacher"])
-    // this.router.navigate(['/pages/users/user-details', _id]);
-    alert("Teacher id :"+ _id)
-  }
+  // teacherViewProfileClick(_id:any){
+  //   localStorage.setItem("view_teacher_profile_id", _id);
+  //   this.router.navigate(["/viewprofileteacher"])
+  //   // this.router.navigate(['/pages/users/user-details', _id]);
+  //   alert("Teacher id :"+ _id)
+  // }
 
-  studentViewProfileClick(_id:any){
-    localStorage.setItem("view_student_profile_id", _id);
-    this.router.navigate(["/viewprofilestudent"])
-      alert("Student id :" + _id)
-  }
-
-  teacherRemoveClick(_id:any){
-    alert("Teacher id :"+ _id)
-  }
-
-  studentRemoveClick(_id:any){
-      alert("Student id :" + _id)
-  }
+  // studentViewProfileClick(_id:any){
+  //   localStorage.setItem("view_student_profile_id", _id);
+  //   this.router.navigate(["/viewprofilestudent"])
+  //     alert("Student id :" + _id)
+  // }
 
   closePrompt() {
     const checkbox = document.getElementById('Remove') as HTMLInputElement;
     checkbox.checked = false;
 }
 
-confirmRemove(teacherId: string) {
+confirmRemoveTeacher(teacherId: String) {
   // Display alert message
   const confirmMessage = confirm('Are you sure you want to remove this teacher?');
+  // If user confirms, proceed with removal
+  if (confirmMessage) {
+      // Call the method to remove the teacher
+      // removeTeacherService
+      this.adminService.removeTeacherService(teacherId).subscribe({
+        next: (res) => {
+          console.log('Successfully removed Teacher');
+          alert('Successfully removed Teacher');
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err);
+          alert(err.error.message);
+        },
+      });
+
+      // Close the prompt
+      const checkbox = document.getElementById('Remove') as HTMLInputElement;
+      checkbox.checked = false;
+  }
+}
+
+confirmRemoveStudent(studentId: string) {
+  // Display alert message
+  const confirmMessage = confirm('Are you sure you want to remove this student?');
   
   // If user confirms, proceed with removal
   if (confirmMessage) {
       // Call the method to remove the teacher
-      this.teacherRemoveClick(teacherId);
-      
+      // removeStudentService
+      this.adminService.removeStudentService(studentId).subscribe({
+        next: (res) => {
+          console.log('Successfully removed Student');
+          alert('Successfully removed Student');
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err);
+          alert(err.error.message);
+        },
+      });
       // Close the prompt
       const checkbox = document.getElementById('Remove') as HTMLInputElement;
       checkbox.checked = false;

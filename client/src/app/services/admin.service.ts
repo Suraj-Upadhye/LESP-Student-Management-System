@@ -212,46 +212,47 @@ export class AdminService {
 
   acceptNewTeacherService(_id: String) {
     // Send HTTP POST request
-    return this.http.post<any>(
-      `${apiUrls.adminServiceApi}acceptNewTeacher`,
-      {
-        teacherId: _id,
-      }
-    );
+    return this.http.post<any>(`${apiUrls.adminServiceApi}acceptNewTeacher`, {
+      teacherId: _id,
+    });
   }
 
   acceptNewStudentService(_id: String) {
     // Send HTTP POST request
     console.log(_id);
-    
-    return this.http.post<any>(
-      `${apiUrls.adminServiceApi}acceptNewStudent`,
-      {
-        studentId: _id,
-      }
-    );
+
+    return this.http.post<any>(`${apiUrls.adminServiceApi}acceptNewStudent`, {
+      studentId: _id,
+    });
   }
 
   rejectNewTeacherService(_id: String) {
     // Send HTTP POST request
-    return this.http.post<any>(
-      `${apiUrls.adminServiceApi}rejectNewTeacher`,
-      {
-        teacherId: _id,
-      }
-    );
+    return this.http.post<any>(`${apiUrls.adminServiceApi}rejectNewTeacher`, {
+      teacherId: _id,
+    });
   }
 
   rejectNewStudentService(_id: String) {
     // Send HTTP POST request
-    return this.http.post<any>(
-      `${apiUrls.adminServiceApi}rejectNewStudent`,
-      {
-        studentId: _id,
-      }
-    );
+    return this.http.post<any>(`${apiUrls.adminServiceApi}rejectNewStudent`, {
+      studentId: _id,
+    });
   }
 
+  removeStudentService(_id: String) {
+    // Send HTTP POST request
+    return this.http.post<any>(`${apiUrls.adminServiceApi}removeStudent`, {
+      _id: _id,
+    });
+  }
+
+  removeTeacherService(_id: String) {
+     // Send HTTP POST request
+     return this.http.post<any>(`${apiUrls.adminServiceApi}removeTeacher`, {
+      _id: _id,
+    });
+  }
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 

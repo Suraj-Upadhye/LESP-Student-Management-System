@@ -513,7 +513,7 @@ const removeStudent = asyncHandler(async (req, res) => {
     const studentToRemove = await User.findById(_id).select("email role firstName");
     if (studentToRemove) {
         sendUserRemovedEmail(studentToRemove.email, studentToRemove.role, studentToRemove.firstName)
-        await studentToRemove.remove();
+        await User.deleteOne({_id:_id})
         res.status(201).json(new ApiResponse(201, "Deleted", "Student removed Successfully!"));
     }
     else {
@@ -532,7 +532,7 @@ const removeTeacher = asyncHandler(async (req, res) => {
     const teacherToRemove = await Admin.findById(_id).select("email role firstName");
     if (teacherToRemove) {
         sendUserRemovedEmail(teacherToRemove.email, teacherToRemove.role, teacherToRemove.firstName)
-        await teacherToRemove.remove();
+        await await Admin.deleteOne({_id:_id})
         res.status(201).json(new ApiResponse(201, "Deleted", "Teacher removed Successfully!"));
     }
     else {
