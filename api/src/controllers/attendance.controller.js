@@ -109,7 +109,7 @@ console.log("Log 1 :",date, teacherId, year, semester, branch, subjectName, stud
 });
 
 
-// Remaining
+
 // Done // one subject all user
 const getAttendanceData = asyncHandler(async (req, res) => {
     try {
@@ -208,76 +208,61 @@ const getAttendanceData = asyncHandler(async (req, res) => {
 });
 
 // Done
-// Remaining
-const getAttendanceSubjectWiseSingleStudent = asyncHandler(async (req, res) => {
+
+const getAttendanceSubjectWiseSingleStudent = async (req, res) => {
     try {
-        // Extract request parameters
-        const { year, semester, branch, division ,batch} = req.user;
-        const { subjectName, sessionType } = req.body;
-
-        // Find the subject
-        const subject = await Subject.findOne({ subject: subjectName });
-        if (!subject) {
-            return res.status(404).json({ success: false, error: "Subject not found" });
-        }
-
-        // Find the student
-        const student = await User.findOne({ rollNo });
-        if (!student) {
-            return res.status(404).json({ success: false, error: "Student not found" });
-        }
-
-        // Use aggregation to fetch attendance data
-        const attendanceData = await Attendance.aggregate([
-            {
-                $match: {
-                    "attendanceData.subjectId": subject._id,
-                    "attendanceData.sessionType": sessionType,
-                }
-            },
-            {
-                $unwind: "$attendanceData"
-            },
-            {
-                $unwind: "$attendanceData.studentList"
-            },
-            {
-                $match: {
-                    "attendanceData.studentList.studentId": student._id,
-                    "attendanceData.sessionType": sessionType,
-                }
-            },
-            {
-                $project: {
-                    date: "$date",
-                    subjectName: subjectName,
-                    studentName: `${student.firstName} ${student.middleName} ${student.lastName}`,
-                    rollNo: rollNo,
-                    status: "$attendanceData.studentList.state",
-                    batch: "$attendanceData.batchBelongs",
-                    sessionType: "$attendanceData.sessionType",
-                    year: student.year,
-                    semester: student.semester,
-                    branch: student.branch
-                }
+      const { _id } = req.user; // Assuming _id is provided in the request body
+  
+      // Fetching attendance data for the given user
+      const userAttendance = await Attendance.findOne({ "attendanceData.studentList.studentId": _id });
+  
+      if (!userAttendance) {
+        return res.status(404).json({ message: "Attendance data not found for the user" });
+      }
+  
+      // Constructing the formatted attendance data for all subjects
+      const formattedAttendance = [];
+      userAttendance.attendanceData.forEach(session => {
+        const { subjectId, studentList } = session;
+        const formattedSession = {
+          sr_no: '', // Assuming you want to generate serial numbers dynamically
+          s_name: subjectId.name, // Assuming 'name' is the field for subject name
+          p_no: '',
+          // Initialize lecture status fields (lno_1, lno_2, etc.) with empty strings
+          ...Array.from({ length: 24 }, (_, i) => ({ [`lno_${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+          tp: '', // Total Present
+          ta: '', // Total Absent
+          per: '', // Percentage
+          // Initialize date fields (d1, d2, etc.) with empty strings
+          ...Array.from({ length: 24 }, (_, i) => ({ [`d${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+        };
+  
+        studentList.forEach(({ studentId, state }) => {
+          if (studentId.toString() === _id) {
+            // Map attendance state to 'p', 'a', or 'l' for lecture status fields
+            if (state === 'Present') {
+              formattedSession[`lno_${studentList.findIndex(s => s.studentId.toString() === _id) + 1}`] = 'p';
+            } else if (state === 'Absent') {
+              formattedSession[`lno_${studentList.findIndex(s => s.studentId.toString() === _id) + 1}`] = 'a';
+            } else if (state === 'Leave') {
+              formattedSession[`lno_${studentList.findIndex(s => s.studentId.toString() === _id) + 1}`] = 'l';
             }
-        ]);
-
-        // Add serial number to each record
-        attendanceData.forEach((record, index) => {
-            record.serialNumber = index + 1;
+  
+            // Assuming you want to record dates of sessions in 'dd/MM/yy' format
+            formattedSession[`d${studentList.findIndex(s => s.studentId.toString() === _id) + 1}`] = new Date(session.date).toLocaleDateString('en-GB');
+          }
         });
-
-        // Return the formatted attendance data
-        res.status(200).json({ success: true, data: attendanceData });
-
+  
+        formattedAttendance.push(formattedSession);
+      });
+  
+      // Sending the formatted attendance data for all subjects
+      res.status(200).json(formattedAttendance);
     } catch (error) {
-        console.error("Error fetching attendance data:", error);
-        res.status(500).json({ success: false, message: "Failed to fetch attendance data." });
+      console.error("Error fetching user attendance:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
-});
-
-
+  };
 
 
 

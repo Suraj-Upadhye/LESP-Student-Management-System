@@ -137,6 +137,28 @@ const getSubjectListByYSB = asyncHandler(async (req, res) => {
     }
 });
 
+
+const getSubjectListByCurrentUser = asyncHandler(async (req, res) => {
+    try {
+        const { year, semester, branch } = req.user; // Extract query parameters
+        console.log(year, semester, branch)
+
+        // Ensure that all required parameters are provided
+        if (!year || !semester || !branch) {
+            return res.status(400).json({ success: false, error: 'Missing required query parameters' });
+        }
+
+        // Find subjects based on the provided year, sem, and branch
+        const subjects = await Subject.find({ year, semester, branch });
+
+        // Return the list of subjects
+        res.status(200).json({ success: true, data: subjects });
+    } catch (error) {
+        // Handle errors and send appropriate response
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Done
 // step 3 :
 const getModeListAndBatchListByYSBSub = asyncHandler(async (req, res) => {
@@ -283,6 +305,7 @@ export {
     getSubjectDetailsBySubjectID,
     getSemByYearBranch,
     getSubjectListByYSB,
+    getSubjectListByCurrentUser,
     getModeListAndBatchListByYSBSub,
     getSubjectListByCurrentAdmin,
 }

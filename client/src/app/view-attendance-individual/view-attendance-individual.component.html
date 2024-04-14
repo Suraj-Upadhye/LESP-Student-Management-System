@@ -1,20 +1,21 @@
 <app-header-merged/>
 
 <div class="flex flex-wrap ml-16">
-    <div class="w-full lg:w-1/6 px-6 mt-4">
+    <div class="w-full lg:w-2/6 px-6 mt-4">
         <div class="relative w-full mb-3">
             <label class="block uppercase text-gray-600 text-xs font-bold mb-2" for="batch">
                 SubjectName
             </label>
             <select id="batch"
+           #selectSubject (change)="onSelectChange(selectSubject.value)"
                 class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="select subjec">
-                <option>---Selection---</option>
-                <option>ENVIRONMENTAL STUDIES</option>
+                <option *ngFor="let ind of subjectList;let index"> {{ind.subject}} </option>
+                <!-- <option>ENVIRONMENTAL STUDIES</option>
                 <option>OPERATING SYSTEMS</option>
                 <option>ADVANCED JAVA PROGRAMMING</option>
                 <option>SOFTWARE TESTING</option>
-                <option>CLIENT-SIDE SCRIPTING LANGUAGE</option>
+                <option>CLIENT-SIDE SCRIPTING LANGUAGE</option> -->
             </select>
         </div>
     </div>
@@ -53,84 +54,83 @@
                 <th rowspan="2" colspan="7">TY</th>
             </tr>
         </thead>
-        <thead>
-            <tr class="fri">
-                <td rowspan="2" class="row"><b>Sr No.</b></td>
-                <td rowspan="2" class="stn"><b>Subject Name</b></td>
-                <td class="vertical-text"><b>Date</b></td>
-                <td class="vertical-date">4/2/2024</td>
-                <td class="vertical-date">5/2/2024</td>
-                <td class="vertical-date">9/2/2024</td>
-                <td class="vertical-date">11/2/2024</td>
-                <td class="vertical-date">12/2/2024</td>
-                <td class="vertical-date">16/2/2024</td>
-                <td class="vertical-date">18/2/2024</td>
-                <td class="vertical-date">19/2/2024</td>
-                <td class="vertical-date">23/2/2024</td>
-                <td class="vertical-date">25/2/2024</td>
-                <td class="vertical-date">26/2/2024</td>
-                <td class="vertical-date">1/3/2024</td>
-                <td class="vertical-date">3/3/2024</td>
-                <td class="vertical-date">4/3/2024</td>
-                <td class="vertical-date">8/3/2024</td>
-                <td class="vertical-date">10/3/2024</td>
-                <td class="vertical-date">11/3/2024</td>
-                <td class="vertical-date">15/3/2024</td>
-                <td class="vertical-date">17/3/2024</td>
-                <td class="vertical-date">18/3/2024</td>
-                <td class="vertical-date">22/3/2024</td>
-                <td class="vertical-date">24/3/2024</td>
-                <td class="vertical-date">25/3/2024</td>
-                <td class="vertical-date">29/3/2024</td>
-                
-                <!-- Repeat this for each date -->
-                <td *ngFor="let num of range(1, totalLecture-24)"></td>
-                
-                <td rowspan="2" class="vertical-text"><b>Total Present</b></td>
-                <td rowspan="2" class="vertical-text"><b>Total Absent</b></td>
-                <td rowspan="2" class="vertical-text"><b>Per.</b></td>
-            </tr>
-            
-            <tr class="sec">
-                <td class="vertical-text"><b>Lecture No.</b></td>
-                <td *ngFor="let num of range(1, totalLecture)">{{num}}</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-            <td>1</td>
-            <td colspan="2">ADVANCED JAVA PROGRAMMING</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>P</td>
-            <td>A</td>
-            <td>12</td>
-            <td>12</td>
-            <td><span style="text-transform: uppercase;">50%</span></td>
-            
-        </tbody>
+    <thead>
+        <tr class="fri">
+            <td rowspan="2" class="row"><b>Roll No.</b></td>
+            <td rowspan="2" class="stn"><b>Student Name</b></td>
+            <td class="vertical-text"><b>Date</b></td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d1}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d2}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d3}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d4}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d5}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d6}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d7}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d8}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d9}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d10}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d11}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d12}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d13}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d14}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d15}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d16}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d17}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d18}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d19}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d20}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d21}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d22}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d23}}</td>
+            <td *ngFor="let user of user" class="vertical-text">{{user.d24}}</td>
+            <!-- <td *ngFor="let num of range(1, totalLecture)"></td> -->
+
+
+            <td class="" rowspan="2"><b>Total Present</b></td>
+            <td class="" rowspan="2"><b>Total Absent</b></td>
+            <td class="" rowspan="2"><b>Per.</b></td>
+        </tr>
+        <tr class="sec">
+            <!-- <td class="vertical-text"><b>{{sessionType}} No.</b></td> -->
+            <td *ngFor="let num of range(1, totalLecture)">{{num}}</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of user">
+            <td>{{user.sr_no}}</td>
+            <td>{{user.s_name}}</td>
+            <td>{{user.p_no}}</td>
+            <td>{{user.lno_1}}</td>
+            <td>{{user.lno_2}}</td>
+            <td>{{user.lno_3}}</td>
+            <td>{{user.lno_4}}</td>
+            <td>{{user.lno_5}}</td>
+            <td>{{user.lno_6}}</td>
+            <td>{{user.lno_7}}</td>
+            <td>{{user.lno_8}}</td>
+            <td>{{user.lno_9}}</td>
+            <td>{{user.lno_10}}</td>
+            <td>{{user.lno_11}}</td>
+            <td>{{user.lno_12}}</td>
+            <td>{{user.lno_13}}</td>
+            <td>{{user.lno_14}}</td>
+            <td>{{user.lno_15}}</td>
+            <td>{{user.lno_16}}</td>
+            <td>{{user.lno_17}}</td>
+            <td>{{user.lno_18}}</td>
+            <td>{{user.lno_19}}</td>
+            <td>{{user.lno_20}}</td>
+            <td>{{user.lno_21}}</td>
+            <td>{{user.lno_22}}</td>
+            <td>{{user.lno_23}}</td>
+            <td>{{user.lno_24}}</td>
+            <td>{{user.tp}}</td>
+            <td>{{user.ta}}</td>
+            <td>{{user.per}}</td>
+        </tr>
+
+    </tbody>
     </table>
 </div>
 <!-- <button id="down_btn" (click)="downloadPDF()">Download as PDF</button> -->
 <button id="down_btn" (click)="downloadPDF()" class="mt-8 ml-2.5% sm:ml-0 block w-full sm:w-auto h-12 font-bold border border-black rounded-md px-6 py-2 bg-green-500 hover:bg-red-700">Download as PDF</button>
-

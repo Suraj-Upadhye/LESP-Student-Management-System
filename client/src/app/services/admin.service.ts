@@ -79,6 +79,19 @@ export class AdminService {
     );
   }
 
+  getSubjectListByCurrentUserService() {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(
+      `${apiUrls.subjectServiceApi}getSubjectListByCurrentUser`,
+      {},
+      { headers }
+    );
+  }
+
   getNewStudentListService() {
     // Get token from localStorage
     const token = localStorage.getItem('accessToken');
@@ -308,25 +321,38 @@ export class AdminService {
     );
   }
 
+  getUserMarksAllSubjectsCombinedService() {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
 
-  getUserMarksAllSubjectsCombinedService(){
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<any>(
+      `${apiUrls.unitTestServiceApi}getUserMarksAllSubjectsCombined`,
+      {},
+      { headers }
+    );
+  }
+
+  getAllUserMarksSubjectWiseService(academicObj: any) {
+    return this.http.post<any>(
+      `${apiUrls.unitTestServiceApi}getAllUserMarksSubjectWise`,
+      academicObj
+    );
+  }
+
+  getAttendanceSubjectWiseSingleStudentService() {
      // Get token from localStorage
      const token = localStorage.getItem('accessToken');
 
      // Set headers with token
      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
  
-     return this.http.post<any>(
-       `${apiUrls.unitTestServiceApi}getUserMarksAllSubjectsCombined`,
-       {},
-       { headers }
-     );
-  }
-
-  getAllUserMarksSubjectWiseService(academicObj:any){
     return this.http.post<any>(
-      `${apiUrls.unitTestServiceApi}getAllUserMarksSubjectWise`,
-     academicObj,
+      `${apiUrls.attendanceServiceApi}getAttendanceSubjectWiseSingleStudent`,
+     {},
+      {headers}
     );
   }
 
