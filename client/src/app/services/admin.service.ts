@@ -323,6 +323,13 @@ export class AdminService {
      );
   }
 
+  getAllUserMarksSubjectWiseService(academicObj:any){
+    return this.http.post<any>(
+      `${apiUrls.unitTestServiceApi}getAllUserMarksSubjectWise`,
+     academicObj,
+    );
+  }
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   isLoggedIn() {

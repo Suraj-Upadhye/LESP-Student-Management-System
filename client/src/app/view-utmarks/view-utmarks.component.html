@@ -1,86 +1,98 @@
 <app-header-merged/>
 
-<div class="w-full lg:w-10/12 px-4 mx-auto mt-6">
+<div class="w-full lg:w-11/12 px-4 mx-auto mt-6">
     <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
-        <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
-            <div class="text-center flex justify-center">
-                <h1 class="text-blueGray-700 text-xl font-bold mt-6">
-                    View UT Marks All Students
-                </h1>
-            </div>
-            <div class="flex flex-wrap mt-6">
-                <div class="w-full lg:w-1/6 px-6 mt-4">
-                    <div class="relative w-full mb-3">
-                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                            Year
-                        </label>
-                        <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            disabled>
-                    </div>
-                </div>
-                <div class="w-full lg:w-1/6 px-6 mt-4">
-                    <div class="relative w-full mb-3">
-                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                            Semester
-                        </label>
-                        <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            disabled>
-                    </div>
-                </div>
-                <div class="w-full lg:w-1/6 px-6 mt-4">
-                    <div class="relative w-full mb-3">
-                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                            Branch
-                        </label>
-                        <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            disabled>
-                    </div>
-                </div>
-                <div class="w-full lg:w-1/6 px-6 mt-4">
-                    <div class="relative w-full mb-3">
-                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="division">
-                            Division
-                        </label>
-                        <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            disabled>
-                    </div>
-                </div>
-                <div class="w-full lg:w-1/6 px-6 mt-4">
-                    <div class="relative w-full mb-3">
-                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
-                            Subject Name
-                        </label>
-                        <input type="text" id="first_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            disabled>
-                    </div>
-                </div>
-                <div class="w-full lg:w-1/6 px-6 mt-10">
-                    <div class="relative w-full mb-3">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
-                            Switch
-                        </button>
-                    </div>
-                </div>
-
-                <div class="w-full lg:w-1/6 px-6 mt-10">
-                    <div class="relative w-full mb-3">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
-                            Search
-                        </button>
-                    </div>
-                </div>
-
-
-            </div>
-
-    
+        <div class="text-center flex justify-center">
+            <h1 class="text-blueGray-700 text-xl font-bold mt-6">
+                View UT Marks
+            </h1>
         </div>
+        <div class="flex flex-wrap mt-6">
+            <div class="w-full lg:w-1/6 px-6 mt-4">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Year
+                    </label>
+                    <input type="text" 
+                   [(ngModel)] = "year"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 
+                        disabled>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-2/12 px-6 mt-4">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
+                        Semester
+                    </label>
+                    <input type="text" 
+                    [(ngModel)] = "semester"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        disabled>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-3/12 px-6 mt-4">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Branch
+                    </label>
+                    <input type="text" 
+                    [(ngModel)] = "branch"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        disabled>
+                </div>
+            </div>
+        
+            
+        
+            <div class="w-full lg:w-1/6 px-6 mt-4">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="division">
+                        Division
+                    </label>
+                    <input type="text"
+                    [(ngModel)] = "division"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        disabled>
+                </div>
+            </div>
+        
+            <div class="w-full lg:w-2/6 px-6 mt-4">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
+                        Subject Name
+                    </label>
+                    <input type="text" 
+                    [(ngModel)] = "subjectName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        disabled>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-1/6 px-6 mt-7">
+                <div class="relative w-full mb-3">
+                    <button 
+                    (click)="switchData()"
+                    class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
+                        Switch 
+                    </button>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-1/6 px-6 mt-7">
+                <div class="relative w-full mb-3">
+                    <button 
+                    (click)="showStudentList()"
+                    class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
+                        View Marks 
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
     </div>
 </div>
 
@@ -91,22 +103,17 @@
     <table id="fir" width="auto">
         <thead>
             <tr>
-                <th class="logo" rowspan="2" > 
-                    <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1712349324/fgpjrap6buflvvjexshz.jpg" alt="logo" height="100px" width="100px">
-                </th>
-                <th id="heading1" colspan="29">Latthe Education Society's
-                    <br><br>
-                    POLYTECHNIC SANGLI
-                </th>
-                <!-- <th id="heading1" colspan="29">Latthe Education Society's Polytechnic, Sangli</th> -->
+                <th class="logo" rowspan="2" > <img src="https://res.cloudinary.com/dk5cr6qga/image/upload/v1712349324/fgpjrap6buflvvjexshz.jpg" alt="logo"
+                    height="100px" width="100px"></th>
+                <th id="heading1" colspan="29">Latthe Education Society's Polytechnic, Sangli</th>
             </tr>
             <tr>
-                <!-- <th id="heading2" colspan="29">POLYTECHNIC SANGLI</th> -->
+                <th id="heading2" colspan="29">POLYTECHNIC KUPWAD MIDC</th>
             </tr>
             <tr><th class="rln" rowspan="2">Roll No.</th>
                 <th class="stn" rowspan="2">Student Name</th>
                 <th colspan="2">UT Marks</th>
-                <th class="rnk" rowspan="2">Rank</th>
+                <th class="rnk" rowspan="2">Average Marks</th>
             </tr>
             <tr>
         
@@ -115,15 +122,17 @@
             </tr>
 
         </thead>
-        <tbody>
-            <tr *ngFor="let student of students">
-                <td>{{student.rollNo}}</td>
-                <td>{{student.name}}</td>
-                <td>{{student.ut1Marks}}</td>
-                <td>{{student.ut2Marks}}</td>
-                <td>{{student.rank}}</td>
-            </tr>
+        <tbody *ngIf="users && users.length > 0">
+            <tr *ngFor="let user of users">
+                <td>{{user.roll}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.ut1}}</td>
+                <td>{{user.ut2}}</td>
+                <td>{{user.averageMarks}}</td>
+              </tr>
         </tbody>
     </table>
+
 </div>
+
 <button id="down_btn" (click)="downloadPDF()">Download as PDF</button>

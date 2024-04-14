@@ -112,10 +112,6 @@ const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
 });
 
 
-
-// All subjects marks ut1 and ut2 single user
-// return rollno, name, subjectname (ut2 marks, ut2 marks), average of all, class ranking
-
 // all subjects one student
 // 2. main      // for student only
 const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
@@ -141,49 +137,48 @@ const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
     res.status(200).json(formattedMarks);
 });
 
-// subject wise ut1 and ut2
-// return rollno, name, ut1 marks, ut2 marks, average, class ranking
 
 // one subject all student
 // 3. main          // for teacher and hod only
-const getAllUserMarksSubjectWise = asyncHandler(async (req, res) => {
-    // Fetching all user marks for the specified subject
+const getAllUserMarksSubjectWise = async (req, res) => {
+    try {
+        const { year, semester, branch, subjectName } = req.body;
+        console.log(req.body);
 
-    const { year, branch, semester, division, subjectName } = req.body; // subject finding
+        // Get the subject ID based on the subject name
+        const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectIDByOther', {
+            year,
+            branch,
+            semester,
+            subjectName
+        });
+        const subjectId = subjectResponse.data.subjectID;
 
-    const { subjectId } = req.params;       // not needed
-    const userMarks = await UnitTest.find({ subject: subjectId }).populate('student');
+        // Find unit test marks for the specified subject
+        const unitTestMarks = await UnitTest.findOne({ subject: subjectId })
+            .populate('studentList.student')
+            .populate('subject');
 
-    // Assuming you have logic to calculate average marks and class ranking
-    // You may need to adjust this based on your actual implementation
+        if (!unitTestMarks) {
+            return res.status(404).json({ message: 'Unit test marks not found for the specified subject' });
+        }
 
-    // Calculate total marks for each user and average marks across all users
-    let totalMarks = 0;
-    let totalUsers = 0;
-    const userWiseMarks = userMarks.map(mark => {
-        const userName = `${mark.student.firstName} ${mark.student.lastName}`;
-        const averageMarks = (mark.ut1 + mark.ut2) / 2;
-        totalMarks += averageMarks;
-        totalUsers++;
-        return { userName, ut1: mark.ut1, ut2: mark.ut2, averageMarks };
-    });
+        // Prepare the response data in the required format
+        const users = unitTestMarks.studentList.map((student, index) => ({
+            roll: student.student.rollNo,
+            name: student.student.firstName + " " + student.student.middleName + " " + student.student.lastName,
+            ut1: student.ut1,
+            ut2: student.ut2,
+            averageMarks: ((student.ut1 + student.ut2) / 2).toFixed(2),
+        }));
 
-    // Calculate average marks across all users
-    const averageAcrossUsers = totalMarks / totalUsers;
+        res.status(200).json({ users });
+    } catch (error) {
+        console.error('Error in retrieving unit test marks by subject:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
-    // Calculate class ranking
-    // For simplicity, let's assume the ranking is stored in a separate model named UserRanking
-    const classRanking = await UserRanking.find({ subject: subjectId });
-
-    // Sending response with user marks for the specified subject, average across all users, and class ranking
-    res.status(200).json({
-        subjectId,
-        subjectName: userMarks[0].subject, // Assuming all marks belong to the same subject
-        userWiseMarks,
-        averageAcrossUsers,
-        classRanking
-    });
-});
 
 
 // Done  
