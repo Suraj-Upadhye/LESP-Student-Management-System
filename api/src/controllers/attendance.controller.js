@@ -65,8 +65,8 @@ const getStudentsDataListForAttendance = asyncHandler(async (req, res) => {
 
 // Done
 const fillAttendance = asyncHandler(async (req, res) => {
-    const { date, teacherId, year, semester, branch, subjectName, studentList, sessionType, batchBelongs, remark } = req.body;
-
+    const { date, teacherId, year, semester, branch, subjectName, studentList, sessionType, batchBelongs, remark, division } = req.body;
+console.log("Log 1 :",date, teacherId, year, semester, branch, subjectName, studentList, sessionType, batchBelongs, remark, division);
     
     try {
         // Get the subject ID based on the subject name
@@ -77,7 +77,8 @@ const fillAttendance = asyncHandler(async (req, res) => {
             subjectName
         });
         const subjectId = subjectResponse.data.subjectID;
-        console.log(subjectId);
+        console.log("Log 2 : ",subjectId);
+        // console.log(subjectResponse);
 
         // Find or create attendance record for the given date
         let attendanceRecord = await Attendance.findOne({ date });
@@ -86,7 +87,7 @@ const fillAttendance = asyncHandler(async (req, res) => {
             // Create a new attendance record if it doesn't exist for the given date
             attendanceRecord = new Attendance({ date });
         }
-
+        
         // Push new attendance data into attendanceData array
         attendanceRecord.attendanceData.push({
             teacherId,
@@ -94,6 +95,7 @@ const fillAttendance = asyncHandler(async (req, res) => {
             studentList,
             sessionType,
             batchBelongs,
+            division,
             remark
         });
 

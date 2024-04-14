@@ -110,6 +110,8 @@ export class TakeattendanceComponent implements OnInit {
           batch: item.batch,
           subjectName: item.subject,
         };
+        console.log("Dataitem : ", dataItem);
+        
 
         // Push the prepared object into the transformedData array
         transformedData.push(dataItem);
@@ -257,8 +259,8 @@ export class TakeattendanceComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        // alert(err.error.message);
-        alert("Attendance Data Saved Successfully!!")
+        alert(err.error.message);
+        // alert("Attendance Data Saved Successfully!!")
         this.router.navigate(['homepage-teacher-hod']);
       },
     });
@@ -330,6 +332,7 @@ export class TakeattendanceComponent implements OnInit {
       teacherId: localStorage.getItem('_id'), // Assign the teacher's ObjectId
       year: this.year,
       semester: this.semester,
+      division:this.division,
       branch: this.branch,
       subjectName: this.subjectName,
       studentList: this.studentListFormatted.map((student: Student) => ({
