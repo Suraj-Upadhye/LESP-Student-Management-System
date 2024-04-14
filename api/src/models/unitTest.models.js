@@ -13,6 +13,10 @@ const unitTestSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "Subject"
         },
+        division: {
+            type: String,
+            required: [true, "division is required"]
+        },
         studentList: [
             {
                 student: {

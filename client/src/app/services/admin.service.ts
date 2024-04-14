@@ -154,9 +154,13 @@ export class AdminService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     // Send HTTP GET request with headers
-    return this.http.get<any>(`${apiUrls.adminServiceApi}viewHODProfile`, {
-      headers,
-    });
+    return this.http.get<any>(
+      `${apiUrls.adminServiceApi}viewHODProfile`,
+
+      {
+        headers,
+      }
+    );
   }
 
   getViewStudentProfileService(_id: string) {
@@ -248,10 +252,31 @@ export class AdminService {
   }
 
   removeTeacherService(_id: String) {
-     // Send HTTP POST request
-     return this.http.post<any>(`${apiUrls.adminServiceApi}removeTeacher`, {
+    // Send HTTP POST request
+    return this.http.post<any>(`${apiUrls.adminServiceApi}removeTeacher`, {
       _id: _id,
     });
+  }
+
+  getStudentDataForFillUTMarksService(academicObj: any) {
+    return this.http.post<any>(
+      `${apiUrls.unitTestServiceApi}getStudentDataForFillUTMarks`,
+      academicObj
+    );
+  }
+
+  addAndUpdateMarksSubjectWiseService(utmarksData: any) {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<any>(
+      `${apiUrls.unitTestServiceApi}addAndUpdateMarksSubjectWise`,
+      utmarksData,
+      { headers }
+    );
   }
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}

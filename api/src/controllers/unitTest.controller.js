@@ -4,6 +4,50 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { UnitTest } from '../models/unitTest.models.js';
+import { User } from '../models/user.models.js';
+import axios from 'axios';
+
+
+const getStudentDataForFillUTMarks = asyncHandler(async (req, res) => {
+
+    const { year, semester, branch, division } = req.body;
+
+    console.log(req.body)
+
+    let aggregationPipeline = [];
+
+    // Match stage to filter documents based on session type and other criteria
+    aggregationPipeline.push({
+        $match: {
+            year,
+            semester: String(semester),
+            branch,
+            division,
+            role: "Student",
+            isEmailVerified: true
+        }
+    });
+
+    // Project stage to include specific fields in the output
+    aggregationPipeline.push({
+        $project: {
+            _id: 1,
+            firstName: 1,
+            middleName: 1,
+            lastName: 1,
+            rollNo: 1
+        }
+    });
+
+    // Perform aggregation
+    let userData = await User.aggregate(aggregationPipeline);
+    console.log(userData);
+
+    // Return the list of students
+    res.status(200).json(new ApiResponse(200, "Success", userData));
+
+});
+
 
 // in front end display changed ut marks fields (student name - rollno - marks (ut1, ut2))
 // subject wise adding ut1 and ut2
@@ -16,57 +60,64 @@ import { UnitTest } from '../models/unitTest.models.js';
 // 1. main      // for teacher and hod only
 const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
     // Extracting data from request body
-    const { year, branch, semester, division, subject } = req.body; // subjectId
+    const { teacher, year, semester, division, branch, subjectName, studentList } = req.body;
 
     const { _id } = req.user;
 
-    const { rollNo, studentName ,ut1, ut2, studentId, studentList } = req.body;
+    // Get the subject ID based on the subject name
+    const subjectResponse = await axios.post('http://localhost:8000/api/v1/subject/getSubjectIDByOther', {
+        year,
+        branch,
+        semester,
+        subjectName
+    });
+    const subjectId = subjectResponse.data.subjectID;
 
-    // return success msg
-
-    // studentList  = student, ut1, ut2
-
-    // Checking if the subject and marks are provided
-    if (!subject || !marks) {
-        throw new ApiError(400, "Subject and marks are required.");
-    }
-
-    // Assuming marks is an array of objects containing student details and their UT marks
-    // Structure: [{ studentName: string, rollNo: string, ut1: number, ut2: number }]
-    // You can adjust this structure as per your data model
-
-    // Perform validation if needed
-
-    // For each student, add or update the UT marks for the given subject
-    marks.forEach(async (mark) => {
-        const { studentName, rollNo, ut1, ut2 } = mark;
-
-        // Assuming you have a model named UnitTest to store UT marks
-        // You may need to adjust this based on your actual schema
-        const existingMarks = await UnitTest.findOne({ student: rollNo, subject });
+    try {
+        // Check if UT marks entry already exists for this subject
+        let existingMarks = await UnitTest.findOne({ subject: subjectId });
 
         if (existingMarks) {
-            // Update existing UT marks
-            existingMarks.ut1 = ut1;
-            existingMarks.ut2 = ut2;
+            // Update existing UT marks for this subject
+            for (const student of studentList) {
+                const { student: studentId, ut1, ut2 } = student;
+                const studentIndex = existingMarks.studentList.findIndex(student => student.student.toString() === studentId);
+
+                if (studentIndex !== -1) {
+                    existingMarks.studentList[studentIndex].ut1 = ut1;
+                    existingMarks.studentList[studentIndex].ut2 = ut2;
+                } else {
+                    // If student not found in existing marks, add them to the list
+                    existingMarks.studentList.push({ student: studentId, ut1, ut2 });
+                }
+            }
             await existingMarks.save();
         } else {
             // Create new UT marks entry
-            await UnitTest.create({
-                student: rollNo,
-                subject,
-                ut1,
-                ut2
+            const newUnitTest = new UnitTest({
+                teacher,
+                subject: subjectId,
+                division,
+                studentList: studentList.map(student => ({ student: student.student, ut1: student.ut1, ut2: student.ut2 }))
             });
+            await newUnitTest.save();
         }
-    });
 
-    // Sending success response
-    res.status(200).json({
-        success: true,
-        message: "UT marks added/updated successfully."
-    });
+        // Sending success response
+        res.status(200).json({
+            success: true,
+            message: "UT marks added/updated successfully."
+        });
+    } catch (error) {
+        // Handle any errors
+        console.error(`Error adding/updating UT marks: ${error.message}`);
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while adding/updating UT marks."
+        });
+    }
 });
+
 
 
 // All subjects marks ut1 and ut2 single user
@@ -257,5 +308,7 @@ export {
     addAndUpdateMarksSubjectWise,
     getUserMarksAllSubjectsCombined,
     getAllUserMarksSubjectWise,
-    deleteAllUserMarksSubjectWise
+    deleteAllUserMarksSubjectWise,
+
+    getStudentDataForFillUTMarks
 };

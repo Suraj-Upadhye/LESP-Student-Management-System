@@ -1,5 +1,5 @@
 <app-header-merged></app-header-merged>
-<div class="w-full lg:w-10/12 px-4 mx-auto mt-6">
+<div class="w-full lg:w-11/12 px-4 mx-auto mt-6">
     <div
         class="relative flex flex-col min-w-0 w-full mb-6 shadow-lg rounded-lg bg-blueGray-100  h-3/4 border-0 bg-gray-100">
         <div class="rounded-t bg-gray-100 mb-0 px-6 py-6">
@@ -15,31 +15,38 @@
                             Year
                         </label>
                         <input type="text" 
+                       [(ngModel)] = "year"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-1/12 px-6 mt-4">
+                    <div class="relative w-full mb-3">
+                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
+                            Semester
+                        </label>
+                        <input type="text" 
+                        [(ngModel)] = "semester"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
-                <div class="w-full lg:w-1/6 px-6 mt-4">
+
+                <div class="w-full lg:w-3/12 px-6 mt-4">
                     <div class="relative w-full mb-3">
                         <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                             Branch
                         </label>
                         <input type="text" 
+                        [(ngModel)] = "branch"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
             
-                <div class="w-full lg:w-1/6 px-6 mt-4">
-                    <div class="relative w-full mb-3">
-                        <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="semester">
-                            Semester
-                        </label>
-                        <input type="text" name="semester"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            disabled>
-                    </div>
-                </div>
+                
             
                 <div class="w-full lg:w-1/6 px-6 mt-4">
                     <div class="relative w-full mb-3">
@@ -47,6 +54,7 @@
                             Division
                         </label>
                         <input type="text"
+                        [(ngModel)] = "division"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
@@ -58,17 +66,33 @@
                             Subject Name
                         </label>
                         <input type="text" 
+                        [(ngModel)] = "subjectName"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             disabled>
                     </div>
                 </div>
+
                 <div class="w-full lg:w-1/6 px-6 mt-7">
                     <div class="relative w-full mb-3">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
+                        <button 
+                        (click)="switchData()"
+                        class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
                             Switch 
                         </button>
                     </div>
                 </div>
+
+                <div class="w-full lg:w-1/6 px-6 mt-7">
+                    <div class="relative w-full mb-3">
+                        <button 
+                        (click)="showStudentList()"
+                        class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg">
+                            Fill Marks 
+                        </button>
+                    </div>
+                </div>
+
+
             </div>
             
 
@@ -93,27 +117,38 @@
                                             UT2</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr *ngFor="let user of users">
-                                        <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                                            {{ user.roll }}
+                                <tbody class="divide-y divide-gray-200"
+                                *ngIf="flagToDisplayTableData"
+                                >
+
+                                    <tr *ngFor="let student of studentListFormatted; let i = index">
+                                        <!-- *ngFor="let user of users" -->
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                            {{ student.rollNo }}
                                         </td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                                            {{ user.Student_Name }}
+                                            {{ student.name }}
                                         </td>
                                         <td>
                                             <input type="number" min="0" max="30"
+                                            [(ngModel)]="student.ut1" name="ut1_{{ i }}"
+                                            (change)="changeUT1Marks(i, student.ut1)"
                                                 class="border-2 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded shadow focus:outline-none focus:ring w-20 ease-linear transition-all duration-500 ml-4"
-                                                [(ngModel)]="user.Ut1" required>
+                                                 required>
+
                                         </td>
                                         <td>
                                             <input type="number" min="0" max="30"
+                                            [(ngModel)]="student.ut2" name="ut2_{{ i }}"
+                                            (change)="changeUT2Marks(i, student.ut2)"
                                                 class="border-2 px-3 py-3 placeholder-blueGray-400 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-20 ease-linear transition-all duration-150 ml-4 justify-center"
-                                                [(ngModel)]="user.Ut2" required>
+                                                required>
+                                                <!-- [(ngModel)]="user.Ut2" -->
                                         </td>
                                     </tr>
+
+
                                 </tbody>
                             </table>
                         </div>
@@ -121,7 +156,8 @@
                 </div>
             </div>
             <div class="relative w-full mb-3 text-end">
-                <button type="button" (click)="fun()"
+                <button type="button" 
+                (click)="onSaveUnitTestMarks()"
                     class="bg-blue-500 active:bg-blue-600 text-end font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-5 ease-linear transition-all duration-150s mt-8 self-end">
                     Done
                 </button>
