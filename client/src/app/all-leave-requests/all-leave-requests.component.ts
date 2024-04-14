@@ -11,19 +11,17 @@ import { Router } from '@angular/router';
   imports: [HeaderMergedComponent, CommonModule, HttpClientModule],
   templateUrl: './all-leave-requests.component.html',
   styleUrl: './all-leave-requests.component.css',
-  providers: [AdminService]
+  providers: [AdminService],
 })
 export class AllLeaveRequestsComponent implements OnInit {
-
   adminService = inject(AdminService);
   router = inject(Router);
 
   role: any;
-  
-  selectedRole: string = 'Student'; // Default role is 'student'
-  studentLeaveRequestsList:any;
-  teacherLeaveRequestsList: any;
 
+  selectedRole: string = 'Student'; // Default role is 'student'
+  studentLeaveRequestsList: any;
+  teacherLeaveRequestsList: any;
 
   // fun() {
   //   console.log(this.studentLeaveRequests);
@@ -55,8 +53,8 @@ export class AllLeaveRequestsComponent implements OnInit {
     }
   }
 
-  getTeacherLeaveData(){
-    const userType = "Teacher"
+  getTeacherLeaveData() {
+    const userType = 'Teacher';
     this.adminService.getStudentTeacherLeaveService(userType).subscribe({
       next: (res) => {
         console.log('Successfully got teacher the data');
@@ -71,8 +69,8 @@ export class AllLeaveRequestsComponent implements OnInit {
     });
   }
 
-  getStudentLeaveData(){
-    const userType = "Student"
+  getStudentLeaveData() {
+    const userType = 'Student';
     this.adminService.getStudentTeacherLeaveService(userType).subscribe({
       next: (res) => {
         console.log('Successfully got teacher the data');
@@ -87,7 +85,6 @@ export class AllLeaveRequestsComponent implements OnInit {
     });
   }
 
-  
   onRoleChange(role: string) {
     this.selectedRole = role;
     if (role === 'Student') {
@@ -98,6 +95,49 @@ export class AllLeaveRequestsComponent implements OnInit {
     }
   }
 
+  acceptLeave(_id: string, userType: string) {
+    console.log(_id, userType);
+    this.adminService
+      .approveLeaveApplicationStudentTeacherService(_id, userType)
+      .subscribe({
+        next: (res) => {
+          console.log('Leave accepted successfully!!');
+          alert('Leave accepted successfully!!')
+          console.log(res);
+          if(userType === 'Student'){
+            this.getStudentLeaveData();
+          }
+          if(userType === "Teacher"){
+             this.getTeacherLeaveData();
+          }
+          // this.studentLeaveRequestsList = res.data;
+          // console.log(this.studentLeaveRequestsList);
+        },
+        error: (err) => {
+          console.log(err);
+          alert(err.error.message);
+        },
+      });
+  }
+
+  rejectLeave(_id: string, userType: string) {
+    this.adminService
+      .rejectLeaveApplicationStudentTeacherService(_id, userType)
+      .subscribe({
+        next: (res) => {
+          console.log('Leave rejected successfully!!');
+          alert('Leave rejected successfully!!');
+          console.log(res);
+          this.router.navigate(['all-leave-requests']);
+          // this.studentLeaveRequestsList = res.data;
+          // console.log(this.studentLeaveRequestsList);
+        },
+        error: (err) => {
+          console.log(err);
+          alert(err.error.message);
+        },
+      });
+  }
 
   // onTeacherLeaveAcceptClick(_id:any){
   //   alert("Teacher id :"+ _id)
@@ -106,6 +146,4 @@ export class AllLeaveRequestsComponent implements OnInit {
   // onTeacherLeaveRejectClick(_id:any){
   //     alert("Student id :" + _id)
   // }
-  
-
 }

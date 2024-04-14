@@ -17,6 +17,8 @@ import {
     viewTeacherProfile,
     viewHODProfile,
     viewStudentProfile,
+    rejectNewStudent,
+    rejectNewTeacher
 } from "../controllers/admin.controller.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
@@ -36,13 +38,18 @@ router.route("/registerAdmin").post(
 )
 
 router.route("/newTeacherList").get(verifyJWT, newTeacherList)
-router.route("/acceptNewTeacher/:teacherId").post(acceptNewTeacher)
+router.route("/acceptNewTeacher").post(acceptNewTeacher)
 
 router.route("/newStudentList").get(verifyJWT, newStudentList)
-router.route("/acceptNewStudent/:studentId").post(acceptNewStudent)
+router.route("/acceptNewStudent").post(acceptNewStudent)
 
-router.route("/studentBatchAllocation/:studentId").post(studentBatchAllocation)
-router.route("/classTeacherAllocation/:teacherId").post(classTeacherAllocation)
+// rejectNewStudent
+// rejectNewTeacher
+router.route("/rejectNewStudent").post(rejectNewStudent)
+router.route("/rejectNewTeacher").post(rejectNewTeacher)
+
+// router.route("/studentBatchAllocation/:studentId").post(studentBatchAllocation)
+// router.route("/classTeacherAllocation/:teacherId").post(classTeacherAllocation)
 
 router.route("/getSubjectSwitchOptionList").get(verifyJWT, getSubjectSwitchOptionList)
 router.route("/getSubjectSwitchOptionListForViewAttendance").get(verifyJWT, getSubjectSwitchOptionListForViewAttendance);

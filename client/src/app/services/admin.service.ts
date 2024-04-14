@@ -100,12 +100,9 @@ export class AdminService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     // Send HTTP GET request with headers
-    return this.http.get<any>(
-      `${apiUrls.adminServiceApi}newTeacherList`,
-      {
-        headers,
-      }
-    );
+    return this.http.get<any>(`${apiUrls.adminServiceApi}newTeacherList`, {
+      headers,
+    });
   }
 
   getStudentTeacherLeaveService(userType: string) {
@@ -150,15 +147,15 @@ export class AdminService {
   }
 
   getViewHODProfileService(_id: string) {
-     // Get token from localStorage
-     const token = localStorage.getItem('accessToken');
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
 
-     // Set headers with token
-     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
- 
-     // Send HTTP GET request with headers
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Send HTTP GET request with headers
     return this.http.get<any>(`${apiUrls.adminServiceApi}viewHODProfile`, {
-     headers
+      headers,
     });
   }
 
@@ -168,6 +165,93 @@ export class AdminService {
       _id: _id,
     });
   }
+
+  addLeaveApplicationStudentTeacherService(
+    startDate: String,
+    endDate: String,
+    reason: String
+  ) {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Create an object with the parameters
+    const body = { startDate: startDate, endDate: endDate, reason: reason };
+
+    // Send HTTP POST request with headers and body
+    return this.http.post<any>(
+      `${apiUrls.leaveServiceApi}addLeaveApplicationStudentTeacher`,
+      body,
+      { headers }
+    );
+  }
+
+  approveLeaveApplicationStudentTeacherService(_id: String, userType: String) {
+    // Send HTTP POST request
+    return this.http.post<any>(
+      `${apiUrls.leaveServiceApi}approveLeaveApplicationStudentTeacher`,
+      {
+        _id: _id,
+        userType: userType,
+      }
+    );
+  }
+
+  rejectLeaveApplicationStudentTeacherService(_id: String, userType: String) {
+    // Send HTTP POST request
+    return this.http.post<any>(
+      `${apiUrls.leaveServiceApi}rejectLeaveApplicationStudentTeacher`,
+      {
+        _id: _id,
+        userType: userType,
+      }
+    );
+  }
+
+  acceptNewTeacherService(_id: String) {
+    // Send HTTP POST request
+    return this.http.post<any>(
+      `${apiUrls.adminServiceApi}acceptNewTeacher`,
+      {
+        teacherId: _id,
+      }
+    );
+  }
+
+  acceptNewStudentService(_id: String) {
+    // Send HTTP POST request
+    console.log(_id);
+    
+    return this.http.post<any>(
+      `${apiUrls.adminServiceApi}acceptNewStudent`,
+      {
+        studentId: _id,
+      }
+    );
+  }
+
+  rejectNewTeacherService(_id: String) {
+    // Send HTTP POST request
+    return this.http.post<any>(
+      `${apiUrls.adminServiceApi}rejectNewTeacher`,
+      {
+        teacherId: _id,
+      }
+    );
+  }
+
+  rejectNewStudentService(_id: String) {
+    // Send HTTP POST request
+    return this.http.post<any>(
+      `${apiUrls.adminServiceApi}rejectNewStudent`,
+      {
+        studentId: _id,
+      }
+    );
+  }
+
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 

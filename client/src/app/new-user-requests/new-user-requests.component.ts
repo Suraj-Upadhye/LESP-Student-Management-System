@@ -9,7 +9,12 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-new-user-requests',
   standalone: true,
-  imports: [HeaderMergedComponent, CommonModule, HttpClientModule, RouterModule],
+  imports: [
+    HeaderMergedComponent,
+    CommonModule,
+    HttpClientModule,
+    RouterModule,
+  ],
   templateUrl: './new-user-requests.component.html',
   styleUrl: './new-user-requests.component.css',
   providers: [AdminService],
@@ -46,7 +51,7 @@ export class NewUserRequestsComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        alert(err.error.message + "Teacher data not found");
+        alert(err.error.message + 'Teacher data not found');
       },
     });
   }
@@ -87,14 +92,70 @@ export class NewUserRequestsComponent implements OnInit {
     }
   }
 
-
-  teacherViewProfileClick(_id:any){
-    alert("Teacher id :"+ _id)
+  acceptNewTeacher(_id: String) {
+    console.log(_id);
+    this.adminService.acceptNewTeacherService(_id).subscribe({
+      next: (res) => {
+        console.log('New Teacher request accepted');
+       alert('New Teacher request accepted');
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message + 'Teacher data not found');
+      },
+    });
   }
 
-  studentViewProfileClick(_id:any){
-      alert("Student id :" + _id)
+
+  acceptNewStudent(_id: String) {
+    this.adminService.acceptNewStudentService(_id).subscribe({
+      next: (res) => {
+        console.log('New Student request accepted');
+       alert('New Student request accepted');
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message + 'Student data not found');
+      },
+    });
+  }
+
+  rejectNewTeacher(_id: String) {
+    this.adminService.rejectNewTeacherService(_id).subscribe({
+      next: (res) => {
+        console.log('New Teacher request rejected');
+       alert('New Teacher request rejected');
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message + 'Teacher data not found');
+      },
+    });
+  }
+
+  rejectNewStudent(_id: String) {
+    this.adminService.rejectNewStudentService(_id).subscribe({
+      next: (res) => {
+        console.log('New Student request rejected');
+       alert('New Student request rejected');
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err.error.message + 'Student data not found');
+      },
+    });
   }
 
 
+  // teacherViewProfileClick(_id:any){
+  //   alert("Teacher id :"+ _id)
+  // }
+
+  // studentViewProfileClick(_id:any){
+  //     alert("Student id :" + _id)
+  // }
 }

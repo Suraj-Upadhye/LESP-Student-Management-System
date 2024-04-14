@@ -19,14 +19,14 @@
                     </div>
                 </div>
 
-                <div class="w-full lg:w-1/6 px-6 mt-4" *ngIf="role === 'Teacher'" >
+                <div class="w-full lg:w-1/6 px-6 mt-4" *ngIf="role === 'Teacher'">
                     <div class="relative w-full mb-3">
                         <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2 w-auto" for="session">
                             All New User Requests
                         </label>
                         <input type="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                           value="Student" disabled>
+                            value="Student" disabled>
                     </div>
                 </div>
 
@@ -36,28 +36,51 @@
                 <div class="relative w-11/12 mb-3">
                     <div class="flex flex-col" *ngIf="selectedRole === 'Student'">
                         <div class="-m-1.5 overflow-x-auto">
-                            <div class="p-1.5 min-w-full inline-block align-middle" >
+                            <div class="p-1.5 min-w-full inline-block align-middle">
                                 <div class="border rounded-lg">
                                     <div class="overflow-hidden">
                                         <table class="min-w-full text-left text-sm font-light w-full">
                                             <tbody>
 
-                                                <tr class="border-b border-neutral-200" 
-                                                *ngFor="let student of studentList"
-                                                >
-                                                   
+                                                <tr class="border-b border-neutral-200"
+                                                    *ngFor="let student of studentList">
+
                                                     <td class="whitespace-nowrap px-6 py-4 items-center">
-                                                        {{ student.firstName }} {{student.middleName}} {{student.lastName}} wants to register as a new Student from {{ student.branch }} department of {{ student.semester }} semester
+                                                        <p>{{ student.firstName }} {{student.middleName}}
+                                                            {{student.lastName}} (Roll No :{{student.rollNo}}) wants to
+                                                            register as a new Student.</p>
+
+                                                             <p> Academics : {{student.year}}
+                                                            {{student.branch }} Semester: {{ student.semester }} </p>
+                                                            <p>Email : {{student.email}} </p>
+
                                                     </td>
-                                                    
+
                                                     <td>
-                                                        <button 
-                                                        (click)="studentViewProfileClick(student._id)"
-                                                        routerLink="/viewprofilestudent"
-                                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2" type="button">
-                                                            View Profile
+                                                        <button
+                                                       (click)="acceptNewStudent(student._id)"
+                                                            class="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2"
+                                                            type="button">
+                                                            Accept
                                                         </button>
                                                     </td>
+                                                    <td>
+                                                        <button
+                                                        (click)="rejectNewStudent(student._id)"
+                                                            class="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2 ml-4"
+                                                            type="button">
+                                                            Reject
+                                                        </button>
+                                                    </td>
+
+                                                    <!-- <td>
+                                                        <button (click)="studentViewProfileClick(student._id)"
+                                                            routerLink="/viewprofilestudent"
+                                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2"
+                                                            type="button">
+                                                            View Profile
+                                                        </button>
+                                                    </td> -->
                                                 </tr>
 
                                             </tbody>
@@ -70,26 +93,47 @@
 
                     <div class="flex flex-col" *ngIf="selectedRole === 'Teacher'">
                         <div class="-m-1.5 overflow-x-auto">
-                            <div class="p-1.5 min-w-full inline-block align-middle" >
+                            <div class="p-1.5 min-w-full inline-block align-middle">
                                 <div class="border rounded-lg">
                                     <div class="overflow-hidden">
                                         <table class="min-w-full text-left text-sm font-light w-full">
 
-                                            <tbody> 
-                                                <!-- (click)="fun() -->
-                                                <tr class="border-b border-neutral-200" *ngFor="let teacher of teacherList">
+                                            <tbody>
+                                                <tr class="border-b border-neutral-200"
+                                                    *ngFor="let teacher of teacherList">
                                                     <td class="whitespace-nowrap px-6 py-4 items-center">
-                                                        {{ teacher.firstName }} {{teacher.middleName}} {{teacher.lastName}} wants to register as a new teacher
-                                                        </td>
+                                                        <p>{{ teacher.firstName }} {{teacher.middleName}}
+                                                            {{teacher.lastName}} wants to register as a new teacher
+                                                        </p>
+                                                        <p>Email: {{teacher.email}}</p>
+                                                        <p *ngIf="teacher.classTeacher.year">Class Teacher of :
+                                                            {{teacher.email}}</p>
+                                                        <!-- {{teacher.classTeacher.year}} {{teacher.classTeacher.branch}} Division : {{teacher.classTeacher.division}} Semester: {{teacher.classTeacher.semester}}  -->
+                                                    </td>
                                                     <td>
-                                                        <button 
-                                                        (click)="teacherViewProfileClick(teacher._id)"
-                                                        routerLink="/viewprofileteacher"
-                                                        class="bg-blue-500 hover:bg-blue-700 
+                                                        <button
+                                                        (click)="acceptNewTeacher(teacher._id)"
+                                                            class="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2"
+                                                            type="button">
+                                                            Accept
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                        (click)="rejectNewTeacher(teacher._id)"
+                                                            class="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2 ml-4"
+                                                            type="button">
+                                                            Reject
+                                                        </button>
+                                                    </td>
+                                                    <!-- <td>
+                                                        <button (click)="teacherViewProfileClick(teacher._id)"
+                                                            routerLink="/viewprofileteacher"
+                                                            class="bg-blue-500 hover:bg-blue-700 
                                                         text-white font-bold py-2 px-4 border border-blue-700 rounded-lg mt-2" type="button">
                                                             View Profile
                                                         </button>
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                             </tbody>
 
@@ -105,4 +149,4 @@
             </div>
         </div>
     </div>
-</div> 
+</div>

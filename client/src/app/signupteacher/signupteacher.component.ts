@@ -81,20 +81,20 @@ export class SignupteacherComponent {
 
   //validation
   userObj: any = {
-    firstName: 'Premala',
-    middleName: 'Bhushan',
-    lastName: 'Khot',
-    gender: 'Female',
-    address: 'kannanwadi latthe collage javal',
-    pincode: '416410',
-    mobileNumber: '1234567890',
-    qualification: 'B.tech',
-    teachingExperience: 2,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    gender: '',
+    address: '',
+    pincode: '',
+    mobileNumber: '',
+    qualification: '',
+    teachingExperience: 0,
     department: '',
-    email: 'premelabkhot@gmail.com',
+    email: '',
     otp: '',
-    password: '12345',
-    role: 'Teacher',
+    password: '',
+    role: '',
   };
 
   onSubmit() {

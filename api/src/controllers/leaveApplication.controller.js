@@ -74,11 +74,15 @@ const getLeaveApplicationListStudentTeacher = asyncHandler(async (req, res) => {
                 .sort('-createdAt')
                 .select('userId startDate endDate reason');
             userField = 'userId';
+            await removeRejectedAndOutdatedLeaves();
+            console.log("here1");
         } else if (userType === "Teacher") {
             leaveApplications = await Leave.find({ userType: userType, status: "Pending" })
                 .sort('-createdAt')
                 .select('adminId startDate endDate reason');
             userField = 'adminId';
+            await removeRejectedAndOutdatedLeaves();
+            console.log("here1");
         } else {
             return res.status(400).json({ success: false, message: "Invalid user type" });
         }
@@ -90,8 +94,11 @@ const getLeaveApplicationListStudentTeacher = asyncHandler(async (req, res) => {
             const validForLeave = currentDate >= leave.startDate && currentDate <= leave.endDate;
 
             return {
-                startDate: leave.startDate,
-                endDate: leave.endDate,
+                startDate: formatDate(leave.startDate),
+                endDate: formatDate(leave.endDate),
+                reason: leave.reason,
+                _id: leave.adminId || leave.userId,
+                userType: userType,
                 user: `${user.firstName} ${user.middleName} ${user.lastName}`,
                 rollNo: user.rollNo || '', // Assuming rollNo is specific to students
                 validForLeave
@@ -112,12 +119,20 @@ const getLeaveApplicationListStudentTeacher = asyncHandler(async (req, res) => {
     }
 });
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+}
 
 // Done  
 // class teacher hod
 const approveLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
     const { _id, userType } = req.body;
 
+    console.log(_id, userType);
     if (userType === "Student") {
         try {
 
@@ -131,6 +146,7 @@ const approveLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
             if (!leave) {
                 return res.status(404).json({ success: false, message: 'Leave application not found' });
             }
+            console.log("approved request student")
 
             const user = await User.findById(leave.userId).select("email firstName");
             if (!user) {
@@ -161,6 +177,7 @@ const approveLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
             if (!leave) {
                 return res.status(404).json({ success: false, message: 'Leave application not found' });
             }
+            console.log("approved request teacher")
 
             const admin = await Admin.findById(leave.adminId).select("email firstName");
             if (!admin) {
@@ -195,7 +212,7 @@ const rejectLeaveApplicationStudentTeacher = asyncHandler(async (req, res) => {
                 { userId: _id, status: 'Pending' }, // Filter criteria
                 { status: 'Rejected' }, // Update
                 { new: true } // Options
-            ).populate('userId');
+            ).populate('userId'); 
 
             if (!leave) {
                 return res.status(404).json({ success: false, message: 'Leave application not found' });

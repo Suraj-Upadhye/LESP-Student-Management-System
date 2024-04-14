@@ -7,7 +7,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Admin } from '../models/admin.models.js';
 import { Subject } from '../models/subjects.models.js';
-import { sendNewUserAcceptedEmail, sendUserRemovedEmail } from '../utils/sendEmail.js';
+import { sendNewUserAcceptedEmail, sendNewUserRejectedEmail, sendUserRemovedEmail } from '../utils/sendEmail.js';
 import axios from 'axios';
 
 // Done
@@ -247,17 +247,19 @@ const newTeacherList = asyncHandler(async (req, res) => {
                     _id: 1,
                     firstName: 1,
                     middleName: 1,
-                    lastName: 1
+                    lastName: 1,
+                    email: 1,
+                    classTeacher: 1
                 }
             }
         ]);
 
         console.log("Filtered Teachers:", newTeachers);
- 
+
         // 3. Return the filtered list of teachers as the response.
         res.status(200).json({
             success: true,
-            data: newTeachers 
+            data: newTeachers
         });
     } catch (error) {
         // Error handling: Log and send error response
@@ -272,8 +274,9 @@ const newTeacherList = asyncHandler(async (req, res) => {
 // Done
 const acceptNewTeacher = asyncHandler(async (req, res) => {
     try {
-        const { teacherId } = req.params;
+        const { teacherId } = req.body;
         console.log(teacherId);
+ 
 
         // Find the teacher by ID and update their status to accepted
         const teacher = await Admin.findByIdAndUpdate(
@@ -288,13 +291,69 @@ const acceptNewTeacher = asyncHandler(async (req, res) => {
             throw new ApiError(404, "Teacher not found");
         }
         // Send a notification email to the teacher's registered email address
-        sendNewUserAcceptedEmail(teacher.email, teacher.role, teacher.firstName);
+        await sendNewUserAcceptedEmail(teacher.email, teacher.role, teacher.firstName);
 
         res.status(200).json(new ApiResponse(200, teacher, "Teacher accepted successfully"));
     } catch (error) {
         throw new ApiError(500, "Error accepting teacher");
     }
 });
+
+
+// Done
+const rejectNewTeacher = asyncHandler(async (req, res) => {
+    try {
+        const { teacherId } = req.body;
+        console.log(teacherId);
+
+        const teacher = await Admin.findById(teacherId).select("email role firstName");
+
+        if (!teacher) {
+            throw new ApiError(404, "Teacher not found");
+        }
+
+        // Send a notification email to the teacher's registered email address
+        await sendNewUserRejectedEmail(teacher.email, teacher.role, teacher.firstName);
+        const msg = await Admin.deleteOne({ _id: teacherId })
+        console.log(msg);
+
+        // await teacher.remove();
+        console.log(teacher);
+        res.status(201).json(new ApiResponse(201, "Rejected", "Teacher request rejected Successfully!"));
+    } catch (error) {
+        console.log(error);
+        throw new ApiError(500, "Error rejecting teacher");
+    }
+});
+
+// Done
+const rejectNewStudent = asyncHandler(async (req, res) => {
+    try {
+        const { studentId } = req.body;
+        console.log(studentId);
+
+        const student = await User.findById(studentId).select("email role firstName");
+
+        if (!student) {
+            throw new ApiError(404, "Student not found");
+        }
+
+        if (student) {
+            // Send a notification email to the teacher's registered email address
+            sendNewUserRejectedEmail(student.email, student.role, student.firstName);
+            await User.deleteOne({ _id: studentId });
+            // await student.remove();
+            console.log(student);
+            res.status(201).json(new ApiResponse(201, "Rejected", "Student request rejected Successfully!"));
+        }
+        else {
+            throw new ApiError(404, 'No such student exists');
+        }
+    } catch (error) {
+        throw new ApiError(500, "Error rejecting student");
+    }
+});
+
 
 // Done
 const newStudentList = asyncHandler(async (req, res) => {
@@ -313,7 +372,7 @@ const newStudentList = asyncHandler(async (req, res) => {
             });
         }
 
-        const newStudents = await User.find({ year: classTeacher.year, branch: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, role: "Student", isEmailVerified: false }).select("_id firstName middleName lastName rollNo year branch semester division");
+        const newStudents = await User.find({ year: classTeacher.year, branch: classTeacher.branch, semester: classTeacher.semester, division: classTeacher.division, role: "Student", isEmailVerified: false }).select("_id firstName middleName lastName rollNo year branch semester division email");
 
         // Debugging: Log the filtered students
         // console.log("Filtered Students:", newStudents);
@@ -337,7 +396,7 @@ const newStudentList = asyncHandler(async (req, res) => {
 // Done
 const acceptNewStudent = asyncHandler(async (req, res) => {
     try {
-        const { studentId } = req.params;
+        const { studentId } = req.body;
         console.log(studentId);
 
         // Find the student by ID and update their status to accepted
@@ -497,15 +556,15 @@ const viewTeacherProfile = asyncHandler(async (req, res) => {
         updatedworkingDetails.push(subjectData)
         // console.log(updatedworkingDetails);
     }
-    for( let index in workingDetails){
+    for (let index in workingDetails) {
         let sub = workingDetails[index];
         delete sub.subject;
         sub["subject"] = updatedworkingDetails[index].subject;
-        console.log( updatedworkingDetails[index].subject);
+        console.log(updatedworkingDetails[index].subject);
         sub.year = updatedworkingDetails[index].year;
         sub["semester"] = updatedworkingDetails[index].semseter;
         sub["branch"] = updatedworkingDetails[index].branch;
-        console.log("this is sub",sub);
+        console.log("this is sub", sub);
     }
     console.log(workingDetails);
     // teacherData.workingDetails = updatedworkingDetails;
@@ -697,6 +756,8 @@ export {
     newTeacherList,
     acceptNewStudent,
     acceptNewTeacher,
+    rejectNewStudent,
+    rejectNewTeacher,
     studentBatchAllocation,
     classTeacherAllocation,
 
