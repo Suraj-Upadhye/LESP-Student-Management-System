@@ -308,6 +308,21 @@ export class AdminService {
     );
   }
 
+
+  getUserMarksAllSubjectsCombinedService(){
+     // Get token from localStorage
+     const token = localStorage.getItem('accessToken');
+
+     // Set headers with token
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+ 
+     return this.http.post<any>(
+       `${apiUrls.unitTestServiceApi}getUserMarksAllSubjectsCombined`,
+       {},
+       { headers }
+     );
+  }
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   isLoggedIn() {

@@ -15,7 +15,7 @@
             <tr><th class="rln" rowspan="2">Sr No.</th>
                 <th class="stn" rowspan="2">Subject Name</th>
                 <th colspan="2">UT Marks</th>
-                <th class="rnk" rowspan="2">Rank</th>
+                <th class="rnk" rowspan="2">Average Marks</th>
             </tr>
             <tr>
         
@@ -25,41 +25,13 @@
 
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>ENVIRONMENTAL STUDIES</td>
-                <td>20</td>
-                <td>18</td>
-                <td>3</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>OPERATING SYSTEMS</td>
-                <td>20</td>
-                <td>20</td>
-                <td>1</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>ADVANCED JAVA PROGRAMMING</td>
-                <td>20</td>
-                <td>18</td>
-                <td>3</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>SOFTWARE TESTING</td>
-                <td>20</td>
-                <td>20</td>
-                <td>1</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>CLIENT-SIDE SCRIPTING LANGUAGE</td>
-                <td>20</td>
-                <td>20</td>
-                <td>1</td>
-            </tr>
+            <tr *ngFor="let user of users">
+                <td>{{user.sr_no}}</td>
+                <td>{{user.s_name}}</td>
+                <td>{{user.ut1}}</td>
+                <td>{{user.ut2}}</td>
+                <td>{{user.averageMarks}}</td>
+              </tr>
         </tbody>
     </table>
 </div>

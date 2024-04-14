@@ -13,7 +13,7 @@ import { verifyJWT } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
 router.route("/addAndUpdateMarksSubjectWise").post(verifyJWT,addAndUpdateMarksSubjectWise);
-router.route("/getUserMarksAllSubjectsCombined").get(getUserMarksAllSubjectsCombined);
+router.route("/getUserMarksAllSubjectsCombined").post(verifyJWT,getUserMarksAllSubjectsCombined);
 router.route("/getAllUserMarksSubjectWise").post(getAllUserMarksSubjectWise);
 router.route("/deleteAllUserMarksSubjectWise").post(deleteAllUserMarksSubjectWise);
 router.route("/getStudentDataForFillUTMarks").post(getStudentDataForFillUTMarks);

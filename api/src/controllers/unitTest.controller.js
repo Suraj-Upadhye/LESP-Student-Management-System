@@ -49,13 +49,6 @@ const getStudentDataForFillUTMarks = asyncHandler(async (req, res) => {
 });
 
 
-// in front end display changed ut marks fields (student name - rollno - marks (ut1, ut2))
-// subject wise adding ut1 and ut2
-// return success msg with object
-// if-else
-// update subject marks which is changed
-// return success msg with object
-
 // one subject all student
 // 1. main      // for teacher and hod only
 const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
@@ -126,43 +119,26 @@ const addAndUpdateMarksSubjectWise = asyncHandler(async (req, res) => {
 // all subjects one student
 // 2. main      // for student only
 const getUserMarksAllSubjectsCombined = asyncHandler(async (req, res) => {
-    // Extracting data from request parameters
-    const { rollNo } = req.params;      // not needed
-
     const { _id } = req.user;
 
     // Fetching all subjects marks for the given user
-    const userMarks = await UnitTest.find({ student: rollNo }).populate('subject');
+    const userMarks = await UnitTest.find({ 'studentList.student': _id }).populate('subject');
 
-    // Assuming you have logic to calculate average marks and class ranking
-    // You may need to adjust this based on your actual implementation
-
-    // Calculate total marks for each subject and average marks across all subjects
-    let totalMarks = 0;
-    let totalSubjects = 0;
-    const subjectMarks = userMarks.map(mark => {
+    // Formatting the marks for each subject
+    const formattedMarks = userMarks.map(mark => {
         const subjectName = mark.subject.subject;
-        const averageMarks = (mark.ut1 + mark.ut2) / 2;
-        totalMarks += averageMarks;
-        totalSubjects++;
-        return { subjectName, ut1: mark.ut1, ut2: mark.ut2, averageMarks };
+        const ut1 = mark.studentList.find(student => String(student.student) === String(_id)).ut1;
+        const ut2 = mark.studentList.find(student => String(student.student) === String(_id)).ut2;
+        const averageMarks = (ut1 + ut2) / 2;
+        return { s_name: subjectName, ut1, ut2, averageMarks };
     });
 
-    // Calculate average marks across all subjects
-    const averageAcrossSubjects = totalMarks / totalSubjects;
-
-    // Calculate class ranking
-    // For simplicity, let's assume the ranking is stored in a separate model named UserRanking
-    const classRanking = await UserRanking.findOne({ user: rollNo });
-
-    // Sending response with user marks for all subjects, average across all subjects, and class ranking
-    res.status(200).json({
-        rollNo,
-        name: userMarks[0].studentName, // Assuming all marks belong to the same user
-        subjectMarks,
-        averageAcrossSubjects,
-        classRanking
+    // Adding serial numbers
+    formattedMarks.forEach((mark, index) => {
+        mark.sr_no = (index + 1).toString();
     });
+
+    res.status(200).json(formattedMarks);
 });
 
 // subject wise ut1 and ut2
