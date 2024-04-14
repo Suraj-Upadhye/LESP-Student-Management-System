@@ -279,6 +279,35 @@ export class AdminService {
     );
   }
 
+  getSubjectListByCurrentAdminService() {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<any>(
+      `${apiUrls.subjectServiceApi}getSubjectListByCurrentAdmin`,
+      {},
+      { headers }
+    );
+  }
+
+  // addSharedResource
+  addSharedResource(formData: FormData) {
+    // Get token from localStorage
+    const token = localStorage.getItem('accessToken');
+
+    // Set headers with token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<any>(
+      `${apiUrls.resourceServiceApi}addSharedResource`,
+      formData,
+      { headers }
+    );
+  }
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   isLoggedIn() {

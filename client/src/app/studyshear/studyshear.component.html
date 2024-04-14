@@ -7,14 +7,17 @@
             <div class="relative flex-col min-w-0 break-words w-full rounded-lg bg-blueGray-100 border-0">
                 <div class="rounded-t bg-gray-100 mb-0 px-6 py-6 h-dvh">
                     <div class="flex flex-wrap">
-                        <div class="w-full lg:w-1/6 px-6 mt-4">
+                        <div class="w-full lg:w-2/6 px-6 mt-4">
                             <div class="relative w-full mb-3">
                                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="batch">
                                     Subject Name
                                 </label>
-                                <select id="batch"
+                                <select id="subject"
+                                (click)="selectedSubject(subject.value)"
+                              #subject  
+                                (change)="selectedSubject(subject.value)"
                                     class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
-                                    <option>Selection</option>
+                                    <option *ngFor="let subject of subjectList">{{subject}}</option>
                                 </select>
                             </div>
                         </div>
@@ -30,7 +33,11 @@
                                     <p class="text-black-400 font-bold text-sm">Drag & Drop or <span
                                             class="text-[#007bff]">Choose
                                             file</span> to upload</p>
-                                    <input type="file" id="uploadFile1" class="hidden" />
+                                            <input type="file" id="uploadFile1" (change)="handleFileInput($event)"
+                                            accept="image/*, application/pdf, video/*, audio/*" />
+                                          
+                                          
+                                    <!-- class="hidden" -->
                                     <p class="text-xs text-black-400 mt-2">Images, Videos and Pdf are Allowed.</p>
                                 </label>
                             </div>
@@ -56,6 +63,7 @@
                                 <p class="text-lg md:text-1xl mb-4">Add Description about resource :
                                 </p>
                                 <textarea cols="15" rows="5" class="w-full"
+                                [(ngModel)]="userObj.description"
                                     placeholder="Enter some description here"></textarea>
                                 <div class="w-full flex justify-center items-center flex-row gap-4 flex-wrap">
                                     <div
@@ -63,6 +71,7 @@
                                         Cancel</div>
 
                                     <div
+                                    (click)="onUpload()"
                                         class="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 border border-blue-700 rounded-lg cursor-pointer ">
                                         send</div>
                                 </div>

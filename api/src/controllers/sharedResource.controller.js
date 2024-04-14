@@ -55,7 +55,7 @@ const addSharedResource = asyncHandler(async (req, res) => {
 
         console.log(students)
         // // res.status(200).json(students);
-        // for (const student of student) {
+        // for (const student of students) {
         //     await sendNewResourceEmail(email, firstName, lastName, student.firstName);
         // }
 

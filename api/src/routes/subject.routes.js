@@ -28,7 +28,7 @@ router.route("/getSemByYearBranch").post(getSemByYearBranch);
 router.route("/getSubjectListByYSB").post(getSubjectListByYSB);
 router.route("/getModeListAndBatchListByYSBSub").post(getModeListAndBatchListByYSBSub);
 
-router.route("/getSubjectListByCurrentAdmin").get(verifyJWT, getSubjectListByCurrentAdmin);
+router.route("/getSubjectListByCurrentAdmin").post(verifyJWT, getSubjectListByCurrentAdmin);
 router.route("/getBatchListByYSBSub").post(getBatchListByYSBSub);
 
 
